@@ -252,6 +252,8 @@ Public Class DVDArt_Process
 
         If DVDArt_Common.Get_Paths(database, thumbs) Then
 
+            Get_Settings()
+
             wait(_delay)
 
             Do
