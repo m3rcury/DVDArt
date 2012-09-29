@@ -9,12 +9,11 @@ The data driving the scraper is taken from MovingPictures, hence any corrections
 
 Images are downloaded from Fanart.tv site. I recommend that you visit site and help out by uploading any DVD images you might have/come across so that we all enrich its content, resulting in scraper finding more images to download.
 
+Brief description of tabs in plugin:
 
-=* Movies with DVDArt shows movies which scraper successfully downloaded an image.
-
-=* Importer shows movies whose DVDArt is currently being imported.
-
-=* Movies missing DVDArt shows movies which scraper could not find any images.
+  # Movies with DVDArt shows movies which scraper successfully downloaded an image.
+  # Importer shows movies whose DVDArt is currently being imported.
+  # Movies missing DVDArt shows movies which scraper could not find any images.
 
 
 The import function for new movies executes automatically in the background, so you don't need to trigger it manually.
