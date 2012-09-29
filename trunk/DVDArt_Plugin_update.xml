@@ -77,7 +77,7 @@
         <ExtensionDescription>This plugin scans your MovingPictures database and download DVD Art from the fanart.tv website.</ExtensionDescription>
         <VersionDescription>A scraper that srapes fanart.tv for DVD cover art of you movie collection in MovingPictures.</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
-        <OnlineLocation>http://code.google.com/p/dvdart/</OnlineLocation>
+        <OnlineLocation>http://dvdart.googlecode.com/files/DVDArt_Plugin-v1.0.0.1.mpe1</OnlineLocation>
         <ReleaseDate>2012-09-27T23:39:41.8388671+02:00</ReleaseDate>
         <Tags>dvdart, cover art, scraper, movingpictures</Tags>
         <Location>E:\Software\MediaPortal\DVDArt_Plugin\DVDArt_Plugin-v1.0.0.1.mpe1</Location>
