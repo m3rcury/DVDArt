@@ -180,9 +180,9 @@
         <Name>DVDArt Plugin</Name>
         <Id>f3460e10-10a7-410e-9afe-dc0a7bb35d6d</Id>
         <Author>m3rcury</Author>
-        <HomePage>http://www.team-mediaportal.com/extensions/plugins/dvdart-plugin?lang=en</HomePage>
+        <HomePage>http://www.team-mediaportal.com/extensions/dvdart-plugin?lang=en</HomePage>
         <ForumPage>http://forum.team-mediaportal.com/threads/dvdart-plugin-that-scrapes-fanart-tv-for-dvd-cover-art-of-you-movie-collection-in-movingpictures.112847/</ForumPage>
-        <UpdateUrl />
+        <UpdateUrl>http://code.google.com/p/dvdart/source/browse/trunk/DVDArt_Plugin_update.xml</UpdateUrl>
         <Version>
           <Major>1</Major>
           <Minor>0</Minor>
@@ -211,7 +211,7 @@
  If have .dll extension used like MP plugin configuration</Description>
             </SectionParam>
             <SectionParam Name="Online Screenshots">
-              <Value />
+              <Value>http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1617.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1619.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1620.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1624.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1621.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1622.jpg</Value>
               <ValueType>String</ValueType>
               <Description>Online stored screenshot urls separated by ; </Description>
             </SectionParam>
