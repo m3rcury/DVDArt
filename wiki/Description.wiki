@@ -1,0 +1,14 @@
+= Introduction =
+
+DVDArt is a new plugin that scrapes fanart.tv for DVD cover art for you movie collection in MovingPictures.
+
+
+= Details =
+
+The data driving the scraper is taken from MovingPictures, hence any corrections, (mainly missing IMDb IDs) need to be corrected in MovingPictures.
+
+Images are downloaded from Fanart.tv site. I recommend that you visit site and help out by uploading any DVD images you might have/come across so that we all enrich its content, resulting in scraper finding more images to download.
+
+- Movies with DVDArt shows movies which scraper successfully downloaded an image.
+- Importer shows movies whose DVDArt is currently being imported.
+- Movies missing DVDArt shows movies which scraper could not find any images.
