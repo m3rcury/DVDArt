@@ -9,7 +9,8 @@ Imports System.ComponentModel
 Public Class DVDArt_Process
 
     Private _delay, _scraping, _maxcpu, _missing As Integer
-    Private _lastrun As String
+    Private _checked(2) As Boolean
+    Private _lastrun, _language As String
 
     Private database, thumbs As String
     Private lv_import As New ListView
@@ -41,7 +42,9 @@ Public Class DVDArt_Process
 
         If lv_import.Items.Count > 0 Then
 
-            Dim SQLconnect As New SQLite.SQLiteConnection()
+            Dim x As Integer
+            Dim filenotexist(2), downloaded(2), try2download(2) As Boolean
+            Dim SQLconnect As New SQLiteConnection()
             Dim SQLcommand As SQLiteCommand
 
             SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
@@ -52,13 +55,22 @@ Public Class DVDArt_Process
 
             For x = 0 To (lv_import.Items.Count - 1)
 
-                SQLcommand.CommandText = "INSERT INTO processed_movies (imdb_id) VALUES(""" & lv_import.Items.Item(x).SubItems.Item(1).Text & """)"
-                SQLcommand.ExecuteNonQuery()
+                For y = 0 To 2
+                    filenotexist(y) = lv_import.Items.Item(x).SubItems.Item(y + 2).Text
+                    try2download(y) = _checked(y) And filenotexist(y)
+                Next
 
-                If DVDArt_Common.download(thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, True) Then
+                downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, True, try2download)
+
+                If downloaded(0) Or downloaded(1) Or downloaded(2) Then
                     Log.Info("DVDArt: process plugin - artwork found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
                 Else
                     Log.Info("DVDArt: process plugin - artwork not found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
+                End If
+
+                If filenotexist(0) And filenotexist(1) And filenotexist(2) Then
+                    SQLcommand.CommandText = "INSERT INTO processed_movies (imdb_id) VALUES(""" & lv_import.Items.Item(x).SubItems.Item(1).Text & """)"
+                    SQLcommand.ExecuteNonQuery()
                 End If
 
             Next
@@ -71,10 +83,11 @@ Public Class DVDArt_Process
 
     Private Sub Execute_Missing()
 
-        Dim SQLconnect As New SQLite.SQLiteConnection()
+        Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
         Dim parm As Object = "queue"
+        Dim filenotexist(2) As Boolean
 
         ' Read movingpictures database
 
@@ -94,9 +107,17 @@ Public Class DVDArt_Process
 
             If Trim(SQLreader(0)) <> "" Then
 
-                If Not FileSystem.FileExists(thumbs & "\MovingPictures\DVDArt\Thumbs\" & SQLreader(0) & ".png") Then
+                For y = 0 To 2
+                    filenotexist(y) = _checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(y, 1) & SQLreader(0) & ".png")
+                Next
+
+                If filenotexist(0) Or filenotexist(1) Or filenotexist(2) Then
                     li_import = lv_import.Items.Add(SQLreader(1))
                     li_import.SubItems.Add(SQLreader(0))
+
+                    For y = 0 To 2
+                        li_import.SubItems.Add(filenotexist(y))
+                    Next
 
                     If Not bw_import.IsBusy Then bw_import.RunWorkerAsync(parm)
                 End If
@@ -123,7 +144,7 @@ Public Class DVDArt_Process
 
     Private Sub Execute_Importer()
 
-        Dim SQLconnect As New SQLite.SQLiteConnection()
+        Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
 
@@ -209,6 +230,10 @@ Public Class DVDArt_Process
             scraping_value = XMLreader.GetValueAsString("Settings", "scraping value", "minutes")
             _missing = XMLreader.GetValueAsInt("Settings", "missing", 0)
             missing_value = XMLreader.GetValueAsString("Settings", "missing value", "disabled")
+            _checked(0) = XMLreader.GetValueAsBool("Scraper", "dvdart", False)
+            _checked(1) = XMLreader.GetValueAsBool("Scraper", "clearart", False)
+            _checked(2) = XMLreader.GetValueAsBool("Scraper", "clearlogo", False)
+            _language = XMLreader.GetValueAsString("Scraper", "language", "EN")
 
         End Using
 
@@ -253,6 +278,9 @@ Public Class DVDArt_Process
         If DVDArt_Common.Get_Paths(database, thumbs) Then
 
             Get_Settings()
+
+            'initialize common variables
+            DVDArt_Common.Initialize()
 
             wait(_delay)
 
