@@ -122,7 +122,9 @@
     <Compile Include="DVDArt_SplashScreen.Designer.vb">
       <DependentUpon>DVDArt_SplashScreen.vb</DependentUpon>
     </Compile>
-    <Compile Include="DVDArt_SplashScreen.vb" />
+    <Compile Include="DVDArt_SplashScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DVDArt.resx">

@@ -569,6 +569,7 @@ Partial Class DVDArt
         Me.cb_language.Name = "cb_language"
         Me.cb_language.Size = New System.Drawing.Size(142, 24)
         Me.cb_language.TabIndex = 7
+        Me.cb_language.Text = "English"
         Me.cb_language.Visible = False
         '
         'Label6
@@ -850,7 +851,7 @@ Partial Class DVDArt
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "DVDArt"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "DVDArt v1.0.0.3"
+        Me.Text = "DVDArt v"
         Me.cms_movies.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.tp1.ResumeLayout(False)

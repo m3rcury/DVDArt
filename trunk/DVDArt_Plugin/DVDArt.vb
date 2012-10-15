@@ -873,6 +873,8 @@ Public Class DVDArt
 
     Private Sub Set_Settings()
 
+        On Error Resume Next
+
         Using XMLwriter As MediaPortal.Profile.Settings = New MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "DVDArt_Plugin.xml"))
 
             XMLwriter.SetValue("Settings", "delay", nud_delay.Value)
@@ -953,6 +955,9 @@ Public Class DVDArt
     Private Sub DVDArt_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
 
         If DVDArt_Common.Get_Paths(database, thumbs) Then
+
+            'initialize screen variables
+            Me.Text = Me.Text & DVDArt_Common._version
 
             'show splashscreen
             Dim splash As New DVDArt_SplashScreen
