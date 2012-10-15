@@ -33,8 +33,8 @@ Namespace DVDArt_Plugin
 
         Private Sub Worker()
 
-            Dim mcp As New DVDArt_Process
-            mcp.DVDArt_Process()
+            Dim plugin As New DVDArt_Process
+            plugin.DVDArt_Process()
 
         End Sub
 
@@ -64,7 +64,7 @@ Namespace DVDArt_Plugin
 
         ' Returns the description of the plugin is shown in the plugin menu
         Public Function Description() As String Implements ISetupForm.Description
-            Return "DVDArt_Plugin complements MovingPictures by downloading DVD Art of you movies to be displayed in Fanart List View."
+            Return "DVDArt_Plugin complements MovingPictures by downloading DVD Art, Clear Art and Clear Logo of your movies to be displayed in MediaPortal."
         End Function
 
         ''' <summary>
