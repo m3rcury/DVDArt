@@ -5,7 +5,7 @@ Imports System.ComponentModel
 
 Public Class DVDArt_Common
 
-    Public Shared folder(2, 1), lang(4), langcode(4) As String
+    Public Shared _version, _plugin, folder(2, 1), lang(4), langcode(4) As String
     Public Shared WithEvents bw_download0, bw_download1, bw_download2, bw_download3, bw_download4, bw_download5 As New BackgroundWorker
 
     Public Shared Sub wait(ByVal milliseconds As Long)
@@ -309,6 +309,10 @@ Public Class DVDArt_Common
     End Function
 
     Public Shared Sub Initialize()
+
+        ' initialize details
+        _plugin = "DVDArt_Plugin"
+        _version = "1.0.0.4"
 
         ' initialize folder paths
         folder(0, 0) = "\MovingPictures\DVDArt\FullSize\"
