@@ -956,9 +956,6 @@ Public Class DVDArt
 
         If DVDArt_Common.Get_Paths(database, thumbs) Then
 
-            'initialize screen variables
-            Me.Text = Me.Text & DVDArt_Common._version
-
             'show splashscreen
             Dim splash As New DVDArt_SplashScreen
             splash.Show()

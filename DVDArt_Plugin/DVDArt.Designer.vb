@@ -851,7 +851,7 @@ Partial Class DVDArt
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "DVDArt"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "DVDArt v"
+        Me.Text = "DVDArt v1.0.0.4"
         Me.cms_movies.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.tp1.ResumeLayout(False)
