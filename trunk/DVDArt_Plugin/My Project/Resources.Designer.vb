@@ -60,23 +60,23 @@ Namespace My.Resources
             End Set
         End Property
         
-        Friend ReadOnly Property armageddon_4f98f92969453() As System.Drawing.Bitmap
+        Friend ReadOnly Property armageddon_clearart() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("armageddon_4f98f92969453", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("armageddon_clearart", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
-        Friend ReadOnly Property armageddon_504291f745a48() As System.Drawing.Bitmap
+        Friend ReadOnly Property armageddon_clearlogo() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("armageddon_504291f745a48", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("armageddon_clearlogo", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
-        Friend ReadOnly Property armageddon_5046201634d55() As System.Drawing.Bitmap
+        Friend ReadOnly Property armageddon_dvdart() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("armageddon_5046201634d55", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("armageddon_dvdart", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -92,6 +92,13 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("compress", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property convert() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("convert", resourceCulture)
+                Return CType(obj,Byte())
             End Get
         End Property
         
@@ -113,6 +120,27 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("download", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property dvdart() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("dvdart", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property dvdart_mask() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("dvdart_mask", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property ICSharpCode_SharpZipLib() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ICSharpCode_SharpZipLib", resourceCulture)
+                Return CType(obj,Byte())
             End Get
         End Property
         
@@ -140,6 +168,20 @@ Namespace My.Resources
         Friend ReadOnly Property movies() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("movies", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property preview() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("preview", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property process() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("process", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -175,6 +217,13 @@ Namespace My.Resources
         Friend ReadOnly Property tick() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("tick", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property upload() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("upload", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

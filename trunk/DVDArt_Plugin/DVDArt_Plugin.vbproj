@@ -62,12 +62,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\Core.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resources\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -93,7 +98,19 @@
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="DVDArt_Common.vb" />
+    <Compile Include="DVDArt_ManualUpload.Designer.vb">
+      <DependentUpon>DVDArt_ManualUpload.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DVDArt_ManualUpload.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DVDArt_Plugin.vb" />
+    <Compile Include="DVDArt_Preview.Designer.vb">
+      <DependentUpon>DVDArt_Preview.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DVDArt_Preview.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DVDArt_Process.vb" />
     <Compile Include="DVDArt.vb">
       <SubType>Form</SubType>
@@ -128,6 +145,12 @@
     <EmbeddedResource Include="DVDArt.resx">
       <DependentUpon>DVDArt.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DVDArt_ManualUpload.resx">
+      <DependentUpon>DVDArt_ManualUpload.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DVDArt_Preview.resx">
+      <DependentUpon>DVDArt_Preview.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -151,14 +174,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\convert.zip" />
     <None Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\dvdart.png" />
+    <Content Include="Resources\dvdart_mask.png" />
+    <Content Include="Resources\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="Resources\process.png" />
+    <Content Include="Resources\upload.png" />
     <None Include="Resources\compress.png" />
     <None Include="Resources\movies.png" />
     <None Include="Resources\delete.png" />
     <None Include="bin\Release\Interop.Shell32.dll" />
     <Content Include="Resources\Interop.Shell32.dll" />
+    <Content Include="Resources\preview.png" />
     <Content Include="Resources\System.Data.SQLite.dll" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\cross.png" />
@@ -171,9 +201,9 @@
     <EmbeddedResource Include="DVDArt_Plugin_enabled.png">
       <CustomToolNamespace>DVDArt_Plugin</CustomToolNamespace>
     </EmbeddedResource>
-    <None Include="Resources\armageddon-4f98f92969453.png" />
-    <None Include="Resources\armageddon-504291f745a48.png" />
-    <None Include="Resources\armageddon-5046201634d55.png" />
+    <None Include="Resources\armageddon_dvdart.png" />
+    <None Include="Resources\armageddon_clearlogo.png" />
+    <None Include="Resources\armageddon_clearart.png" />
     <None Include="Resources\arrow.png" />
     <Content Include="Resources\movies.ico" />
     <None Include="Resources\rescan_movies.png" />

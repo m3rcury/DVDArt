@@ -6,8 +6,9 @@ Imports MediaPortal.Configuration
 
 Public Class DVDArt
 
-    Private database, thumbs, current_imdb_id, _lastrun As String
-    Private checked(2) As Boolean
+    Public Shared checked(2) As Boolean
+
+    Private database, thumbs, current_imdb_id, _lang, _lastrun As String
     Private l_import_queue As New List(Of String)
     Private l_import_index As New List(Of Integer)
     Private lv_url_dvdart, lv_url_clearart, lv_url_clearlogo As New ListView
@@ -59,7 +60,7 @@ Public Class DVDArt
 
     End Sub
 
-    Public Function FileInUse(ByVal sFile As String) As Boolean
+    Private Function FileInUse(ByVal sFile As String) As Boolean
 
         Dim inuse As Boolean = False
 
@@ -77,29 +78,6 @@ Public Class DVDArt
 
     End Function
 
-    Public Function GetSize(ByVal path As String, ByVal image As String) As String
-
-        Dim size As String = Nothing
-        Dim shell As New Shell32.Shell
-        Dim folder = shell.NameSpace(path)
-
-        Dim columns As New Dictionary(Of String, Integer)
-
-        For i As Integer = 0 To Short.MaxValue
-            Dim header = folder.GetDetailsOf(folder.Items, i)
-            If String.IsNullOrEmpty(header) Then
-                Exit For 'no more columns
-            Else
-                columns(header) = i
-            End If
-        Next
-
-        If columns.ContainsKey("Dimensions") Then size = folder.GetDetailsOf(folder.ParseName(image), columns("Dimensions")).Replace(" ", "")
-
-        Return size
-
-    End Function
-
     Private Sub import_timer_tick() Handles t_import_timer.Tick
 
         If l_import_queue.Any And Not bw_import.IsBusy Then
@@ -113,7 +91,7 @@ Public Class DVDArt
         For Each filePath As String In IO.Directory.GetFiles(thumbs & DVDArt_Common.folder(0, 0))
 
             If Not FileInUse(filePath) Then
-                If GetSize(thumbs & DVDArt_Common.folder(0, 0), IO.Path.GetFileName(filePath)) <> "‪500x500‬" Then DVDArt_Common.CompressImage(filePath)
+                If DVDArt_Common.GetSize(thumbs & DVDArt_Common.folder(0, 0), IO.Path.GetFileName(filePath)) <> "500x500" Then DVDArt_Common.Resize(filePath)
             End If
 
         Next
@@ -156,7 +134,7 @@ Public Class DVDArt
                         filenotexist(y) = checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
                     Next
 
-                    downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, True, filenotexist)
+                    downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, _lang)
 
                     For y = 0 To 2
 
@@ -239,7 +217,7 @@ Public Class DVDArt
                         filenotexist(y) = checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(y, 1) & imdb_id & ".png")
                     Next
 
-                    downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, imdb_id, True, filenotexist)
+                    downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, imdb_id, False, filenotexist, _lang)
 
                     For y = 0 To 2
 
@@ -249,7 +227,6 @@ Public Class DVDArt
                             addedmovies = addedmovies Or (lv_movies.FindItemWithText(title).Text <> Nothing)
 
                             If Not addedmovies Then
-
                                 li_movies = lv_movies.Items.Add(title)
                                 li_movies.SubItems.Add(imdb_id)
                                 addedmovies = True
@@ -719,10 +696,13 @@ Public Class DVDArt
                     load_image(pb_dvdart, thumbpath)
 
                     If Not pb_dvdart.Image Is Nothing Then
-                        l_size.Text = GetSize(thumbs & DVDArt_Common.folder(x, 0), current_imdb_id & ".png")
-                        If l_size.Text = "‪500x500‬" Then b_compress.Visible = False Else b_compress.Visible = True
+                        l_size.Text = DVDArt_Common.GetSize(thumbs & DVDArt_Common.folder(x, 0), current_imdb_id & ".png")
+                        If l_size.Text = "500x500" Then b_compress.Visible = False Else b_compress.Visible = True
+                        b_preview.Visible = Not b_compress.Visible
                     Else
                         l_size.Text = Nothing
+                        b_compress.Visible = False
+                        b_preview.Visible = False
                     End If
 
                 ElseIf x = 1 Then
@@ -792,13 +772,42 @@ Public Class DVDArt
             If Not bw_import.IsBusy Then
                 FTV_api_connector("queue", Nothing, "import")
             End If
+        ElseIf e.ClickedItem.Text = "Manually Upload Artwork" Then
+            For x As Integer = 0 To (lv_missing.SelectedItems.Count - 1)
+
+                Dim title As String = lv_missing.SelectedItems(x).SubItems(0).Text
+                Dim imdb_id As String = lv_missing.SelectedItems(x).SubItems.Item(4).Text
+                Dim upload As New DVDArt_ManualUpload(imdb_id, title)
+                upload.ShowDialog()
+
+                If FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, 1) & imdb_id & ".png") Or _
+                   FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, 1) & imdb_id & ".png") Or _
+                   FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, 1) & imdb_id & ".png") Then
+
+                    li_import = lv_import.Items.Add(title)
+                    li_import.SubItems.Add(imdb_id)
+                    l_import_queue.Add(imdb_id & "|" & title)
+                    l_import_index.Add(lv_import.Items.Count - 1)
+
+                    lv_missing.Items.Remove(lv_missing.SelectedItems(x))
+
+                    If lv_movies.FindItemWithText(title) Is Nothing Then
+                        li_movies = lv_movies.Items.Add(title)
+                        li_movies.SubItems.Add(imdb_id)
+                    End If
+
+                End If
+
+            Next
         End If
 
     End Sub
 
     Private Sub cms_import_Click(ByVal sender As Object, ByVal e As ToolStripItemClickedEventArgs) Handles cms_import.ItemClicked
 
-        Restart_Importer()
+        If e.ClickedItem.Text = "Restart Importer" Then
+            Restart_Importer()
+        End If
 
     End Sub
 
@@ -893,6 +902,8 @@ Public Class DVDArt
 
         End Using
 
+        MediaPortal.Profile.Settings.SaveCache()
+
     End Sub
 
     Private Sub Get_Settings()
@@ -909,7 +920,8 @@ Public Class DVDArt
             cb_DVDArt.Checked = XMLreader.GetValueAsBool("Scraper", "dvdart", False)
             cb_ClearArt.Checked = XMLreader.GetValueAsBool("Scraper", "clearart", False)
             cb_ClearLogo.Checked = XMLreader.GetValueAsBool("Scraper", "clearlogo", False)
-            cb_language.Text = DVDArt_Common.lang(Array.IndexOf(DVDArt_Common.langcode, XMLreader.GetValueAsString("Scraper", "language", "EN")))
+            _lang = XMLreader.GetValueAsString("Scraper", "language", "##")
+            cb_language.Text = DVDArt_Common.lang(Array.IndexOf(DVDArt_Common.langcode, _lang))
             _lastrun = XMLreader.GetValueAsString("Settings", "lastrun", Nothing)
 
         End Using
@@ -990,6 +1002,10 @@ Public Class DVDArt
             dll = IO.Directory.GetCurrentDirectory() & "\Interop.Shell32.dll"
             If Not FileSystem.FileExists(dll) Then FileSystem.WriteAllBytes(dll, My.Resources.Interop_Shell32, False)
 
+            ' extract ICSharpCode.SharpZipLib.dll from resources to application library
+            dll = IO.Directory.GetCurrentDirectory() & "\ICSharpCode.SharpZipLib.dll"
+            If Not FileSystem.FileExists(dll) Then FileSystem.WriteAllBytes(dll, My.Resources.ICSharpCode_SharpZipLib, False)
+
             Create_Folder_Structure()
             Get_Settings()
             Load_Movie_List()
@@ -1054,11 +1070,13 @@ Public Class DVDArt
 
     Private Sub b_compress_Click(sender As System.Object, e As System.EventArgs) Handles b_compress.Click
 
-        DVDArt_Common.CompressImage(thumbs & DVDArt_Common.folder(0, 0) & current_imdb_id & ".png")
+        DVDArt_Common.Resize(thumbs & DVDArt_Common.folder(0, 0) & current_imdb_id & ".png")
 
-        l_size.Text = GetSize(thumbs & DVDArt_Common.folder(0, 0), current_imdb_id & ".png")
+        l_size.Text = DVDArt_Common.GetSize(thumbs & DVDArt_Common.folder(0, 0), current_imdb_id & ".png")
 
-        If l_size.Text = "‪500x500‬" Then b_compress.Visible = False Else b_compress.Visible = True
+        If l_size.Text = "500x500" Then b_compress.Visible = False Else b_compress.Visible = True
+
+        b_preview.Visible = Not b_compress.Visible
 
     End Sub
 
@@ -1080,6 +1098,11 @@ Public Class DVDArt
             pb_clearlogo.Tag = Nothing
             b_deletelogo.Visible = False
         End If
+    End Sub
+
+    Private Sub b_preview_Click(sender As System.Object, e As System.EventArgs) Handles b_preview.Click
+        Dim preview As New DVDArt_Preview(thumbs & DVDArt_Common.folder(0, 0) & current_imdb_id & ".png")
+        preview.Show()
     End Sub
 
 End Class

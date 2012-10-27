@@ -62,7 +62,7 @@ Partial Class DVDArt_SplashScreen
         Me.l_version.Name = "l_version"
         Me.l_version.Size = New System.Drawing.Size(46, 13)
         Me.l_version.TabIndex = 2
-        Me.l_version.Text = "v1.0.0.4"
+        Me.l_version.Text = "v1.0.0.5"
         Me.l_version.UseWaitCursor = True
         '
         'l_copyright

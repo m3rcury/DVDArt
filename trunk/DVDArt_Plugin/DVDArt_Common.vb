@@ -12,9 +12,9 @@ Public Class DVDArt_Common
         System.Threading.Thread.Sleep(milliseconds)
     End Sub
 
-    Public Shared Function parse(ByVal jsonresponse As String) As Array
+    Public Shared Function parse(ByVal jsonresponse As String, Optional ByVal language As String = "##") As Array
 
-        Dim details(5, 0), parsestring(2), parseHD As String
+        Dim details(5, 0), returndetails(5, 0), parsestring(2), parseHD As String
         Dim starting(2), startHD, startp, endp, len, x, y, i, j As Integer
 
         ' check if there are HD logos and if yes, store in a temporary variable to later on merge with movielogos
@@ -23,7 +23,6 @@ Public Class DVDArt_Common
 
         If startHD > 0 Then
             parseHD = Mid(jsonresponse, startHD, InStr(startHD, jsonresponse, "]") - startHD + 1)
-            'jsonresponse = jsonresponse.Replace("hdmovielogo", "movielogo")
         End If
 
         ' find the starting place of the respective sections
@@ -118,7 +117,26 @@ Public Class DVDArt_Common
 
         Next
 
-        Return details
+        If language <> "##" Then
+
+            For x = 0 To (details.Length / 6) - 1
+                For y = 1 To 5 Step 2
+                    If InStr(details(y, x), "LANG:" & language) > 0 Then
+
+                        For i = 0 To 5
+                            returndetails(i, 0) = details(i, x)
+                        Next
+
+                        Return returndetails
+
+                    End If
+                Next
+            Next
+        Else
+            returndetails = details
+        End If
+
+        Return returndetails
 
     End Function
 
@@ -171,7 +189,7 @@ Public Class DVDArt_Common
     End Sub
 
     Public Shared Function download(ByVal thumbs As String, ByVal folder(,) As String, ByVal imdb_id As String, ByVal overwrite As Boolean, _
-                                    ByVal try2download() As Boolean) As Array
+                                    ByVal try2download() As Boolean, Optional ByVal language As String = "##") As Array
 
         Dim WebClient As New System.Net.WebClient
         Dim moviediscurl(5, 0) As String
@@ -181,11 +199,15 @@ Public Class DVDArt_Common
 
         Dim fullpath, thumbpath, jsonresponse As String
 
-        jsonresponse = JSON_request(imdb_id, "1")
+        If language = "##" Then
+            jsonresponse = JSON_request(imdb_id, "1")
+        Else
+            jsonresponse = JSON_request(imdb_id, "2")
+        End If
 
         If jsonresponse <> "null" Then
 
-            moviediscurl = parse(jsonresponse)
+            moviediscurl = parse(jsonresponse, language)
 
             For y = 0 To 2
 
@@ -239,9 +261,35 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Sub CompressImage(ByVal path As String)
+    Public Shared Function GetSize(ByVal path As String, ByVal image As String) As String
 
-        Dim factor As Decimal
+        Dim size As String = String.Empty
+        Dim shell As New Shell32.Shell
+        Dim folder = shell.NameSpace(path)
+
+        Dim columns As New Dictionary(Of String, Integer)
+
+        For i As Integer = 0 To Short.MaxValue
+            Dim header = folder.GetDetailsOf(folder.Items, i)
+            If String.IsNullOrEmpty(header) Then
+                Exit For 'no more columns
+            Else
+                columns(header) = i
+            End If
+        Next
+
+        If columns.ContainsKey("Dimensions") Then
+            size = folder.GetDetailsOf(folder.ParseName(image), columns("Dimensions")).Replace(" ", String.Empty)
+            size = Mid(size, 2, size.Length - 2)
+        End If
+
+        Return size
+
+    End Function
+
+    Public Shared Sub Resize(ByVal path As String, Optional ByVal width As Integer = 500, Optional ByVal height As Integer = 500)
+
+        Dim hfactor, wfactor As Decimal
         Dim image As Image
         Dim ImageInBytes() As Byte
         Dim stream As System.IO.MemoryStream
@@ -250,9 +298,10 @@ Public Class DVDArt_Common
         stream = New System.IO.MemoryStream(ImageInBytes)
         image = image.FromStream(stream)
 
-        factor = 500 / image.Size.Height
+        hfactor = height / image.Size.Height
+        wfactor = width / image.Size.Width
 
-        image = New Bitmap(image, New Size(image.Size.Width * factor, image.Size.Height * factor))
+        image = New Bitmap(image, New Size(image.Size.Width * wfactor, image.Size.Height * hfactor))
         image.Save(path)
 
     End Sub
@@ -320,7 +369,7 @@ Public Class DVDArt_Common
 
         ' initialize language array
 
-        lang = {"English", "German", "French", "Italian", "Other"}
+        lang = {"English", "Deutsch", "Française", "Italiano", "Any"}
         langcode = {"EN", "DE", "FR", "IT", "##"}
 
     End Sub

@@ -60,7 +60,7 @@ Public Class DVDArt_Process
                     try2download(y) = _checked(y) And filenotexist(y)
                 Next
 
-                downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, True, try2download)
+                downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, True, try2download, _language)
 
                 If downloaded(0) Or downloaded(1) Or downloaded(2) Then
                     Log.Info("DVDArt: process plugin - artwork found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
@@ -233,7 +233,7 @@ Public Class DVDArt_Process
             _checked(0) = XMLreader.GetValueAsBool("Scraper", "dvdart", False)
             _checked(1) = XMLreader.GetValueAsBool("Scraper", "clearart", False)
             _checked(2) = XMLreader.GetValueAsBool("Scraper", "clearlogo", False)
-            _language = XMLreader.GetValueAsString("Scraper", "language", "EN")
+            _language = XMLreader.GetValueAsString("Scraper", "language", "##")
 
         End Using
 
