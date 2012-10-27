@@ -72,19 +72,21 @@
           <Major>1</Major>
           <Minor>0</Minor>
           <Build>0</Build>
-          <Revision>4</Revision>
+          <Revision>5</Revision>
         </Version>
         <ExtensionDescription>This plugin scans your MovingPictures database and download DVD Art, Clear Art and Clear Logo from the fanart.tv website.</ExtensionDescription>
         <VersionDescription>A scraper that srapes fanart.tv for DVD cover art, Clear Art and Clear Logo of you movie collection in MovingPictures.
 
-The scraper now also has a settings tab where you set its behaviour.
+The scraper now also has a settings tab where you set its behaviour, select what to scrape and choose preferred language for the Importer.
 
-Also, it can rescrape movies which originally were missing DVD cover art just in case new ones were loaded.</VersionDescription>
+You have also the possibility to upload images manually and images can be of any type.  The plugin will try to add the required transparency.
+
+The plugin can be set to rescrape movies which originally were missing any of the artwork just in case new ones were loaded.</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
         <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
-        <ReleaseDate>2012-10-15T23:39:41</ReleaseDate>
-        <Tags>dvdart, cover art, scraper, movingpictures</Tags>
-        <Location>E:\Software\MediaPortal\DVDArt_Plugin\DVDArt_Plugin-v1.0.0.4.mpe1</Location>
+        <ReleaseDate>2012-10-27T23:39:41</ReleaseDate>
+        <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures</Tags>
+        <Location>E:\Software\MediaPortal\DVDArt_Plugin\DVDArt_Plugin-v1.0.0.5.mpe1</Location>
         <Params>
           <Items>
             <SectionParam Name="Online Icon">
@@ -100,7 +102,7 @@ Also, it can rescrape movies which originally were missing DVD cover art just in
  If have .dll extension used like MP plugin configuration</Description>
             </SectionParam>
             <SectionParam Name="Online Screenshots">
-              <Value>http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1638.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1639.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1640.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1620.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1641.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1642.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1621.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1622.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1623.jpg</Value>
+              <Value>http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1638.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1639.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1640.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1620.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1641.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1642.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1678.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1679.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1621.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1622.jpg;http://www.team-mediaportal.com/components/com_mtree/img/listings/m/1623.jpg</Value>
               <ValueType>String</ValueType>
               <Description>Online stored screenshot urls separated by ; </Description>
             </SectionParam>

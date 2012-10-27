@@ -36,6 +36,7 @@ Partial Class DVDArt
         Me.IMDb_id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tbc_movies = New System.Windows.Forms.TabControl()
         Me.tp_DVDArt = New System.Windows.Forms.TabPage()
+        Me.b_preview = New System.Windows.Forms.Button()
         Me.b_compress = New System.Windows.Forms.Button()
         Me.l_size = New System.Windows.Forms.Label()
         Me.lv_dvdart = New System.Windows.Forms.ListView()
@@ -66,8 +67,9 @@ Partial Class DVDArt
         Me.m_ClearLogo = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.m_IMDb_id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.cms_missing = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.SendToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RescanToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SendToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RescanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UploadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tp4 = New System.Windows.Forms.TabPage()
         Me.gb2 = New System.Windows.Forms.GroupBox()
         Me.cb_language = New System.Windows.Forms.ComboBox()
@@ -229,6 +231,7 @@ Partial Class DVDArt
         'tp_DVDArt
         '
         Me.tp_DVDArt.BackColor = System.Drawing.SystemColors.Control
+        Me.tp_DVDArt.Controls.Add(Me.b_preview)
         Me.tp_DVDArt.Controls.Add(Me.b_compress)
         Me.tp_DVDArt.Controls.Add(Me.l_size)
         Me.tp_DVDArt.Controls.Add(Me.lv_dvdart)
@@ -241,10 +244,20 @@ Partial Class DVDArt
         Me.tp_DVDArt.TabIndex = 0
         Me.tp_DVDArt.Text = "DVDArt"
         '
+        'b_preview
+        '
+        Me.b_preview.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
+        Me.b_preview.Location = New System.Drawing.Point(234, 7)
+        Me.b_preview.Name = "b_preview"
+        Me.b_preview.Size = New System.Drawing.Size(40, 40)
+        Me.b_preview.TabIndex = 17
+        Me.b_preview.UseVisualStyleBackColor = True
+        Me.b_preview.Visible = False
+        '
         'b_compress
         '
         Me.b_compress.Image = Global.DVDArt_Plugin.My.Resources.Resources.compress
-        Me.b_compress.Location = New System.Drawing.Point(233, 3)
+        Me.b_compress.Location = New System.Drawing.Point(234, 7)
         Me.b_compress.Name = "b_compress"
         Me.b_compress.Size = New System.Drawing.Size(40, 40)
         Me.b_compress.TabIndex = 16
@@ -418,7 +431,7 @@ Partial Class DVDArt
         Me.lv_import.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_import.Location = New System.Drawing.Point(8, 8)
         Me.lv_import.Name = "lv_import"
-        Me.lv_import.Size = New System.Drawing.Size(595, 550)
+        Me.lv_import.Size = New System.Drawing.Size(628, 550)
         Me.lv_import.StateImageList = Me.il_state
         Me.lv_import.TabIndex = 9
         Me.lv_import.UseCompatibleStateImageBehavior = False
@@ -427,7 +440,7 @@ Partial Class DVDArt
         'i_Movie
         '
         Me.i_Movie.Text = "Movie"
-        Me.i_Movie.Width = 500
+        Me.i_Movie.Width = 533
         '
         'i_IMDb_id
         '
@@ -475,7 +488,7 @@ Partial Class DVDArt
         Me.lv_missing.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_missing.Location = New System.Drawing.Point(8, 8)
         Me.lv_missing.Name = "lv_missing"
-        Me.lv_missing.Size = New System.Drawing.Size(595, 550)
+        Me.lv_missing.Size = New System.Drawing.Size(628, 550)
         Me.lv_missing.SmallImageList = Me.il_state
         Me.lv_missing.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_missing.TabIndex = 10
@@ -485,7 +498,7 @@ Partial Class DVDArt
         'm_Movie
         '
         Me.m_Movie.Text = "Movie"
-        Me.m_Movie.Width = 344
+        Me.m_Movie.Width = 377
         '
         'm_DVDArt
         '
@@ -511,25 +524,33 @@ Partial Class DVDArt
         '
         'cms_missing
         '
-        Me.cms_missing.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SendToolStripMenuItem1, Me.RescanToolStripMenuItem1})
+        Me.cms_missing.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SendToolStripMenuItem, Me.RescanToolStripMenuItem, Me.UploadToolStripMenuItem})
         Me.cms_missing.Name = "cms_missing"
-        Me.cms_missing.Size = New System.Drawing.Size(179, 48)
+        Me.cms_missing.Size = New System.Drawing.Size(210, 70)
         '
-        'SendToolStripMenuItem1
+        'SendToolStripMenuItem
         '
-        Me.SendToolStripMenuItem1.Image = Global.DVDArt_Plugin.My.Resources.Resources.arrow
-        Me.SendToolStripMenuItem1.Name = "SendToolStripMenuItem1"
-        Me.SendToolStripMenuItem1.Size = New System.Drawing.Size(178, 22)
-        Me.SendToolStripMenuItem1.Text = "Send to importer"
-        Me.SendToolStripMenuItem1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.SendToolStripMenuItem.Image = Global.DVDArt_Plugin.My.Resources.Resources.arrow
+        Me.SendToolStripMenuItem.Name = "SendToolStripMenuItem"
+        Me.SendToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.SendToolStripMenuItem.Text = "Send to importer"
+        Me.SendToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'RescanToolStripMenuItem1
+        'RescanToolStripMenuItem
         '
-        Me.RescanToolStripMenuItem1.Image = Global.DVDArt_Plugin.My.Resources.Resources.rescan_movies
-        Me.RescanToolStripMenuItem1.Name = "RescanToolStripMenuItem1"
-        Me.RescanToolStripMenuItem1.Size = New System.Drawing.Size(178, 22)
-        Me.RescanToolStripMenuItem1.Text = "Rescan ALL missing"
-        Me.RescanToolStripMenuItem1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.RescanToolStripMenuItem.Image = Global.DVDArt_Plugin.My.Resources.Resources.rescan_movies
+        Me.RescanToolStripMenuItem.Name = "RescanToolStripMenuItem"
+        Me.RescanToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.RescanToolStripMenuItem.Text = "Rescan ALL missing"
+        Me.RescanToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'UploadToolStripMenuItem
+        '
+        Me.UploadToolStripMenuItem.Image = Global.DVDArt_Plugin.My.Resources.Resources.upload
+        Me.UploadToolStripMenuItem.Name = "UploadToolStripMenuItem"
+        Me.UploadToolStripMenuItem.Size = New System.Drawing.Size(209, 22)
+        Me.UploadToolStripMenuItem.Text = "Manually Upload Artwork"
+        Me.UploadToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'tp4
         '
@@ -564,27 +585,25 @@ Partial Class DVDArt
         'cb_language
         '
         Me.cb_language.FormattingEnabled = True
-        Me.cb_language.Items.AddRange(New Object() {"English", "German", "French", "Italian", "Other"})
+        Me.cb_language.Items.AddRange(New Object() {"English", "Deutsch", "Française", "Italiano", "Any"})
         Me.cb_language.Location = New System.Drawing.Point(273, 251)
         Me.cb_language.Name = "cb_language"
         Me.cb_language.Size = New System.Drawing.Size(142, 24)
         Me.cb_language.TabIndex = 7
-        Me.cb_language.Text = "English"
-        Me.cb_language.Visible = False
+        Me.cb_language.Text = "Any"
         '
         'Label6
         '
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(13, 254)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(124, 16)
+        Me.Label6.Size = New System.Drawing.Size(194, 16)
         Me.Label6.TabIndex = 6
-        Me.Label6.Text = "Preferred language"
-        Me.Label6.Visible = False
+        Me.Label6.Text = "Preferred language for Importer"
         '
         'pb2
         '
-        Me.pb2.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_5046201634d55
+        Me.pb2.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_clearart
         Me.pb2.Location = New System.Drawing.Point(273, 134)
         Me.pb2.Name = "pb2"
         Me.pb2.Size = New System.Drawing.Size(100, 56)
@@ -594,7 +613,7 @@ Partial Class DVDArt
         '
         'pb3
         '
-        Me.pb3.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_504291f745a48
+        Me.pb3.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_clearlogo
         Me.pb3.Location = New System.Drawing.Point(273, 196)
         Me.pb3.Name = "pb3"
         Me.pb3.Size = New System.Drawing.Size(100, 39)
@@ -604,7 +623,7 @@ Partial Class DVDArt
         '
         'pb1
         '
-        Me.pb1.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_4f98f92969453
+        Me.pb1.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_dvdart
         Me.pb1.Location = New System.Drawing.Point(273, 28)
         Me.pb1.Name = "pb1"
         Me.pb1.Size = New System.Drawing.Size(100, 100)
@@ -848,10 +867,11 @@ Partial Class DVDArt
         Me.Controls.Add(Me.l_movingpictures)
         Me.Controls.Add(Me.pbFTV_Logo)
         Me.Controls.Add(Me.Label1)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "DVDArt"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "DVDArt v1.0.0.4"
+        Me.Text = "DVDArt v1.0.0.5"
         Me.cms_movies.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.tp1.ResumeLayout(False)
@@ -897,8 +917,8 @@ Partial Class DVDArt
     Friend WithEvents SendToImporterToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents RescanAllToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ChangeIMDBTMDBNumberToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents SendToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents RescanToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SendToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RescanToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents bw_import As System.ComponentModel.BackgroundWorker
     Friend WithEvents lv_import As System.Windows.Forms.ListView
     Friend WithEvents il_state As System.Windows.Forms.ImageList
@@ -911,7 +931,6 @@ Partial Class DVDArt
     Friend WithEvents lv_missing As System.Windows.Forms.ListView
     Friend WithEvents m_Movie As System.Windows.Forms.ColumnHeader
     Friend WithEvents m_IMDb_id As System.Windows.Forms.ColumnHeader
-    Friend WithEvents lv_movies As System.Windows.Forms.ListView
     Friend WithEvents Movie As System.Windows.Forms.ColumnHeader
     Friend WithEvents IMDb_id As System.Windows.Forms.ColumnHeader
     Friend WithEvents tp4 As System.Windows.Forms.TabPage
@@ -957,5 +976,8 @@ Partial Class DVDArt
     Friend WithEvents b_deleteart As System.Windows.Forms.Button
     Friend WithEvents b_deletelogo As System.Windows.Forms.Button
     Friend WithEvents CompressToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents b_preview As System.Windows.Forms.Button
+    Friend WithEvents UploadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents lv_movies As System.Windows.Forms.ListView
 
 End Class
