@@ -108,7 +108,7 @@ Namespace DVDArt_Plugin
         Public Sub ShowPlugin() Implements MediaPortal.GUI.Library.ISetupForm.ShowPlugin
 
             'Using DVDArt_PluginForm As Form = New Global.DVDArt_Plugin.DVDArt_PluginForm(_database, _thumbs, _chkbox)
-            Using DVDArt_PluginForm As Form = New Global.DVDArt_Plugin.DVDArt()
+            Using DVDArt_PluginForm As Form = New Global.DVDArt_Plugin.DVDArt_GUI()
                 DVDArt_PluginForm.ShowDialog()
             End Using
 

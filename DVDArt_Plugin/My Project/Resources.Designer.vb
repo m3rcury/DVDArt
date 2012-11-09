@@ -102,6 +102,13 @@ Namespace My.Resources
             End Get
         End Property
         
+        Friend ReadOnly Property convert1() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("convert1", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
         Friend ReadOnly Property cross() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("cross", resourceCulture)
@@ -172,6 +179,13 @@ Namespace My.Resources
             End Get
         End Property
         
+        Friend ReadOnly Property movingpictures() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("movingpictures", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
         Friend ReadOnly Property preview() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("preview", resourceCulture)
@@ -200,13 +214,6 @@ Namespace My.Resources
             End Get
         End Property
         
-        Friend ReadOnly Property splash_small_transparent() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("splash_small_transparent", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
         Friend ReadOnly Property System_Data_SQLite() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("System_Data_SQLite", resourceCulture)
@@ -217,6 +224,13 @@ Namespace My.Resources
         Friend ReadOnly Property tick() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("tick", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property tvseries() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("tvseries", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

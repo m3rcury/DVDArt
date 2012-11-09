@@ -112,11 +112,11 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DVDArt_Process.vb" />
-    <Compile Include="DVDArt.vb">
+    <Compile Include="DVDArt_GUI.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DVDArt.Designer.vb">
-      <DependentUpon>DVDArt.vb</DependentUpon>
+    <Compile Include="DVDArt_GUI.Designer.vb">
+      <DependentUpon>DVDArt_GUI.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -142,8 +142,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DVDArt.resx">
-      <DependentUpon>DVDArt.vb</DependentUpon>
+    <EmbeddedResource Include="DVDArt_GUI.resx">
+      <DependentUpon>DVDArt_GUI.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DVDArt_ManualUpload.resx">
       <DependentUpon>DVDArt_ManualUpload.vb</DependentUpon>
@@ -178,10 +178,13 @@
     <None Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\convert.png" />
     <Content Include="Resources\dvdart.png" />
     <Content Include="Resources\dvdart_mask.png" />
     <Content Include="Resources\ICSharpCode.SharpZipLib.dll" />
+    <None Include="Resources\movingpictures.png" />
     <Content Include="Resources\process.png" />
+    <Content Include="Resources\tvseries.png" />
     <Content Include="Resources\upload.png" />
     <None Include="Resources\compress.png" />
     <None Include="Resources\movies.png" />
@@ -192,7 +195,6 @@
     <Content Include="Resources\System.Data.SQLite.dll" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\cross.png" />
-    <None Include="Resources\splash_small_transparent.png" />
     <None Include="Resources\restart.png" />
     <None Include="Resources\download.png" />
     <EmbeddedResource Include="DVDArt_Plugin_disabled.png">
