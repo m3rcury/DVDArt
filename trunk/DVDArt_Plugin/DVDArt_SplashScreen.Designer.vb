@@ -22,25 +22,13 @@ Partial Class DVDArt_SplashScreen
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.l_plugin = New System.Windows.Forms.Label()
         Me.l_version = New System.Windows.Forms.Label()
         Me.l_copyright = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.BackColor = System.Drawing.Color.White
-        Me.PictureBox1.Image = Global.DVDArt_Plugin.My.Resources.Resources.movies
-        Me.PictureBox1.Location = New System.Drawing.Point(13, 13)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(128, 128)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 0
-        Me.PictureBox1.TabStop = False
-        Me.PictureBox1.UseWaitCursor = True
         '
         'l_plugin
         '
@@ -62,7 +50,7 @@ Partial Class DVDArt_SplashScreen
         Me.l_version.Name = "l_version"
         Me.l_version.Size = New System.Drawing.Size(46, 13)
         Me.l_version.TabIndex = 2
-        Me.l_version.Text = "v1.0.0.5"
+        Me.l_version.Text = "v1.0.0.6"
         Me.l_version.UseWaitCursor = True
         '
         'l_copyright
@@ -86,6 +74,18 @@ Partial Class DVDArt_SplashScreen
         Me.GroupBox1.TabIndex = 5
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.UseWaitCursor = True
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.BackColor = System.Drawing.Color.White
+        Me.PictureBox1.Image = Global.DVDArt_Plugin.My.Resources.Resources.movies
+        Me.PictureBox1.Location = New System.Drawing.Point(13, 13)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(128, 128)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 0
+        Me.PictureBox1.TabStop = False
+        Me.PictureBox1.UseWaitCursor = True
         '
         'DVDArt_SplashScreen
         '

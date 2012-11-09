@@ -1,25 +1,33 @@
 ﻿Imports Microsoft.VisualBasic.FileIO
 Imports MediaPortal.Configuration
+Imports MediaPortal.GUI.Library
 Imports System.Data.SQLite
 Imports System.ComponentModel
 
 Public Class DVDArt_Common
 
-    Public Shared folder(2, 1), lang(4), langcode(4) As String
+    Public Shared folder(1, 2, 1), lang(4), langcode(4) As String
     Public Shared WithEvents bw_download0, bw_download1, bw_download2, bw_download3, bw_download4, bw_download5 As New BackgroundWorker
+    Public Shared _temp As String = Environ("temp")
 
     Public Shared Sub wait(ByVal milliseconds As Long)
         System.Threading.Thread.Sleep(milliseconds)
     End Sub
 
-    Public Shared Function parse(ByVal jsonresponse As String, Optional ByVal language As String = "##") As Array
+    Public Shared Function parse(ByVal jsonresponse As String, ByVal type As String, Optional ByVal language As String = "##") As Array
 
-        Dim details(5, 0), returndetails(5, 0), parsestring(2), parseHD As String
+        Dim details(5, 0), returndetails(5, 0), parsestring(2), keyword(3), parseHD As String
         Dim starting(2), startHD, startp, endp, len, x, y, i, j As Integer
+
+        If type = "movie" Then
+            keyword = {"hdmovielogo", "moviedisc", "movieart", "movielogo"}
+        ElseIf type = "series" Then
+            keyword = {"hdtvlogo", "**n/a**", "clearart", "clearlogo"}
+        End If
 
         ' check if there are HD logos and if yes, store in a temporary variable to later on merge with movielogos
 
-        startHD = InStr(jsonresponse, "hdmovielogo")
+        startHD = InStr(jsonresponse, keyword(0))
 
         If startHD > 0 Then
             parseHD = Mid(jsonresponse, startHD, InStr(startHD, jsonresponse, "]") - startHD + 1)
@@ -27,9 +35,9 @@ Public Class DVDArt_Common
 
         ' find the starting place of the respective sections
 
-        starting(0) = InStr(jsonresponse, "moviedisc")
-        starting(1) = InStr(jsonresponse, "movieart")
-        starting(2) = InStr(jsonresponse, "movielogo")
+        For i = 0 To 2
+            starting(i) = InStr(jsonresponse, keyword(i + 1))
+        Next
 
         ' split the jsonresponse to the respective sections
 
@@ -140,18 +148,18 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Function JSON_request(ByVal imdb_id As String, ByVal nbrimages As String) As String
+    Public Shared Function JSON_request(ByVal imdb_id As String, ByVal type As String, ByVal nbrimages As String) As String
 
         Dim WebClient As New System.Net.WebClient
         Dim apikey As String = "bfd6e4e0d4e71237f784b70fc43f8269"
 
-        Dim url As String = "http://fanart.tv/webservice/movie/" & apikey & "/" & imdb_id & "/json/all/1/" & nbrimages
+        Dim url As String = "http://fanart.tv/webservice/" & type & "/" & apikey & "/" & imdb_id & "/json/all/1/" & nbrimages
 
         Return WebClient.DownloadString(url)
 
     End Function
 
-    Public Shared Sub bw_download_worker(sender As System.Object, e As System.ComponentModel.DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork
+    Public Shared Sub bw_download_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork
 
         Dim parm As String = e.Argument
         Dim url, path As String
@@ -188,11 +196,11 @@ Public Class DVDArt_Common
 
     End Sub
 
-    Public Shared Function download(ByVal thumbs As String, ByVal folder(,) As String, ByVal imdb_id As String, ByVal overwrite As Boolean, _
-                                    ByVal try2download() As Boolean, Optional ByVal language As String = "##") As Array
+    Public Shared Function download(ByVal thumbs As String, ByVal folder(,,) As String, ByVal id As String, ByVal overwrite As Boolean, _
+                                    ByVal try2download() As Boolean, ByVal type As String, Optional ByVal language As String = "##") As Array
 
         Dim WebClient As New System.Net.WebClient
-        Dim moviediscurl(5, 0) As String
+        Dim url(5, 0) As String
         Dim found(2) As Boolean
         Dim parm As Object
         Dim y As Integer
@@ -200,22 +208,27 @@ Public Class DVDArt_Common
         Dim fullpath, thumbpath, jsonresponse As String
 
         If language = "##" Then
-            jsonresponse = JSON_request(imdb_id, "1")
+            jsonresponse = JSON_request(id, type, "1")
         Else
-            jsonresponse = JSON_request(imdb_id, "2")
+            jsonresponse = JSON_request(id, type, "2")
         End If
 
         If jsonresponse <> "null" Then
 
-            moviediscurl = parse(jsonresponse, language)
+            url = parse(jsonresponse, type, language)
 
             For y = 0 To 2
 
-                fullpath = thumbs & folder(y, 0) & imdb_id & ".png"
-                thumbpath = thumbs & folder(y, 1) & imdb_id & ".png"
+                If type = "movie" Then
+                    fullpath = thumbs & folder(0, y, 0) & id & ".png"
+                    thumbpath = thumbs & folder(0, y, 1) & id & ".png"
+                ElseIf type = "series" Then
+                    fullpath = thumbs & folder(1, y, 0) & id & ".png"
+                    thumbpath = thumbs & folder(1, y, 1) & id & ".png"
+                End If
 
-                If (try2download(y) Or overwrite) And moviediscurl(y * 2, 0) <> Nothing Then
-                    parm = thumbpath & "|" & moviediscurl(y * 2, 0) & "/preview"
+                If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
+                    parm = thumbpath & "|" & url(y * 2, 0) & "/preview"
                     found(y) = True
                     Do
                         If Not bw_download0.IsBusy Then
@@ -235,8 +248,8 @@ Public Class DVDArt_Common
 
                 found(y) = found(y) Or FileSystem.FileExists(thumbpath)
 
-                If (try2download(y) Or overwrite) And moviediscurl(y * 2, 0) <> Nothing Then
-                    If y = 0 Then parm = fullpath & "|" & moviediscurl(y * 2, 0) & "|shrink" Else parm = fullpath & "|" & moviediscurl(y * 2, 0)
+                If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
+                    If y = 0 Then parm = fullpath & "|" & url(y * 2, 0) & "|shrink" Else parm = fullpath & "|" & url(y * 2, 0)
                     Do
                         If Not bw_download1.IsBusy Then
                             bw_download1.RunWorkerAsync(parm)
@@ -306,6 +319,21 @@ Public Class DVDArt_Common
 
     End Sub
 
+    Public Shared Sub Convert(ByVal source As String, ByVal destination As String, ByVal ParamArray params() As String)
+
+        Dim cmd As String = _temp & "\convert " & source
+        Dim x As Integer
+
+        For x = 0 To params.LongLength - 1
+            cmd = cmd & " " & params(x)
+        Next
+
+        cmd = cmd & " " & destination
+
+        Shell(cmd, vbHide)
+
+    End Sub
+
     Public Shared Function Get_Paths(ByRef database As String, ByRef thumbs As String) As Boolean
 
         database = Nothing
@@ -334,7 +362,7 @@ Public Class DVDArt_Common
         SQLconnect.ConnectionString = "Data Source=" & Config.GetFile(Config.Dir.Database, "dvdart.db3")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "PRAGMA table_info (""processed_movies"")"
+        SQLcommand.CommandText = "PRAGMA table_info (" & table & ")"
         SQLreader = SQLcommand.ExecuteReader()
 
         While SQLreader.Read()
@@ -360,15 +388,20 @@ Public Class DVDArt_Common
     Public Shared Sub Initialize()
 
         ' initialize folder paths
-        folder(0, 0) = "\MovingPictures\DVDArt\FullSize\"
-        folder(0, 1) = "\MovingPictures\DVDArt\Thumbs\"
-        folder(1, 0) = "\MovingPictures\ClearArt\FullSize\"
-        folder(1, 1) = "\MovingPictures\ClearArt\Thumbs\"
-        folder(2, 0) = "\MovingPictures\ClearLogo\FullSize\"
-        folder(2, 1) = "\MovingPictures\ClearLogo\Thumbs\"
+        folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"
+        folder(0, 0, 1) = "\MovingPictures\DVDArt\Thumbs\"
+        folder(0, 1, 0) = "\MovingPictures\ClearArt\FullSize\"
+        folder(0, 1, 1) = "\MovingPictures\ClearArt\Thumbs\"
+        folder(0, 2, 0) = "\MovingPictures\ClearLogo\FullSize\"
+        folder(0, 2, 1) = "\MovingPictures\ClearLogo\Thumbs\"
+        folder(1, 0, 0) = Nothing
+        folder(1, 0, 1) = Nothing
+        folder(1, 1, 0) = "\TVSeries\ClearArt\FullSize\"
+        folder(1, 1, 1) = "\TVSeries\ClearArt\Thumbs\"
+        folder(1, 2, 0) = "\TVSeries\ClearLogo\FullSize\"
+        folder(1, 2, 1) = "\TVSeries\ClearLogo\Thumbs\"
 
         ' initialize language array
-
         lang = {"English", "Deutsch", "Française", "Italiano", "Any"}
         langcode = {"EN", "DE", "FR", "IT", "##"}
 

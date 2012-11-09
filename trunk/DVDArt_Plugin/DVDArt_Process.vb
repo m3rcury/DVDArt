@@ -43,6 +43,7 @@ Public Class DVDArt_Process
         If lv_import.Items.Count > 0 Then
 
             Dim x As Integer
+            Dim type As String
             Dim filenotexist(2), downloaded(2), try2download(2) As Boolean
             Dim SQLconnect As New SQLiteConnection()
             Dim SQLcommand As SQLiteCommand
@@ -55,22 +56,46 @@ Public Class DVDArt_Process
 
             For x = 0 To (lv_import.Items.Count - 1)
 
-                For y = 0 To 2
-                    filenotexist(y) = lv_import.Items.Item(x).SubItems.Item(y + 2).Text
-                    try2download(y) = _checked(y) And filenotexist(y)
-                Next
+                type = lv_import.Items.Item(x).SubItems.Item(2).Text
 
-                downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, True, try2download, _language)
+                If type = "movie" Then
+                    For y = 0 To 2
+                        filenotexist(y) = lv_import.Items.Item(x).SubItems.Item(y + 3).Text
+                        try2download(y) = _checked(y) And filenotexist(y)
+                    Next
 
-                If downloaded(0) Or downloaded(1) Or downloaded(2) Then
-                    Log.Info("DVDArt: process plugin - artwork found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
-                Else
-                    Log.Info("DVDArt: process plugin - artwork not found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
-                End If
+                    downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, True, try2download, type, _language)
 
-                If filenotexist(0) And filenotexist(1) And filenotexist(2) Then
-                    SQLcommand.CommandText = "INSERT INTO processed_movies (imdb_id) VALUES(""" & lv_import.Items.Item(x).SubItems.Item(1).Text & """)"
-                    SQLcommand.ExecuteNonQuery()
+                    If downloaded(0) Or downloaded(1) Or downloaded(2) Then
+                        Log.Info("DVDArt: process plugin - artwork found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
+                    Else
+                        Log.Info("DVDArt: process plugin - artwork not found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
+                    End If
+
+                    If filenotexist(0) And filenotexist(1) And filenotexist(2) Then
+                        SQLcommand.CommandText = "INSERT INTO processed_movies (imdb_id) VALUES(""" & lv_import.Items.Item(x).SubItems.Item(1).Text & """)"
+                        SQLcommand.ExecuteNonQuery()
+                    End If
+                ElseIf type = "series" Then
+                    try2download(0) = False
+
+                    For y = 1 To 2
+                        filenotexist(y) = lv_import.Items.Item(x).SubItems.Item(y + 3).Text
+                        try2download(y) = _checked(y) And filenotexist(y)
+                    Next
+
+                    downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, True, try2download, type, _language)
+
+                    If downloaded(1) Or downloaded(2) Then
+                        Log.Info("DVDArt: process plugin - artwork found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
+                    Else
+                        Log.Info("DVDArt: process plugin - artwork not found for: """ & lv_import.Items.Item(x).SubItems.Item(0).Text & """")
+                    End If
+
+                    If filenotexist(1) And filenotexist(2) Then
+                        SQLcommand.CommandText = "INSERT INTO processed_series (thetvdb_id) VALUES(""" & lv_import.Items.Item(x).SubItems.Item(1).Text & """)"
+                        SQLcommand.ExecuteNonQuery()
+                    End If
                 End If
 
             Next
@@ -97,7 +122,7 @@ Public Class DVDArt_Process
 
         SQLcommand = SQLconnect.CreateCommand
 
-        SQLcommand.CommandText = "SELECT imdb_id, title FROM movie_info ORDER BY sortby"
+        SQLcommand.CommandText = "SELECT imdb_id, title FROM movie_info WHERE imdb_id is not Null and title is not Null ORDER BY sortby"
 
         SQLreader = SQLcommand.ExecuteReader()
 
@@ -108,12 +133,53 @@ Public Class DVDArt_Process
             If Trim(SQLreader(0)) <> "" Then
 
                 For y = 0 To 2
-                    filenotexist(y) = _checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(y, 1) & SQLreader(0) & ".png")
+                    filenotexist(y) = _checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & SQLreader(0) & ".png")
                 Next
 
                 If filenotexist(0) Or filenotexist(1) Or filenotexist(2) Then
                     li_import = lv_import.Items.Add(SQLreader(1))
                     li_import.SubItems.Add(SQLreader(0))
+                    li_import.SubItems.Add("movie")
+
+                    For y = 0 To 2
+                        li_import.SubItems.Add(filenotexist(y))
+                    Next
+
+                    If Not bw_import.IsBusy Then bw_import.RunWorkerAsync(parm)
+                End If
+
+            End If
+
+        End While
+
+        SQLconnect.Close()
+
+        ' Read TVSeries database
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\TVSeriesDatabase4.db3"
+
+        SQLconnect.Open()
+
+        SQLcommand = SQLconnect.CreateCommand
+
+        SQLcommand.CommandText = "SELECT id, pretty_name FROM online_series WHERE id is not Null and pretty_name is not Null ORDER BY sortname"
+
+        SQLreader = SQLcommand.ExecuteReader()
+
+        lv_import.Items.Clear()
+
+        While SQLreader.Read()
+
+            If Trim(SQLreader(0)) <> "" Then
+
+                For y = 0 To 2
+                    filenotexist(y) = _checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & SQLreader(0) & ".png")
+                Next
+
+                If filenotexist(1) Or filenotexist(2) Then
+                    li_import = lv_import.Items.Add(SQLreader(1))
+                    li_import.SubItems.Add(SQLreader(0))
+                    li_import.SubItems.Add("series")
 
                     For y = 0 To 2
                         li_import.SubItems.Add(filenotexist(y))
@@ -155,13 +221,9 @@ Public Class DVDArt_Process
         Dim processed_movies() As String
 
         SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
-
         SQLconnect.Open()
-
         SQLcommand = SQLconnect.CreateCommand
-
-        SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies ORDER BY imdb_id"
-
+        SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies WHERE imdb_id is not Null ORDER BY imdb_id"
         SQLreader = SQLcommand.ExecuteReader()
 
         While SQLreader.Read()
@@ -179,13 +241,9 @@ Public Class DVDArt_Process
         ' Read movingpictures database
 
         SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3"
-
         SQLconnect.Open()
-
         SQLcommand = SQLconnect.CreateCommand
-
-        SQLcommand.CommandText = "SELECT imdb_id, title FROM movie_info ORDER BY sortby"
-
+        SQLcommand.CommandText = "SELECT imdb_id, title FROM movie_info WHERE imdb_id is not Null and title is not Null ORDER BY sortby"
         SQLreader = SQLcommand.ExecuteReader()
 
         lv_import.Items.Clear()
@@ -197,6 +255,67 @@ Public Class DVDArt_Process
                 If Not processed_movies.Contains(SQLreader(0)) Then
                     li_import = lv_import.Items.Add(SQLreader(1))
                     li_import.SubItems.Add(SQLreader(0))
+                    li_import.SubItems.Add("movie")
+
+                    For y = 0 To 2
+                        li_import.SubItems.Add(_checked(y))
+                    Next
+
+                    If Not bw_import.IsBusy Then bw_import.RunWorkerAsync(parm)
+                End If
+
+            End If
+
+        End While
+
+        SQLconnect.Close()
+
+        ' Read already processed TVSeries to identify newly imported ones in TVSeries
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT thetvdb_id FROM processed_series WHERE thetvdb_id is not Null ORDER BY thetvdb_id"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        Dim processed_series() As String
+
+        x = 0
+
+        While SQLreader.Read()
+
+            ReDim Preserve processed_series(x)
+            processed_series(x) = SQLreader(0)
+            x += 1
+
+        End While
+
+        SQLconnect.Close()
+
+        If x = 0 Then ReDim Preserve processed_series(0)
+
+        ' Read tvseries database
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\TVSeriesDatabase4.db3"
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT id, pretty_name FROM online_series WHERE id is not Null and pretty_name is not Null ORDER BY sortname"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        lv_import.Items.Clear()
+
+        While SQLreader.Read()
+
+            If Trim(SQLreader(0)) <> "" Then
+
+                If Not processed_series.Contains(SQLreader(0)) Then
+                    li_import = lv_import.Items.Add(SQLreader(1))
+                    li_import.SubItems.Add(SQLreader(0))
+                    li_import.SubItems.Add("series")
+
+                    For y = 0 To 2
+                        li_import.SubItems.Add(_checked(y))
+                    Next
 
                     If Not bw_import.IsBusy Then bw_import.RunWorkerAsync(parm)
                 End If
@@ -281,6 +400,11 @@ Public Class DVDArt_Process
 
             'initialize common variables
             DVDArt_Common.Initialize()
+
+            ' intialize plugin properties
+            GUIPropertyManager.SetProperty("#MovingPictures.DVDArt", thumbs & Microsoft.VisualBasic.Left(DVDArt_Common.folder(0, 0, 0), Len(DVDArt_Common.folder(0, 0, 0))) - 1)
+            GUIPropertyManager.SetProperty("#MovingPictures.ClearArt", thumbs & Microsoft.VisualBasic.Left(DVDArt_Common.folder(0, 1, 0), Len(DVDArt_Common.folder(0, 1, 0))) - 1)
+            GUIPropertyManager.SetProperty("#MovingPictures.ClearLogo", thumbs & Microsoft.VisualBasic.Left(DVDArt_Common.folder(0, 2, 0), Len(DVDArt_Common.folder(0, 2, 0))) - 1)
 
             wait(_delay)
 
