@@ -1,6 +1,6 @@
 = Introduction =
 
-DVDArt is a new plugin that scrapes fanart.tv for DVD cover art for you movie collection in MovingPictures.
+DVDArt is a new plugin that scrapes fanart.tv for DVD cover art for you movie collection in MovingPictures and TVSeries.
 
 
 = Details =
@@ -11,10 +11,16 @@ Images are downloaded from Fanart.tv site. I recommend that you visit site and h
 
 Brief description of tabs in plugin:
 
-  # Movies with DVDArt shows movies which scraper successfully downloaded an image.
-  # Importer shows movies whose DVDArt is currently being imported.
-  # Movies missing DVDArt shows movies which scraper could not find any images.
+  # Movies with Artwork shows movies which scraper successfully downloaded an image for DVDArt, ClearArt and/or ClearLogo.
+  # Movies missing Artwork shows movies which scraper could not find any of the images mentioned.
+  # Series with Artwork shows series which scraper successfully downloaded an image for ClearArt and/or ClearLogo.
+  # Series missing Artwork shows series which scraper could not find any of the images mentioned.
+  # Importer shows movies/series which are currently being imported.
 
-The import function for new movies executes automatically in the background, so you don't need to trigger it manually.
+The import function for new movies/series executes automatically in the background, so you don't need to trigger it manually.
 
-Each tab has a number of functions which can be triggered by pressing the right mouse button. In Movies with DVDArt tab, pressing right mouse button gives the facility to Refresh DVDArt from Online. This option download all images available and allows you to change the existing image chosen. In Importer tab, pressing the right mouse button will Restart the Importer, hence if changes were done in MovingPictures, you don't need to restart application. In Movies missing DVDArt tab, the right mouse button presents 2 options. The first one sends the currently selected movie to the importer, which the second sends all the movies missing DVDArt to the importer.
+Each tab has a number of functions which can be triggered by pressing the right mouse button. In Movies/Series with Artwork tab, pressing right mouse button gives the facility to Refresh Artwork from Online. This option download all images available and allows you to change the existing image chosen.  There is also an option to upload images manually.  Also, to gain some disk space, there is an option to compress images to 500x500 pixels.
+
+In Importer tab, pressing the right mouse button will Restart the Importer, hence if changes were done in MovingPictures and/or TVSeries, you don't need to restart application.
+
+In Movies/Series missing Artwork tab, the right mouse button presents a number of options. The first one sends the currently selected movie/series to the importer.  The second sends all the movies/series missing Artwork to the importer.  The third option offers the facility to upload images manually.  In case of movies, there is a fourth option which can convert a movie cover into DVDArt.
