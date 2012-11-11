@@ -1,0 +1,35 @@
+Properties to be used in skin files.
+
+= Introduction =
+
+In order to facilitate skin file modding, a number of property fields have been created so that these can in turn be used in xml files.
+
+
+= Details =
+
+  * *#MovingPictures.DVDArt*
+ This property holds the folder under which full size DVDArt images are stored.  This resolves to *_thumbspath_\MovingPictures\DVDArt\FullSize*
+
+ In a skin file, this can be used as follows:
+ {{{
+<!-- m3rcury : Rotating DVDArt -->
+    <control>
+      <description>Rotating Movie disc</description>
+      <type>image</type>
+      <id>0</id>
+      <posX>65</posX>
+      <posY>300</posY>
+      <width>386</width>
+      <height>350</height>
+      <texture>#MovingPictures.DVDArt\#MovingPictures.SelectedMovie.imdb_id.png</texture>
+      <keepaspectratio>yes</keepaspectratio>
+      <visible>facadeview.list+control.isvisible(50)+Control.HasThumb(90)</visible>
+      <animation effect="rotate" delay="0" end="-360" centre="475,258" time="8000" loop="true" condition="true">Conditional</animation>
+    </control>
+<!-- m3rcury : Rotating DVDArt -->
+}}}
+
+  * *#MovingPictures.ClearArt*
+  * *#MovingPictures.ClearLogo*
+  * *#TVSeries.ClearArt*
+  * *#TVSeries.ClearLogo*
