@@ -20,3 +20,4 @@ E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll.config
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.dll
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources

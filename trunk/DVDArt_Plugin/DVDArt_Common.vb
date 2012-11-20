@@ -334,6 +334,24 @@ Public Class DVDArt_Common
 
     End Sub
 
+    Public Shared Function FileInUse(ByVal sFile As String) As Boolean
+
+        Dim inuse As Boolean = False
+
+        If System.IO.File.Exists(sFile) Then
+            Try
+                Dim F As Short = FreeFile()
+                FileOpen(F, sFile, OpenMode.Binary, OpenAccess.ReadWrite, OpenShare.LockReadWrite)
+                FileClose(F)
+            Catch
+                inuse = True
+            End Try
+        End If
+
+        Return inuse
+
+    End Function
+
     Public Shared Function Get_Paths(ByRef database As String, ByRef thumbs As String) As Boolean
 
         database = Nothing
