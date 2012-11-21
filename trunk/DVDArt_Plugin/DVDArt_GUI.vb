@@ -1702,65 +1702,65 @@ Public Class DVDArt_GUI
 
         If DVDArt_Common.Get_Paths(database, thumbs) Then
 
+            'initialize common variables
+            DVDArt_Common.Initialize()
+
             'show splashscreen
             Dim splash As New DVDArt_SplashScreen
             splash.Show()
             splash.Refresh()
 
-            ' initialize version
+            'initialize version
             Me.Text = Me.Text & DVDArt_Common._version
 
-            ' initialize timer
+            'initialize timer
             t_import_timer.Interval = 2000
             t_import_timer.Start()
 
-            ' initialize importer state images
+            'initialize importer state images
             il_state.Images.Add(My.Resources.download)
             il_state.Images.Add(My.Resources.tick)
             il_state.Images.Add(My.Resources.cross)
 
-            ' initialize common variables
-            DVDArt_Common.Initialize()
-
-            ' initialize labels
+            'initialize labels
             l_imdb_id.Text = Nothing
             l_movie_size.Text = Nothing
 
-            ' disable tabs that are not selected in settings
+            'disable tabs that are not selected in settings
             cb_DVDArt_CheckedChanged(Nothing, Nothing)
             cb_ClearArt_CheckedChanged(Nothing, Nothing)
             cb_ClearLogo_CheckedChanged(Nothing, Nothing)
 
-            ' populate language dropdown
+            'populate language dropdown
             cb_language.Items.AddRange(DVDArt_Common.lang)
 
-            ' extract System.Data.SQLite.dll from resources to application library
+            'extract System.Data.SQLite.dll from resources to application library
             Dim dll As String = IO.Directory.GetCurrentDirectory() & "\System.Data.SQLite.dll"
             If Not FileSystem.FileExists(dll) Then FileSystem.WriteAllBytes(dll, My.Resources.System_Data_SQLite, False)
 
-            ' extract Interop.Shell32.dll from resources to application library
+            'extract Interop.Shell32.dll from resources to application library
             dll = IO.Directory.GetCurrentDirectory() & "\Interop.Shell32.dll"
             If Not FileSystem.FileExists(dll) Then FileSystem.WriteAllBytes(dll, My.Resources.Interop_Shell32, False)
 
-            ' extract ICSharpCode.SharpZipLib.dll from resources to application library
+            'extract ICSharpCode.SharpZipLib.dll from resources to application library
             dll = IO.Directory.GetCurrentDirectory() & "\ICSharpCode.SharpZipLib.dll"
             If Not FileSystem.FileExists(dll) Then FileSystem.WriteAllBytes(dll, My.Resources.ICSharpCode_SharpZipLib, False)
 
-            ' extract dvdart.png from resources to temporary folder
+            'extract dvdart.png from resources to temporary folder
             Dim png As String = DVDArt_Common._temp & "\dvdart.png"
             If Not FileSystem.FileExists(png) Then
                 Dim image As Image = New Bitmap(My.Resources.dvdart)
                 image.Save(png)
             End If
 
-            ' extract dvdart_mask.png from resources to temporary folder
+            'extract dvdart_mask.png from resources to temporary folder
             png = DVDArt_Common._temp & "\dvdart_mask.png"
             If Not FileSystem.FileExists(png) Then
                 Dim image As Image = New Bitmap(My.Resources.dvdart_mask)
                 image.Save(png)
             End If
 
-            ' extract convert.zip from resources to temporary folder
+            'extract convert.zip from resources to temporary folder
             Dim obj As String = DVDArt_Common._temp & "\convert.exe"
             If Not FileSystem.FileExists(obj) Then
                 obj = DVDArt_Common._temp & "\convert.zip"
