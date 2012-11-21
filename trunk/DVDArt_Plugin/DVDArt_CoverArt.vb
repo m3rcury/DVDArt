@@ -138,7 +138,9 @@ Public Class DVDArt_CoverArt
 
         'create image with transparency from cover art
         Dim fullsize, thumb As String
+        Dim file2 As String = file.Replace(IO.Path.GetExtension(file), ".png")
         Dim params() As String = {"-resize", "500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", DVDArt_Common._temp & "\dvdart_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", DVDArt_Common._temp & "\dvdart.png", "-compose", "over", "-composite"}
+
         fullsize = _thumbs & DVDArt_Common.folder(0, 0, 0) & _imdb_id & ".png"
 
         If FileIO.FileSystem.FileExists(fullsize) Then
@@ -150,18 +152,27 @@ Public Class DVDArt_CoverArt
             End If
         End If
 
-        DVDArt_Common.Convert("""" & file & """", fullsize, params)
+        DVDArt_Common.Convert(file, file2, params)
 
-        Do While Not FileSystem.FileExists(fullsize) Or DVDArt_Common.FileInUse(fullsize)
+        Dim counter As Integer = 0
+
+        Do While (Not FileSystem.FileExists(file2) Or DVDArt_Common.FileInUse(file2)) And counter < 5
             DVDArt_Common.wait(250)
+            counter += 1
         Loop
 
-        'copy to Thumbs folder and resize to thumb size
-        thumb = _thumbs & DVDArt_Common.folder(0, 0, 1) & _imdb_id & ".png"
-        FileIO.FileSystem.CopyFile(fullsize, thumb, True)
-        DVDArt_Common.Resize(thumb, 200, 200)
+        If counter = 5 Then
+            MsgBox("Failed to create DVDArt from " & file & " to " & fullsize, MsgBoxStyle.Critical)
+        Else
+            'move to Thumbs folder
+            FileIO.FileSystem.MoveFile(file2, fullsize, True)
+            'copy to Thumbs folder and resize to thumb size
+            thumb = _thumbs & DVDArt_Common.folder(0, 0, 1) & _imdb_id & ".png"
+            FileIO.FileSystem.CopyFile(fullsize, thumb, True)
+            DVDArt_Common.Resize(thumb, 200, 200)
 
-        FileIO.FileSystem.DeleteFile(file)
+            FileIO.FileSystem.DeleteFile(file)
+        End If
 
         Me.Close()
 

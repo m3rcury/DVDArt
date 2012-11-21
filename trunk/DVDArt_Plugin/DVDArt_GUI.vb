@@ -112,7 +112,7 @@ Public Class DVDArt_GUI
                         'create image with transparency from cover art
                         Dim fullsize, thumb As String
                         Dim params() As String = {"-resize", "500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", DVDArt_Common._temp & "\dvdart_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", DVDArt_Common._temp & "\dvdart.png", "-compose", "over", "-composite"}
-                        fullsize = thumbs & DVDArt_Common.folder(0, 0, 0) & imdb_id & ".png"
+                        fullsize = """" & thumbs & DVDArt_Common.folder(0, 0, 0) & imdb_id & ".png"""
                         DVDArt_Common.Convert("""" & images(y) & """", fullsize, params)
 
                         Do While Not FileSystem.FileExists(fullsize) Or DVDArt_Common.FileInUse(fullsize)
@@ -120,7 +120,7 @@ Public Class DVDArt_GUI
                         Loop
 
                         'copy to Thumbs folder and resize to thumb size
-                        thumb = thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png"
+                        thumb = """" & thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png"""
                         FileIO.FileSystem.CopyFile(fullsize, thumb, True)
                         DVDArt_Common.Resize(thumb, 200, 200)
 
@@ -1706,6 +1706,9 @@ Public Class DVDArt_GUI
             Dim splash As New DVDArt_SplashScreen
             splash.Show()
             splash.Refresh()
+
+            ' initialize version
+            Me.Text = Me.Text & DVDArt_Common._version
 
             ' initialize timer
             t_import_timer.Interval = 2000

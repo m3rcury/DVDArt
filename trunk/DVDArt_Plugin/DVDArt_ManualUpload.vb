@@ -244,10 +244,10 @@ Public Class DVDArt_ManualUpload
             Loop
 
             'copy to FullSize folder
-            FileIO.FileSystem.CopyFile(file, thumbs & DVDArt_Common.folder(0, 2, 0) & _imdb_id & ".png", True)
+            FileIO.FileSystem.CopyFile(file, """" & thumbs & DVDArt_Common.folder(0, 2, 0) & _imdb_id & ".png""", True)
             'resize to thumb size and copy to Thumbs folder
             DVDArt_Common.Resize(file, 200, 77)
-            FileIO.FileSystem.MoveFile(file, thumbs & DVDArt_Common.folder(0, 2, 1) & _imdb_id & ".png", True)
+            FileIO.FileSystem.MoveFile(file, """" & thumbs & DVDArt_Common.folder(0, 2, 1) & _imdb_id & ".png""", True)
             If FileIO.FileSystem.FileExists(tb_clearlogo.Text) Then FileIO.FileSystem.DeleteFile(tb_clearlogo.Text)
 
         End If
