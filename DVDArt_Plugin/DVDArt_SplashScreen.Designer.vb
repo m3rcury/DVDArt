@@ -48,9 +48,9 @@ Partial Class DVDArt_SplashScreen
         Me.l_version.BackColor = System.Drawing.Color.White
         Me.l_version.Location = New System.Drawing.Point(155, 54)
         Me.l_version.Name = "l_version"
-        Me.l_version.Size = New System.Drawing.Size(46, 13)
+        Me.l_version.Size = New System.Drawing.Size(41, 13)
         Me.l_version.TabIndex = 2
-        Me.l_version.Text = "v1.0.0.8"
+        Me.l_version.Text = "version"
         Me.l_version.UseWaitCursor = True
         '
         'l_copyright
