@@ -221,6 +221,27 @@ Namespace My.Resources
             End Get
         End Property
         
+        Friend ReadOnly Property sort_asc() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("sort_asc", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property sort_desc() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("sort_desc", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property sort_none() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("sort_none", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
         Friend ReadOnly Property System_Data_SQLite() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("System_Data_SQLite", resourceCulture)

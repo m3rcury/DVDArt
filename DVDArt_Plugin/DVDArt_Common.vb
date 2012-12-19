@@ -232,12 +232,15 @@ Public Class DVDArt_Common
                     found(y) = True
                     Do
                         If Not bw_download0.IsBusy Then
+                            bw_download0.WorkerSupportsCancellation = True
                             bw_download0.RunWorkerAsync(parm)
                             Exit Do
                         ElseIf Not bw_download2.IsBusy Then
+                            bw_download2.WorkerSupportsCancellation = True
                             bw_download2.RunWorkerAsync(parm)
                             Exit Do
                         ElseIf Not bw_download4.IsBusy Then
+                            bw_download4.WorkerSupportsCancellation = True
                             bw_download4.RunWorkerAsync(parm)
                             Exit Do
                         Else
@@ -252,12 +255,15 @@ Public Class DVDArt_Common
                     If y = 0 Then parm = fullpath & "|" & url(y * 2, 0) & "|shrink" Else parm = fullpath & "|" & url(y * 2, 0)
                     Do
                         If Not bw_download1.IsBusy Then
+                            bw_download1.WorkerSupportsCancellation = True
                             bw_download1.RunWorkerAsync(parm)
                             Exit Do
                         ElseIf Not bw_download3.IsBusy Then
+                            bw_download3.WorkerSupportsCancellation = True
                             bw_download3.RunWorkerAsync(parm)
                             Exit Do
                         ElseIf Not bw_download5.IsBusy Then
+                            bw_download5.WorkerSupportsCancellation = True
                             bw_download5.RunWorkerAsync(parm)
                             Exit Do
                         Else
@@ -406,7 +412,7 @@ Public Class DVDArt_Common
     Public Shared Sub Initialize()
 
         ' initialize version
-        _version = "v1.0.0.9"
+        _version = "v1.0.1.0"
 
         ' initialize folder paths
         folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"

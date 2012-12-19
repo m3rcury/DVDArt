@@ -12,6 +12,7 @@ Public Class DVDArt_GUI
     Private database, thumbs, current_imdb_id, current_thetvdb_id, _lang, _lastrun As String
     Private l_import_queue As New List(Of String)
     Private l_import_index As New List(Of Integer)
+    Private lvwColumnSorter = New ListViewColumnSorter()
     Private lv_url_dvdart, lv_url_clearart, lv_url_clearlogo As New ListView
     Private li_movies, li_series, li_import, li_missing As New ListViewItem
     Private WithEvents t_import_timer As New Timer
@@ -32,6 +33,28 @@ Public Class DVDArt_GUI
         Friend iIndent As Integer
     End Structure
 
+    Friend Structure HDITEM
+        Friend mask As _mask
+        Friend cxy As Long
+        Friend pszText As String
+        Friend hbm As Long
+        Friend cchTextMax As Long
+        Friend fmt As _fmt
+        Friend lParam As Long
+        Friend iImage As Long
+        Friend iOrder As Long
+
+        Friend Enum _mask
+            format = &H4
+        End Enum
+
+        Friend Enum _fmt
+            SortDown = &H200
+            SortUp = &H400
+        End Enum
+
+    End Structure
+
     Friend Const LVM_FIRST As Integer = &H1000
     Friend Const LVM_SETITEMA As Integer = LVM_FIRST + 6
     Friend Const LVM_SETITEMW As Integer = LVM_FIRST + 76
@@ -40,8 +63,50 @@ Public Class DVDArt_GUI
     Friend Const LVIF_IMAGE As Integer = &H2
     Friend Const LVS_EX_SUBITEMIMAGES As Integer = &H2
 
+    Friend Const LVM_GETHEADER = LVM_FIRST + 31
+    Friend Const HDM_FIRST = &H1200
+    Friend Const HDM_GETITEM = HDM_FIRST + 11
+    Friend Const HDM_SETITEM = HDM_FIRST + 12
+
     Friend Overloads Declare Auto Function SendMessage Lib "User32.dll" (ByVal hwnd As IntPtr, ByVal msg As Integer, ByVal wParam As IntPtr, ByRef lParam As LVITEM) As Integer
+    Friend Overloads Declare Auto Function SendMessage Lib "User32.dll" (ByVal hwnd As IntPtr, ByVal msg As Integer, ByVal wParam As IntPtr, ByRef lParam As HDITEM) As Integer
     Friend Overloads Declare Auto Function SendMessage Lib "User32.dll" (ByVal hwnd As IntPtr, ByVal msg As Integer, ByVal wParam As Integer, ByVal lParam As Integer) As Integer
+
+    Public Sub SetSortArrow(ByRef lv As ListView, ByVal column As Integer, ByVal order As Integer)
+
+        Dim hHeader As Long
+        Dim HD As New HDITEM
+
+        hHeader = SendMessage(lv.Handle, LVM_GETHEADER, 0, 0)
+
+        For col = 0 To (lv.Columns.Count - 1)
+
+            If col = column Then
+
+                With HD
+                    .mask = HDITEM._mask.format
+                End With
+
+                SendMessage(hHeader, HDM_GETITEM, col, HD)
+
+                If order = SortOrder.Ascending Then
+                    With HD
+                        .fmt = HDITEM._fmt.SortUp
+                    End With
+
+                ElseIf order = SortOrder.Descending Then
+                    With HD
+                        .fmt = HDITEM._fmt.SortDown
+                    End With
+                End If
+
+                SendMessage(hHeader, HDM_SETITEM, col, HD)
+
+            End If
+
+        Next
+
+    End Sub
 
     Friend Shared Function ListView_SetItem(ByVal hwnd As IntPtr, ByRef lvi As LVITEM) As Boolean
         Return CBool(SendMessage(hwnd, LVM_SETITEM, IntPtr.Zero, lvi))
@@ -112,15 +177,15 @@ Public Class DVDArt_GUI
                         'create image with transparency from cover art
                         Dim fullsize, thumb As String
                         Dim params() As String = {"-resize", "500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", DVDArt_Common._temp & "\dvdart_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", DVDArt_Common._temp & "\dvdart.png", "-compose", "over", "-composite"}
-                        fullsize = """" & thumbs & DVDArt_Common.folder(0, 0, 0) & imdb_id & ".png"""
-                        DVDArt_Common.Convert("""" & images(y) & """", fullsize, params)
+                        fullsize = thumbs & DVDArt_Common.folder(0, 0, 0) & imdb_id & ".png"
+                        DVDArt_Common.Convert("""" & images(y) & """", """" & fullsize & """", params)
 
                         Do While Not FileSystem.FileExists(fullsize) Or DVDArt_Common.FileInUse(fullsize)
                             wait(250)
                         Loop
 
                         'copy to Thumbs folder and resize to thumb size
-                        thumb = """" & thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png"""
+                        thumb = thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png"
                         FileIO.FileSystem.CopyFile(fullsize, thumb, True)
                         DVDArt_Common.Resize(thumb, 200, 200)
 
@@ -698,12 +763,15 @@ Public Class DVDArt_GUI
 
                     Do
                         If Not DVDArt_Common.bw_download0.IsBusy Then
+                            DVDArt_Common.bw_download0.WorkerSupportsCancellation = True
                             DVDArt_Common.bw_download0.RunWorkerAsync(parm)
                             Exit Do
                         ElseIf Not DVDArt_Common.bw_download2.IsBusy Then
+                            DVDArt_Common.bw_download2.WorkerSupportsCancellation = True
                             DVDArt_Common.bw_download2.RunWorkerAsync(parm)
                             Exit Do
                         ElseIf Not DVDArt_Common.bw_download4.IsBusy Then
+                            DVDArt_Common.bw_download4.WorkerSupportsCancellation = True
                             DVDArt_Common.bw_download4.RunWorkerAsync(parm)
                             Exit Do
                         Else
@@ -715,12 +783,15 @@ Public Class DVDArt_GUI
 
                     Do
                         If Not DVDArt_Common.bw_download1.IsBusy Then
+                            DVDArt_Common.bw_download1.WorkerSupportsCancellation = True
                             DVDArt_Common.bw_download1.RunWorkerAsync(parm)
                             Exit Do
                         ElseIf Not DVDArt_Common.bw_download3.IsBusy Then
+                            DVDArt_Common.bw_download3.WorkerSupportsCancellation = True
                             DVDArt_Common.bw_download3.RunWorkerAsync(parm)
                             Exit Do
                         ElseIf Not DVDArt_Common.bw_download5.IsBusy Then
+                            DVDArt_Common.bw_download5.WorkerSupportsCancellation = True
                             DVDArt_Common.bw_download5.RunWorkerAsync(parm)
                             Exit Do
                         Else
@@ -736,6 +807,7 @@ Public Class DVDArt_GUI
 
             Dim parm As Object = id
 
+            bw_import.WorkerSupportsCancellation = True
             bw_import.RunWorkerAsync(parm)
 
         End If
@@ -822,9 +894,16 @@ Public Class DVDArt_GUI
 
                         lvi = Nothing
 
+                        li_missing.ForeColor = Color.White
+
                         For y = 0 To 2
 
                             li_missing.SubItems.Add("")
+                            'If fileexist(y) Then
+                            'li_missing.SubItems.Add("1")
+                            'Else
+                            'li_missing.SubItems.Add("0")
+                            'End If
 
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
@@ -839,6 +918,8 @@ Public Class DVDArt_GUI
                             ListView_SetItem(lv_movies_missing.Handle, lvi)
 
                         Next
+
+                        li_missing.ForeColor = Color.Black
 
                         li_missing.SubItems.Add(SQLreader(0))
 
@@ -1175,6 +1256,32 @@ Public Class DVDArt_GUI
         cms_missing.Items.Item(3).Visible = True
     End Sub
 
+    Private Sub lv_movies_missing_ColumnClick(sender As Object, e As System.Windows.Forms.ColumnClickEventArgs) Handles lv_movies_missing.ColumnClick
+
+        lv_movies_missing.ListViewItemSorter = lvwColumnSorter
+
+        ' Determine if the clicked column is already the column that is 
+        ' being sorted.
+        If (e.Column = lvwColumnSorter.SortColumn) Then
+            ' Reverse the current sort direction for this column.
+            If (lvwColumnSorter.Order = SortOrder.Ascending) Then
+                lvwColumnSorter.Order = SortOrder.Descending
+            Else
+                lvwColumnSorter.Order = SortOrder.Ascending
+            End If
+        Else
+            ' Set the column number that is to be sorted; default to ascending.
+            lvwColumnSorter.SortColumn = e.Column
+            lvwColumnSorter.Order = SortOrder.Ascending
+        End If
+
+        SetSortArrow(lv_movies_missing, e.Column, lvwColumnSorter.order)
+
+        ' Perform the sort with these new sort options.
+        lv_movies_missing.Sort()
+
+    End Sub
+
     Private Sub lv_series_missing_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles lv_series_missing.GotFocus
         cms_missing.Items.Item(3).Visible = False
     End Sub
@@ -1310,7 +1417,10 @@ Public Class DVDArt_GUI
                 Next
             ElseIf e.ClickedItem.Text = "Use Cover Art for DVD Art" Then
 
-                If Not bw_coverart.IsBusy Then bw_coverart.RunWorkerAsync()
+                If Not bw_coverart.IsBusy Then
+                    bw_coverart.WorkerSupportsCancellation = True
+                    bw_coverart.RunWorkerAsync()
+                End If
 
             ElseIf e.ClickedItem.Text = "Select/Edit Cover Art for DVD Art" Then
 
@@ -1687,6 +1797,8 @@ Public Class DVDArt_GUI
             If DVDArt_Common.bw_download4.IsBusy Then DVDArt_Common.bw_download4.CancelAsync()
             If DVDArt_Common.bw_download5.IsBusy Then DVDArt_Common.bw_download5.CancelAsync()
             If bw_compress.IsBusy Then bw_compress.CancelAsync()
+            If bw_coverart.IsBusy Then bw_coverart.CancelAsync()
+            If bw_import.IsBusy Then bw_import.CancelAsync()
 
             Me.Cursor = Cursors.Default
 
@@ -1721,6 +1833,11 @@ Public Class DVDArt_GUI
             il_state.Images.Add(My.Resources.download)
             il_state.Images.Add(My.Resources.tick)
             il_state.Images.Add(My.Resources.cross)
+
+            'initialize column header images
+            il_column.Images.Add(My.Resources.sort_none)
+            il_column.Images.Add(My.Resources.sort_asc)
+            il_column.Images.Add(My.Resources.sort_desc)
 
             'initialize labels
             l_imdb_id.Text = Nothing
