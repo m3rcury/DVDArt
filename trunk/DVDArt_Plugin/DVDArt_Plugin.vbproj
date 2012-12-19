@@ -125,6 +125,7 @@
       <DependentUpon>DVDArt_GUI.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ListViewColumnSorter.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -194,6 +195,9 @@
     <None Include="Resources\movingpictures.png" />
     <Content Include="Resources\process.png" />
     <Content Include="Resources\selectcoverart.png" />
+    <Content Include="Resources\sort_asc.png" />
+    <Content Include="Resources\sort_desc.png" />
+    <Content Include="Resources\sort_none.png" />
     <Content Include="Resources\tvseries.png" />
     <Content Include="Resources\upload.png" />
     <None Include="Resources\compress.png" />
