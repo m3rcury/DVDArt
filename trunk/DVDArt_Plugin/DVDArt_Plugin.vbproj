@@ -193,6 +193,7 @@
     <Content Include="Resources\dvdart_mask.png" />
     <Content Include="Resources\ICSharpCode.SharpZipLib.dll" />
     <None Include="Resources\movingpictures.png" />
+    <Content Include="Resources\na.png" />
     <Content Include="Resources\process.png" />
     <Content Include="Resources\selectcoverart.png" />
     <Content Include="Resources\sort_asc.png" />

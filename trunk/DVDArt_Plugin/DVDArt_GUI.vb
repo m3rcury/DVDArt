@@ -833,6 +833,7 @@ Public Class DVDArt_GUI
         Dim SQLreader As SQLiteDataReader
         Dim processed_movies(), imdb_id_in_mp() As String
         Dim x As Integer = 0
+        Dim found, missing As Boolean
 
         If Not FileSystem.FileExists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
 
@@ -879,16 +880,21 @@ Public Class DVDArt_GUI
 
                 If processed_movies.Contains(SQLreader(0)) Then
 
+                    found = False
+                    missing = False
+
                     For y = 0 To 2
                         fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & SQLreader(0) & ".png")
+                        If Not found Then found = checked(y) And fileexist(y)
+                        If Not missing Then missing = checked(y) And Not fileexist(y)
                     Next
 
-                    If fileexist(0) Or fileexist(1) Or fileexist(2) Then
+                    If found Then
                         li_movies = lv_movies.Items.Add(SQLreader(1))
                         li_movies.SubItems.Add(SQLreader(0))
                     End If
 
-                    If Not fileexist(0) Or Not fileexist(1) Or Not fileexist(2) Then
+                    If missing Then
 
                         li_missing = lv_movies_missing.Items.Add(SQLreader(1))
 
@@ -908,10 +914,14 @@ Public Class DVDArt_GUI
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
 
-                            If fileexist(y) Then
-                                lvi.iImage = 1
+                            If checked(y) Then
+                                If fileexist(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
                             Else
-                                lvi.iImage = 2
+                                lvi.iImage = 3
                             End If
 
                             lvi.mask = LVIF_IMAGE
@@ -1037,7 +1047,7 @@ Public Class DVDArt_GUI
                 If processed_series.Contains(SQLreader(0)) Then
 
                     For y = 1 To 2
-                        fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & SQLreader(0) & ".png")
+                        fileexist(y) = checked(y) And FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & SQLreader(0) & ".png")
                     Next
 
                     If fileexist(1) Or fileexist(2) Then
@@ -1058,10 +1068,14 @@ Public Class DVDArt_GUI
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
 
-                            If fileexist(y) Then
-                                lvi.iImage = 1
+                            If checked(y) Then
+                                If fileexist(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
                             Else
-                                lvi.iImage = 2
+                                lvi.iImage = 3
                             End If
 
                             lvi.mask = LVIF_IMAGE
@@ -1833,6 +1847,7 @@ Public Class DVDArt_GUI
             il_state.Images.Add(My.Resources.download)
             il_state.Images.Add(My.Resources.tick)
             il_state.Images.Add(My.Resources.cross)
+            il_state.Images.Add(My.Resources.na)
 
             'initialize column header images
             il_column.Images.Add(My.Resources.sort_none)
