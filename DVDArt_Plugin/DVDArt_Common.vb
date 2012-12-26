@@ -140,6 +140,24 @@ Public Class DVDArt_Common
                     End If
                 Next
             Next
+
+            ' if no artwork found for preferred language, check if there is anything in english
+            If language <> "EN" Then
+                For x = 0 To (details.Length / 6) - 1
+                    For y = 1 To 5 Step 2
+                        If InStr(details(y, x), "LANG:EN") > 0 Then
+
+                            For i = 0 To 5
+                                returndetails(i, 0) = details(i, x)
+                            Next
+
+                            Return returndetails
+
+                        End If
+                    Next
+                Next
+            End If
+
         Else
             returndetails = details
         End If
@@ -412,7 +430,7 @@ Public Class DVDArt_Common
     Public Shared Sub Initialize()
 
         ' initialize version
-        _version = "v1.0.1.0"
+        _version = "v1.0.1.1"
 
         ' initialize folder paths
         folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"

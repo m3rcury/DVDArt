@@ -26,5 +26,5 @@ Imports MediaPortal.Common.Utils
 <Assembly: UsesSubsystem("MP.SkinEngine")> 
 <Assembly: UsesSubsystem("MP.Config")> 
 
-<Assembly: AssemblyVersion("1.0.1.0")> 
-<Assembly: AssemblyFileVersion("1.0.1.0")> 
+<Assembly: AssemblyVersion("1.0.1.1")> 
+<Assembly: AssemblyFileVersion("1.0.1.1")> 

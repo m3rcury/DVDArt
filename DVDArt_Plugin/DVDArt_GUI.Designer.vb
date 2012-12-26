@@ -132,6 +132,7 @@ Partial Class DVDArt_GUI
         Me.MUploadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SendToImporterToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RescanAllToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Label7 = New System.Windows.Forms.Label()
         Me.cms_found.SuspendLayout()
         Me.cms_import.SuspendLayout()
         Me.cms_missing.SuspendLayout()
@@ -937,6 +938,7 @@ Partial Class DVDArt_GUI
         '
         'gb2
         '
+        Me.gb2.Controls.Add(Me.Label7)
         Me.gb2.Controls.Add(Me.cb_language)
         Me.gb2.Controls.Add(Me.Label6)
         Me.gb2.Controls.Add(Me.pb2)
@@ -1208,6 +1210,16 @@ Partial Class DVDArt_GUI
         Me.RescanAllToolStripMenuItem1.Size = New System.Drawing.Size(232, 22)
         Me.RescanAllToolStripMenuItem1.Text = "Rescan all"
         '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.0!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Location = New System.Drawing.Point(421, 260)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(147, 9)
+        Me.Label7.TabIndex = 8
+        Me.Label7.Text = "(English is by default secondary language)"
+        '
         'DVDArt_GUI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1374,5 +1386,6 @@ Partial Class DVDArt_GUI
     Friend WithEvents ManuallyUploadArtworkToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SelectCoverArtForDVDArtToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents il_column As System.Windows.Forms.ImageList
+    Friend WithEvents Label7 As System.Windows.Forms.Label
 
 End Class
