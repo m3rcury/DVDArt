@@ -1,9 +1,10 @@
 ﻿Imports Microsoft.VisualBasic.FileIO
+
 Imports System.Data.SQLite
 Imports System.Runtime.InteropServices
 Imports System.ComponentModel
+
 Imports MediaPortal.Configuration
-Imports ICSharpCode.SharpZipLib.Zip
 
 Public Class DVDArt_GUI
 
@@ -613,7 +614,7 @@ Public Class DVDArt_GUI
         ' Read already processed movies to identify newly imported ones in movingpictures
 
         Dim x As Integer
-        Dim processed_movies() As String
+        Dim processed_movies() As String = Nothing
 
         SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
 
@@ -742,7 +743,8 @@ Public Class DVDArt_GUI
         ElseIf mode = "selected" Then
 
             Dim parm As Object
-            Dim fullpath, thumbpath As String
+            Dim fullpath As String = Nothing
+            Dim thumbpath As String = Nothing
 
             'id = current_imdb_id
 
@@ -831,7 +833,8 @@ Public Class DVDArt_GUI
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
-        Dim processed_movies(), imdb_id_in_mp() As String
+        Dim processed_movies() As String = Nothing
+        Dim imdb_id_in_mp() As String = Nothing
         Dim x As Integer = 0
         Dim found, missing As Boolean
 
@@ -989,7 +992,8 @@ Public Class DVDArt_GUI
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
-        Dim processed_series(), thetvdb_id_in_tv() As String
+        Dim processed_series() As String = Nothing
+        Dim thetvdb_id_in_tv() As String = Nothing
         Dim x As Integer = 0
 
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
@@ -1866,18 +1870,6 @@ Public Class DVDArt_GUI
             'populate language dropdown
             cb_language.Items.AddRange(DVDArt_Common.lang)
 
-            'extract System.Data.SQLite.dll from resources to application library
-            Dim dll As String = IO.Directory.GetCurrentDirectory() & "\System.Data.SQLite.dll"
-            If Not FileSystem.FileExists(dll) Then FileSystem.WriteAllBytes(dll, My.Resources.System_Data_SQLite, False)
-
-            'extract Interop.Shell32.dll from resources to application library
-            dll = IO.Directory.GetCurrentDirectory() & "\Interop.Shell32.dll"
-            If Not FileSystem.FileExists(dll) Then FileSystem.WriteAllBytes(dll, My.Resources.Interop_Shell32, False)
-
-            'extract ICSharpCode.SharpZipLib.dll from resources to application library
-            dll = IO.Directory.GetCurrentDirectory() & "\ICSharpCode.SharpZipLib.dll"
-            If Not FileSystem.FileExists(dll) Then FileSystem.WriteAllBytes(dll, My.Resources.ICSharpCode_SharpZipLib, False)
-
             'extract dvdart.png from resources to temporary folder
             Dim png As String = DVDArt_Common._temp & "\dvdart.png"
             If Not FileSystem.FileExists(png) Then
@@ -1890,15 +1882,6 @@ Public Class DVDArt_GUI
             If Not FileSystem.FileExists(png) Then
                 Dim image As Image = New Bitmap(My.Resources.dvdart_mask)
                 image.Save(png)
-            End If
-
-            'extract convert.zip from resources to temporary folder
-            Dim obj As String = DVDArt_Common._temp & "\convert.exe"
-            If Not FileSystem.FileExists(obj) Then
-                obj = DVDArt_Common._temp & "\convert.zip"
-                FileSystem.WriteAllBytes(obj, My.Resources.convert, False)
-                Dim unzip As New FastZip
-                unzip.ExtractZip(obj, DVDArt_Common._temp, "")
             End If
 
             Create_Folder_Structure()
