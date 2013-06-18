@@ -56,21 +56,24 @@
   <ItemGroup>
     <Reference Include="Common.Utils, Version=1.2.100.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\Common.Utils.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Common.Utils.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Core, Version=1.2.100.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\Core.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="Interop.Shell32">
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Interop.Shell32.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\System.Data.SQLite.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -80,7 +83,8 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Utils, Version=1.2.100.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\Utils.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -184,14 +188,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\convert.zip" />
     <None Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\convert.png" />
     <Content Include="Resources\dvdart.png" />
     <Content Include="Resources\dvdart_mask.png" />
-    <Content Include="Resources\ICSharpCode.SharpZipLib.dll" />
     <None Include="Resources\movingpictures.png" />
     <Content Include="Resources\na.png" />
     <Content Include="Resources\process.png" />
@@ -205,9 +207,7 @@
     <None Include="Resources\movies.png" />
     <None Include="Resources\delete.png" />
     <None Include="bin\Release\Interop.Shell32.dll" />
-    <Content Include="Resources\Interop.Shell32.dll" />
     <Content Include="Resources\preview.png" />
-    <Content Include="Resources\System.Data.SQLite.dll" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\cross.png" />
     <None Include="Resources\restart.png" />
@@ -225,17 +225,6 @@
     <Content Include="Resources\movies.ico" />
     <None Include="Resources\rescan_movies.png" />
     <None Include="Resources\movie_search.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="Shell32">
-      <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,8 @@
 ﻿Imports Microsoft.VisualBasic.FileIO
+
 Imports MediaPortal.Configuration
 Imports MediaPortal.GUI.Library
+
 Imports System.Data.SQLite
 Imports System.ComponentModel
 
@@ -16,7 +18,8 @@ Public Class DVDArt_Common
 
     Public Shared Function parse(ByVal jsonresponse As String, ByVal type As String, Optional ByVal language As String = "##") As Array
 
-        Dim details(5, 0), returndetails(5, 0), parsestring(2), keyword(3), parseHD As String
+        Dim details(5, 0), returndetails(5, 0), parsestring(2), keyword(3) As String
+        Dim parseHD As String = Nothing
         Dim starting(2), startHD, startp, endp, len, x, y, i, j As Integer
 
         If type = "movie" Then
@@ -223,7 +226,9 @@ Public Class DVDArt_Common
         Dim parm As Object
         Dim y As Integer
 
-        Dim fullpath, thumbpath, jsonresponse As String
+        Dim jsonresponse As String = Nothing
+        Dim fullpath As String = Nothing
+        Dim thumbpath As String = Nothing
 
         If language = "##" Then
             jsonresponse = JSON_request(id, type, "1")
@@ -397,7 +402,7 @@ Public Class DVDArt_Common
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
-        Dim columns() As String
+        Dim columns() As String = Nothing
         Dim exists() As Boolean
         Dim x As Integer = 0
 
@@ -430,7 +435,7 @@ Public Class DVDArt_Common
     Public Shared Sub Initialize()
 
         ' initialize version
-        _version = "v1.0.1.1"
+        _version = "v1.0.1.2"
 
         ' initialize folder paths
         folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"

@@ -95,13 +95,6 @@ Namespace My.Resources
             End Get
         End Property
         
-        Friend ReadOnly Property convert() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("convert", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
         Friend ReadOnly Property convert1() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("convert1", resourceCulture)
@@ -141,20 +134,6 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("dvdart_mask", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        Friend ReadOnly Property ICSharpCode_SharpZipLib() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("ICSharpCode_SharpZipLib", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        Friend ReadOnly Property Interop_Shell32() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("Interop_Shell32", resourceCulture)
-                Return CType(obj,Byte())
             End Get
         End Property
         
@@ -246,13 +225,6 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("sort_none", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        Friend ReadOnly Property System_Data_SQLite() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("System_Data_SQLite", resourceCulture)
-                Return CType(obj,Byte())
             End Get
         End Property
         

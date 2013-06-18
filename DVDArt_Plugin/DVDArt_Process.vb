@@ -218,7 +218,7 @@ Public Class DVDArt_Process
 
         Dim x As Integer
         Dim parm As Object = "queue"
-        Dim processed_movies() As String
+        Dim processed_movies() As String = Nothing
 
         SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
         SQLconnect.Open()
@@ -278,7 +278,7 @@ Public Class DVDArt_Process
         SQLcommand.CommandText = "SELECT thetvdb_id FROM processed_series WHERE thetvdb_id is not Null ORDER BY thetvdb_id"
         SQLreader = SQLcommand.ExecuteReader()
 
-        Dim processed_series() As String
+        Dim processed_series() As String = Nothing
 
         x = 0
 
