@@ -1,8 +1,9 @@
 ﻿Imports Microsoft.VisualBasic.FileIO
+Imports System.Data.SQLite
 
 Public Class DVDArt_CoverArt
 
-    Private _images(), _thumbs, _imdb_id As String
+    Private _images(), _thumbs, _imdb_id, _movie_name As String
     Private lv_images As New ListView
     Private dvdart, dvdart_mask As Bitmap
 
@@ -29,11 +30,12 @@ Public Class DVDArt_CoverArt
         IsDragging = False
     End Sub
 
-    Public Sub New(images() As String, thumbs As String, imdb_id As String)
+    Public Sub New(images() As String, thumbs As String, imdb_id As String, movie_name As String)
         InitializeComponent()
         _images = images
         _thumbs = thumbs
         _imdb_id = imdb_id
+        _movie_name = movie_name.Replace("""", Nothing)
     End Sub
 
     Private Sub lv_coverart_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_coverart.SelectedIndexChanged
@@ -126,51 +128,32 @@ Public Class DVDArt_CoverArt
 
     Private Sub b_done_Click(sender As System.Object, e As System.EventArgs) Handles b_done.Click
 
-        Dim CropRect As New Rectangle(0, Math.Abs(pb_coverart.Bounds.Top), 500, 500)
-        Dim CropImage = New Bitmap(CropRect.Width, CropRect.Height)
-        Using grp = Graphics.FromImage(CropImage)
-            grp.DrawImage(pb_coverart.Image, New Rectangle(0, 0, CropRect.Width, CropRect.Height), CropRect, GraphicsUnit.Pixel)
-        End Using
+        Dim file2 As String = _thumbs & DVDArt_Common.folder(0, 0, 0) & _imdb_id & ".png"
 
-        Dim file As String = DVDArt_Common._temp & "\" & _imdb_id & ".jpg"
-
-        CropImage.Save(file)
-
-        'create image with transparency from cover art
-        Dim fullsize, thumb As String
-        Dim file2 As String = file.Replace(IO.Path.GetExtension(file), ".png")
-        Dim params() As String = {"-resize", "500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", DVDArt_Common._temp & "\dvdart_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", DVDArt_Common._temp & "\dvdart.png", "-compose", "over", "-composite"}
-
-        fullsize = _thumbs & DVDArt_Common.folder(0, 0, 0) & _imdb_id & ".png"
-
-        If FileIO.FileSystem.FileExists(fullsize) Then
+        If FileIO.FileSystem.FileExists(file2) Then
             If MsgBox("DvdArt already exists.  Overwrite?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                 Me.Close()
                 Return
             Else
-                FileIO.FileSystem.DeleteFile(fullsize)
+                FileIO.FileSystem.DeleteFile(file2)
             End If
         End If
 
-        DVDArt_Common.Convert(file, file2, params)
+        Dim file As String = DVDArt_Common._temp & "\" & _imdb_id & ".jpg"
+        Dim CropRect As New Rectangle(0, Math.Abs(pb_coverart.Bounds.Top), 500, 500)
+        Dim CropImage = New Bitmap(CropRect.Width, CropRect.Height)
 
-        Dim counter As Integer = 0
+        Using grp = Graphics.FromImage(CropImage)
+            grp.DrawImage(pb_coverart.Image, New Rectangle(0, 0, CropRect.Width, CropRect.Height), CropRect, GraphicsUnit.Pixel)
+        End Using
 
-        Do While (Not FileSystem.FileExists(file2) Or DVDArt_Common.FileInUse(file2)) And counter < 5
-            DVDArt_Common.wait(250)
-            counter += 1
-        Loop
+        CropImage.Save(file)
 
-        If counter = 5 Then
-            MsgBox("Failed to create DVDArt from " & file & " to " & fullsize, MsgBoxStyle.Critical)
+        DVDArt_Common.create_CoverArt(file, _imdb_id, _movie_name, cb_title.Checked, cb_logos.Checked)
+
+        If Not FileSystem.FileExists(file2) Then
+            MsgBox("Failed to create DVDArt from " & file & " to " & file2 & ".png", MsgBoxStyle.Critical)
         Else
-            'move to Thumbs folder
-            FileIO.FileSystem.MoveFile(file2, fullsize, True)
-            'copy to Thumbs folder and resize to thumb size
-            thumb = _thumbs & DVDArt_Common.folder(0, 0, 1) & _imdb_id & ".png"
-            FileIO.FileSystem.CopyFile(fullsize, thumb, True)
-            DVDArt_Common.Resize(thumb, 200, 200)
-
             FileIO.FileSystem.DeleteFile(file)
         End If
 

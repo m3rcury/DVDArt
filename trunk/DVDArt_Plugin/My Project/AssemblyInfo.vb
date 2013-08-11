@@ -16,7 +16,7 @@ Imports MediaPortal.Common.Utils
 <Assembly: AssemblyCopyright("Copyright ©  2012")> 
 <Assembly: AssemblyTrademark("")> 
 
-<Assembly: ComVisible(False)>
+<Assembly: ComVisible(False)> 
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
 <Assembly: Guid("96387045-dcab-4af7-b834-56f553d19c1f")> 
@@ -24,7 +24,7 @@ Imports MediaPortal.Common.Utils
 'MediaPortal compatibility
 <Assembly: CompatibleVersion("1.3.100.0", "1.1.6.27644")> 
 <Assembly: UsesSubsystem("MP.SkinEngine")> 
-<Assembly: UsesSubsystem("MP.Config")>
+<Assembly: UsesSubsystem("MP.Config")> 
 
-<Assembly: AssemblyVersion("1.0.1.2")> 
-<Assembly: AssemblyFileVersion("1.0.1.2")> 
+<Assembly: AssemblyVersion("1.0.1.3")> 
+<Assembly: AssemblyFileVersion("1.0.1.3")> 

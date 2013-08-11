@@ -64,9 +64,16 @@
       <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Interop.Shell32">
-      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Interop.Shell32.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+    <Reference Include="Cornerstone">
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Cornerstone.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Databases">
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MovingPictures">
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\MovingPictures.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -74,6 +81,7 @@
     <Reference Include="System.Data.SQLite, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -194,9 +202,18 @@
     <Content Include="Resources\convert.png" />
     <Content Include="Resources\dvdart.png" />
     <Content Include="Resources\dvdart_mask.png" />
+    <Content Include="Resources\dvdart_title.png" />
+    <Content Include="Resources\grimm_clearart.png" />
+    <Content Include="Resources\grimm_clearlogo.png" />
     <None Include="Resources\movingpictures.png" />
+    <Content Include="Resources\hd.png" />
+    <Content Include="Resources\music.png" />
     <Content Include="Resources\na.png" />
     <Content Include="Resources\process.png" />
+    <Content Include="Resources\queen_banner.jpg" />
+    <Content Include="Resources\queen_cdart.png" />
+    <Content Include="Resources\queen_clearlogo.png" />
+    <Content Include="Resources\sd.png" />
     <Content Include="Resources\selectcoverart.png" />
     <Content Include="Resources\sort_asc.png" />
     <Content Include="Resources\sort_desc.png" />
@@ -225,6 +242,17 @@
     <Content Include="Resources\movies.ico" />
     <None Include="Resources\rescan_movies.png" />
     <None Include="Resources\movie_search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Shell32">
+      <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

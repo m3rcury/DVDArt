@@ -3,22 +3,32 @@
 Imports System.Data.SQLite
 Imports System.Runtime.InteropServices
 Imports System.ComponentModel
+Imports System.Threading
 
 Imports MediaPortal.Configuration
 
+'this is for mymovies.  you need to add movingpictures.dll in the resources
+Imports MediaPortal.Plugins.MovingPictures.Database
+
+'this is for myvideos.  you need to add database.dll in the resources
+'Imports MediaPortal.Video.Database
+
+'this is for myfilms.  you need to add myfilms.dll in the resources
+'Imports MyFilmsPlugin.MyFilms
+
 Public Class DVDArt_GUI
 
-    Public Shared checked(2) As Boolean
+    Public Shared checked(2, 2) As Boolean
 
+    Private WithEvents bw_compress, bw_coverart As New BackgroundWorker
+    Private WithEvents t_import_timer As New System.Windows.Forms.Timer
     Private database, thumbs, current_imdb_id, current_thetvdb_id, _lang, _lastrun As String
     Private l_import_queue As New List(Of String)
     Private l_import_index As New List(Of Integer)
     Private lvwColumnSorter = New ListViewColumnSorter()
-    Private lv_url_dvdart, lv_url_clearart, lv_url_clearlogo As New ListView
-    Private li_movies, li_series, li_import, li_missing As New ListViewItem
-    Private WithEvents t_import_timer As New Timer
-    Private WithEvents bw_compress, bw_coverart As New BackgroundWorker
-
+    Private lv_url_dvdart, lv_url_cdart, lv_url_clearart, lv_url_banner, lv_url_clearlogo As New ListView
+    Private li_movies, li_series, li_artist, li_music, li_import, li_missing As New ListViewItem
+    
     <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Auto)> _
     Friend Structure LVITEM
         Friend mask As Integer
@@ -34,28 +44,6 @@ Public Class DVDArt_GUI
         Friend iIndent As Integer
     End Structure
 
-    Friend Structure HDITEM
-        Friend mask As _mask
-        Friend cxy As Long
-        Friend pszText As String
-        Friend hbm As Long
-        Friend cchTextMax As Long
-        Friend fmt As _fmt
-        Friend lParam As Long
-        Friend iImage As Long
-        Friend iOrder As Long
-
-        Friend Enum _mask
-            format = &H4
-        End Enum
-
-        Friend Enum _fmt
-            SortDown = &H200
-            SortUp = &H400
-        End Enum
-
-    End Structure
-
     Friend Const LVM_FIRST As Integer = &H1000
     Friend Const LVM_SETITEMA As Integer = LVM_FIRST + 6
     Friend Const LVM_SETITEMW As Integer = LVM_FIRST + 76
@@ -64,44 +52,23 @@ Public Class DVDArt_GUI
     Friend Const LVIF_IMAGE As Integer = &H2
     Friend Const LVS_EX_SUBITEMIMAGES As Integer = &H2
 
-    Friend Const LVM_GETHEADER = LVM_FIRST + 31
-    Friend Const HDM_FIRST = &H1200
-    Friend Const HDM_GETITEM = HDM_FIRST + 11
-    Friend Const HDM_SETITEM = HDM_FIRST + 12
-
     Friend Overloads Declare Auto Function SendMessage Lib "User32.dll" (ByVal hwnd As IntPtr, ByVal msg As Integer, ByVal wParam As IntPtr, ByRef lParam As LVITEM) As Integer
-    Friend Overloads Declare Auto Function SendMessage Lib "User32.dll" (ByVal hwnd As IntPtr, ByVal msg As Integer, ByVal wParam As IntPtr, ByRef lParam As HDITEM) As Integer
     Friend Overloads Declare Auto Function SendMessage Lib "User32.dll" (ByVal hwnd As IntPtr, ByVal msg As Integer, ByVal wParam As Integer, ByVal lParam As Integer) As Integer
 
     Public Sub SetSortArrow(ByRef lv As ListView, ByVal column As Integer, ByVal order As Integer)
 
-        Dim hHeader As Long
-        Dim HD As New HDITEM
-
-        hHeader = SendMessage(lv.Handle, LVM_GETHEADER, 0, 0)
-
         For col = 0 To (lv.Columns.Count - 1)
+
+            lv.Columns.Item(col).Text = lv.Columns.Item(col).Text.Replace(" " & ChrW(&H25B2), Nothing)
+            lv.Columns.Item(col).Text = lv.Columns.Item(col).Text.Replace(" " & ChrW(&H25BC), Nothing)
 
             If col = column Then
 
-                With HD
-                    .mask = HDITEM._mask.format
-                End With
-
-                SendMessage(hHeader, HDM_GETITEM, col, HD)
-
                 If order = SortOrder.Ascending Then
-                    With HD
-                        .fmt = HDITEM._fmt.SortUp
-                    End With
-
+                    lv.Columns.Item(column).Text &= " " & ChrW(&H25B2)
                 ElseIf order = SortOrder.Descending Then
-                    With HD
-                        .fmt = HDITEM._fmt.SortDown
-                    End With
+                    lv.Columns.Item(column).Text &= " " & ChrW(&H25BC)
                 End If
-
-                SendMessage(hHeader, HDM_SETITEM, col, HD)
 
             End If
 
@@ -143,7 +110,7 @@ Public Class DVDArt_GUI
         Dim imdb_id, images() As String
         Dim x, y, z As Integer
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
 
@@ -155,7 +122,7 @@ Public Class DVDArt_GUI
 
             If Not FileSystem.FileExists(DVDArt_Common.folder(0, 0, 1)) Then
 
-                SQLcommand.CommandText = "SELECT alternatecovers, coverfullpath FROM movie_info WHERE imdb_id = """ & imdb_id & """"
+                SQLcommand.CommandText = "SELECT alternatecovers, coverfullpath, title FROM movie_info WHERE imdb_id = """ & imdb_id & """"
                 SQLreader = SQLcommand.ExecuteReader(CommandBehavior.SingleRow)
 
                 images = Split(SQLreader(0), "|")
@@ -175,20 +142,7 @@ Public Class DVDArt_GUI
 
                     If images(y) <> SQLreader(1) Or images.Length = 1 Then
 
-                        'create image with transparency from cover art
-                        Dim fullsize, thumb As String
-                        Dim params() As String = {"-resize", "500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", DVDArt_Common._temp & "\dvdart_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", DVDArt_Common._temp & "\dvdart.png", "-compose", "over", "-composite"}
-                        fullsize = thumbs & DVDArt_Common.folder(0, 0, 0) & imdb_id & ".png"
-                        DVDArt_Common.Convert("""" & images(y) & """", """" & fullsize & """", params)
-
-                        Do While Not FileSystem.FileExists(fullsize) Or DVDArt_Common.FileInUse(fullsize)
-                            wait(250)
-                        Loop
-
-                        'copy to Thumbs folder and resize to thumb size
-                        thumb = thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png"
-                        FileIO.FileSystem.CopyFile(fullsize, thumb, True)
-                        DVDArt_Common.Resize(thumb, 200, 200)
+                        DVDArt_Common.create_CoverArt(images(y), imdb_id, SQLreader(2), True, True)
 
                         If lv_movies.FindItemWithText(lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text) Is Nothing Then
                             li_movies = lv_movies.Items.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text)
@@ -216,7 +170,7 @@ Public Class DVDArt_GUI
         For Each filePath As String In IO.Directory.GetFiles(thumbs & DVDArt_Common.folder(0, 0, 0))
 
             If Not DVDArt_Common.FileInUse(filePath) Then
-                If DVDArt_Common.GetSize(thumbs & DVDArt_Common.folder(0, 0, 0), IO.Path.GetFileName(filePath)) <> "500x500" Then DVDArt_Common.Resize(filePath)
+                If DVDArt_Common.getSize(thumbs & DVDArt_Common.folder(0, 0, 0), IO.Path.GetFileName(filePath)) <> "500x500" Then DVDArt_Common.Resize(filePath)
             End If
 
         Next
@@ -228,6 +182,7 @@ Public Class DVDArt_GUI
         Dim parm As String = e.Argument
         Dim x, y As Integer
         Dim added, addedmissing, filenotexist(2), downloaded(2) As Boolean
+        Dim MBID As String = Nothing
         Dim lvi As LVITEM
 
         On Error Resume Next
@@ -258,7 +213,7 @@ Public Class DVDArt_GUI
                     If lv_import.Items.Item(x).SubItems.Item(2).Text = "Movie" Then
 
                         For y = 0 To 2
-                            filenotexist(y) = checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
+                            filenotexist(y) = checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, "movie", _lang)
@@ -305,6 +260,8 @@ Public Class DVDArt_GUI
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_movies_missing.Handle, lvi)
 
+                            lv_import.Items(x).EnsureVisible()
+
                         Next
 
                         If addedmissing Then
@@ -319,7 +276,7 @@ Public Class DVDArt_GUI
                     ElseIf lv_import.Items.Item(x).SubItems.Item(2).Text = "Series" Then
 
                         For y = 1 To 2
-                            filenotexist(y) = checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
+                            filenotexist(y) = checked(1, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, "series", _lang)
@@ -366,6 +323,8 @@ Public Class DVDArt_GUI
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_series_missing.Handle, lvi)
 
+                            lv_import.Items(x).EnsureVisible()
+
                         Next
 
                         If addedmissing Then
@@ -377,9 +336,202 @@ Public Class DVDArt_GUI
                         SQLcommand.CommandText = "INSERT INTO processed_series (thetvdb_id) VALUES(""" & lv_import.Items.Item(x).SubItems.Item(1).Text & """)"
                         SQLcommand.ExecuteNonQuery()
 
+                    ElseIf lv_import.Items.Item(x).SubItems.Item(2).Text = "Artist" Then
+
+                        MBID = DVDArt_Common.Get_Artist_MBID(lv_import.Items.Item(x).SubItems.Item(0).Text)
+
+                        If MBID <> Nothing Then
+
+                            lv_import.Items.Item(x).SubItems.Item(1).Text = MBID
+
+                            For y = 1 To 2
+                                filenotexist(y) = checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(0).Text & ".png")
+                            Next
+
+                            downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, "artist")
+
+                        Else
+                            downloaded = {False, False, False}
+                            lv_import.Items.Item(x).SubItems.Item(1).Text = Nothing
+                        End If
+
+                        For y = 0 To 2
+
+                            If downloaded(y) Then
+
+                                Dim file1 As String = thumbs & DVDArt_Common.folder(2, y, 0) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png"
+                                Dim file2 As String = lv_import.Items.Item(x).SubItems.Item(0).Text & ".png"
+
+                                Do While Not FileSystem.FileExists(file1)
+                                    wait(250)
+                                Loop
+
+                                FileSystem.RenameFile(file1, file2)
+
+                                file1 = thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png"
+                                file2 = lv_import.Items.Item(x).SubItems.Item(0).Text & ".png"
+
+                                Do While Not FileSystem.FileExists(file1)
+                                    wait(250)
+                                Loop
+
+                                FileSystem.RenameFile(file1, file2)
+
+                                lv_import.Items(x).StateImageIndex = 1
+
+                                added = added Or (lv_music.FindItemWithText(lv_import.Items.Item(x).SubItems.Item(0).Text).Text <> Nothing)
+
+                                If Not added Then
+                                    li_music = lv_music.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                    li_music.SubItems.Add(lv_import.Items.Item(x).SubItems.Item(1).Text)
+                                    added = True
+                                End If
+                            Else
+                                If Not added Then
+                                    lv_import.Items(x).StateImageIndex = 2
+                                End If
+
+                                If Not addedmissing Then
+                                    li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                    addedmissing = True
+                                End If
+                            End If
+
+                            If Not addedmissing Then
+                                li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                addedmissing = True
+                            End If
+
+                            li_missing.SubItems.Add("")
+
+                            lvi.iItem = li_missing.Index
+                            lvi.subItem = li_missing.SubItems.Count - 1
+
+                            If y > 0 Then
+                                If downloaded(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
+                            Else
+                                lvi.iImage = 3
+                            End If
+
+                            lvi.mask = LVIF_IMAGE
+                            ListView_SetItem(lv_music_missing.Handle, lvi)
+
+                            lv_import.Items(x).EnsureVisible()
+
+                        Next
+
+                        If addedmissing Then
+                            li_missing.SubItems.Add(lv_import.Items.Item(x).SubItems.Item(1).Text)
+                        Else
+                            li_missing.SubItems.RemoveAt(li_missing.Index)
+                        End If
+
+                        SQLcommand.CommandText = "INSERT INTO processed_artist (artist, MBID) VALUES('" & lv_import.Items.Item(x).SubItems.Item(0).Text.Replace("'", "''") & "','" & lv_import.Items.Item(x).SubItems.Item(1).Text & "')"
+                        SQLcommand.ExecuteNonQuery()
+
+                    ElseIf lv_import.Items.Item(x).SubItems.Item(2).Text = "Music" Then
+
+                        MBID = DVDArt_Common.Get_MBID(lv_import.Items.Item(x).SubItems.Item(0).Text, lv_import.Items.Item(x).SubItems.Item(3).Text, database)
+
+                        If MBID <> Nothing Then
+
+                            lv_import.Items.Item(x).SubItems.Item(1).Text = MBID
+
+                            For y = 0 To 0
+                                filenotexist(y) = checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(0).Text & ".png")
+                            Next
+
+                            downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, "artist")
+                        Else
+                            downloaded = {False, False, False}
+                            lv_import.Items.Item(x).SubItems.Item(1).Text = Nothing
+                        End If
+
+                        For y = 0 To 2
+
+                            If downloaded(y) Then
+
+                                Dim file1 As String = thumbs & DVDArt_Common.folder(2, y, 0) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png"
+                                Dim file2 As String = lv_import.Items.Item(x).SubItems.Item(0).Text & ".png"
+
+                                Do While Not FileSystem.FileExists(file1)
+                                    wait(250)
+                                Loop
+
+                                FileSystem.RenameFile(file1, file2)
+
+                                file1 = thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png"
+                                file2 = lv_import.Items.Item(x).SubItems.Item(0).Text & ".png"
+
+                                Do While Not FileSystem.FileExists(file1)
+                                    wait(250)
+                                Loop
+
+                                FileSystem.RenameFile(file1, file2)
+
+                                lv_import.Items(x).StateImageIndex = 1
+
+                                added = added Or (lv_music.FindItemWithText(lv_import.Items.Item(x).SubItems.Item(0).Text).Text <> Nothing)
+
+                                If Not added Then
+                                    li_music = lv_music.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                    li_music.SubItems.Add(lv_import.Items.Item(x).SubItems.Item(1).Text)
+                                    added = True
+                                End If
+                            Else
+                                If Not added Then
+                                    lv_import.Items(x).StateImageIndex = 2
+                                End If
+
+                                If Not addedmissing Then
+                                    li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                    addedmissing = True
+                                End If
+                            End If
+
+                            If Not addedmissing Then
+                                li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                addedmissing = True
+                            End If
+
+                            li_missing.SubItems.Add("")
+
+                            lvi.iItem = li_missing.Index
+                            lvi.subItem = li_missing.SubItems.Count - 1
+
+                            If y = 0 Then
+                                If downloaded(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
+                            Else
+                                lvi.iImage = 3
+                            End If
+
+                            lvi.mask = LVIF_IMAGE
+                            ListView_SetItem(lv_music_missing.Handle, lvi)
+
+                            lv_import.Items(x).EnsureVisible()
+
+                        Next
+
+                        If addedmissing Then
+                            li_missing.SubItems.Add(lv_import.Items.Item(x).SubItems.Item(1).Text)
+                        Else
+                            li_missing.SubItems.RemoveAt(li_missing.Index)
+                        End If
+
+                        SQLcommand.CommandText = "INSERT INTO processed_music (album, MBID) VALUES('" & lv_import.Items.Item(x).SubItems.Item(0).Text.Replace("'", "''") & "','" & lv_import.Items.Item(x).SubItems.Item(1).Text & "')"
+                        SQLcommand.ExecuteNonQuery()
+
                     End If
 
-                    x += 1
+                        x += 1
 
                 Loop
 
@@ -413,12 +565,13 @@ Public Class DVDArt_GUI
 
                     If type = "movie" Then
                         For y = 0 To 2
-                            filenotexist(y) = checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & id & ".png")
+                            filenotexist(y) = checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & id & ".png")
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, id, False, filenotexist, type, _lang)
 
                         For y = 0 To 2
+
                             If downloaded(y) Then
                                 lv_import.Items(l_import_index(x)).StateImageIndex = 1
 
@@ -458,10 +611,13 @@ Public Class DVDArt_GUI
 
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_movies_missing.Handle, lvi)
+
+                            lv_import.Items(l_import_index(x)).EnsureVisible()
+
                         Next
                     ElseIf type = "series" Then
                         For y = 1 To 2
-                            filenotexist(y) = checked(y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & id & ".png")
+                            filenotexist(y) = checked(1, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & id & ".png")
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, id, False, filenotexist, type, _lang)
@@ -508,6 +664,118 @@ Public Class DVDArt_GUI
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_series_missing.Handle, lvi)
 
+                            lv_import.Items(l_import_index(x)).EnsureVisible()
+
+                        Next
+                    ElseIf type = "artist" Then
+
+                        lv_import.Items(l_import_index(x)).SubItems.Item(2).Text = DVDArt_Common.Get_Artist_MBID(lv_import.Items.Item(x).SubItems.Item(0).Text)
+
+                        For y = 1 To 2
+                            filenotexist(y) = checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & id & ".png")
+                        Next
+
+                        downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, id, False, filenotexist, type, _lang)
+
+                        For y = 1 To 2
+
+                            If downloaded(y) Then
+                                lv_import.Items(l_import_index(x)).StateImageIndex = 1
+
+                                added = added Or (lv_artist.FindItemWithText(title).Text <> Nothing)
+
+                                If Not added Then
+                                    li_artist = lv_artist.Items.Add(title)
+                                    li_artist.SubItems.Add(id)
+                                    added = True
+                                End If
+                            Else
+                                If Not added Then
+                                    lv_import.Items(l_import_index(x)).StateImageIndex = 2
+                                End If
+
+                                If Not addedmissing Then
+                                    li_missing = lv_music_missing.Items.Add(title)
+                                    addedmissing = True
+                                End If
+                            End If
+
+                            If Not addedmissing Then
+                                li_missing = lv_music_missing.Items.Add(title)
+                                addedmissing = True
+                            End If
+
+                            li_missing.SubItems.Add("")
+
+                            lvi.iItem = li_missing.Index
+                            lvi.subItem = li_missing.SubItems.Count - 1
+
+                            If downloaded(y) Then
+                                lvi.iImage = 1
+                            Else
+                                lvi.iImage = 2
+                            End If
+
+                            lvi.mask = LVIF_IMAGE
+                            ListView_SetItem(lv_music_missing.Handle, lvi)
+
+                            lv_import.Items(l_import_index(x)).EnsureVisible()
+
+                        Next
+                    ElseIf type = "music" Then
+
+                        'lv_import.Items(l_import_index(x)).SubItems.Item(2).Text = DVDArt_Common.Get_MBID(lv_import.Items.Item(x).SubItems.Item(1).Text)
+
+                        For y = 0 To 0
+                            filenotexist(y) = checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & id & ".png")
+                        Next
+
+                        downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, id, False, filenotexist, type, _lang)
+
+                        For y = 0 To 0
+
+                            If downloaded(y) Then
+                                lv_import.Items(l_import_index(x)).StateImageIndex = 1
+
+                                added = added Or (lv_music.FindItemWithText(title).Text <> Nothing)
+
+                                If Not added Then
+                                    li_music = lv_music.Items.Add(title)
+                                    li_music.SubItems.Add(id)
+                                    added = True
+                                End If
+                            Else
+                                If Not added Then
+                                    lv_import.Items(l_import_index(x)).StateImageIndex = 2
+                                End If
+
+                                If Not addedmissing Then
+                                    li_missing = lv_music_missing.Items.Add(title)
+                                    addedmissing = True
+                                End If
+                            End If
+
+                            If Not addedmissing Then
+                                li_missing = lv_music_missing.Items.Add(title)
+                                addedmissing = True
+                            End If
+
+                            li_missing.SubItems.Add("")
+
+                            lvi.iItem = li_missing.Index
+                            lvi.subItem = li_missing.SubItems.Count - 1
+
+                            If downloaded(y) Then
+                                lvi.iImage = 1
+                            Else
+                                lvi.iImage = 2
+                            End If
+
+                            lvi.mask = LVIF_IMAGE
+                            ListView_SetItem(lv_music_missing.Handle, lvi)
+
+                            lv_import.Items(l_import_index(x)).EnsureVisible()
+
                         Next
                     End If
 
@@ -526,6 +794,8 @@ Public Class DVDArt_GUI
 
         End If
 
+        e.Result = "Import Complete"
+
     End Sub
 
     Private Sub use_coverart(mode As String)
@@ -533,10 +803,10 @@ Public Class DVDArt_GUI
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
-        Dim imdb_id, images() As String
+        Dim imdb_id, movie_name, images() As String
         Dim x, y, z, count As Integer
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
 
@@ -549,8 +819,10 @@ Public Class DVDArt_GUI
         For x = 0 To count
 
             If mode = "movies" Then
+                movie_name = lv_movies.SelectedItems(x).SubItems.Item(0).Text
                 imdb_id = lv_movies.SelectedItems(x).SubItems.Item(1).Text
             Else
+                movie_name = lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text
                 imdb_id = lv_movies_missing.SelectedItems(x).SubItems.Item(4).Text
             End If
 
@@ -580,7 +852,7 @@ Public Class DVDArt_GUI
                     MsgBox("No CoverArt Available", MsgBoxStyle.Exclamation)
                 Else
                     ReDim Preserve images(z - 1)
-                    Dim coverart As New DVDArt_CoverArt(images, thumbs, imdb_id)
+                    Dim coverart As New DVDArt_CoverArt(images, thumbs, imdb_id, movie_name)
                     coverart.ShowDialog()
                 End If
 
@@ -616,13 +888,13 @@ Public Class DVDArt_GUI
         Dim x As Integer
         Dim processed_movies() As String = Nothing
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3;Read Only=True;"
 
         SQLconnect.Open()
 
         SQLcommand = SQLconnect.CreateCommand
 
-        SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies ORDER BY imdb_id"
+        SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies WHERE imdb_id IS NOT NULL ORDER BY imdb_id "
 
         SQLreader = SQLcommand.ExecuteReader()
 
@@ -640,7 +912,7 @@ Public Class DVDArt_GUI
 
         ' Read movingpictures database and populate list box
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
 
         SQLconnect.Open()
 
@@ -702,7 +974,7 @@ Public Class DVDArt_GUI
 
                 For x = 0 To (details.Length / 6) - 1
 
-                    If cb_DVDArt.Checked = True And details(0, x) <> Nothing Then
+                    If cb_DVDArt_movies.Checked = True And details(0, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
                         ImageInBytes = WebClient.DownloadData(details(0, x) & "/preview")
                         stream = New System.IO.MemoryStream(ImageInBytes)
@@ -711,7 +983,7 @@ Public Class DVDArt_GUI
                         lv_url_dvdart.Items.Add(details(0, x), imagekey)
                     End If
 
-                    If cb_ClearArt.Checked = True And details(2, x) <> Nothing Then
+                    If cb_ClearArt_movies.Checked = True And details(2, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
                         ImageInBytes = WebClient.DownloadData(details(2, x) & "/preview")
                         stream = New System.IO.MemoryStream(ImageInBytes)
@@ -724,7 +996,7 @@ Public Class DVDArt_GUI
                         lv_url_clearart.Items.Add(details(2, x), imagekey)
                     End If
 
-                    If cb_ClearLogo.Checked = True And details(4, x) <> Nothing Then
+                    If cb_ClearLogo_movies.Checked = True And details(4, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
                         ImageInBytes = WebClient.DownloadData(details(4, x) & "/preview")
                         stream = New System.IO.MemoryStream(ImageInBytes)
@@ -750,7 +1022,7 @@ Public Class DVDArt_GUI
 
             For x = 0 To 2
 
-                If checked(x) And url(x) <> Nothing Then
+                If (checked(0, x) Or checked(1, x) Or checked(2, x)) And url(x) <> Nothing Then
 
                     If type = "movie" Then
                         fullpath = thumbs & DVDArt_Common.folder(0, x, 0) & id & ".png"
@@ -818,15 +1090,9 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub Load_Movie_List()
+    Private Sub LoadMovieList()
 
-        If FileSystem.FileExists(database & "\movingpictures.db3") Then
-            If tbc_main.TabPages.Contains(tp_MovingPictures) Then tbc_main.TabPages.Remove(tp_MovingPictures)
-            tbc_main.TabPages.Insert(0, tp_MovingPictures)
-        Else
-            tbc_main.TabPages.Remove(tp_MovingPictures)
-            Exit Sub
-        End If
+        If Not FileSystem.FileExists(database & "\movingpictures.db3") Then Exit Sub
 
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
@@ -863,7 +1129,19 @@ Public Class DVDArt_GUI
 
         If x = 0 Then ReDim Preserve processed_movies(0)
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3"
+        'this part is for default Videos database
+        'Dim myvideos As New ArrayList
+        'VideoDatabase.GetMovies(myvideos)
+
+        'this part is for myfilms
+        'Dim myfilms As New ArrayList
+        'BaseMesFilms.GetMovies(myfilms)
+
+        'this is for MovingPictures
+        'Dim allMovies As New List(Of DBMovieInfo)
+        'allMovies = DBMovieInfo.GetAll
+        
+        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
 
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
@@ -888,8 +1166,8 @@ Public Class DVDArt_GUI
 
                     For y = 0 To 2
                         fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & SQLreader(0) & ".png")
-                        If Not found Then found = checked(y) And fileexist(y)
-                        If Not missing Then missing = checked(y) And Not fileexist(y)
+                        If Not found Then found = checked(0, y) And fileexist(y)
+                        If Not missing Then missing = checked(0, y) And Not fileexist(y)
                     Next
 
                     If found Then
@@ -907,17 +1185,21 @@ Public Class DVDArt_GUI
 
                         For y = 0 To 2
 
-                            li_missing.SubItems.Add("")
-                            'If fileexist(y) Then
-                            'li_missing.SubItems.Add("1")
-                            'Else
-                            'li_missing.SubItems.Add("0")
-                            'End If
+                            If checked(0, y) Then
+                                If fileexist(y) Then
+                                    li_missing.SubItems.Add("Yes")
+                                Else
+                                    li_missing.SubItems.Add("No")
+                                End If
+                            Else
+                                li_missing.SubItems.Add("")
+                            End If
+
 
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
 
-                            If checked(y) Then
+                            If checked(0, y) Then
                                 If fileexist(y) Then
                                     lvi.iImage = 1
                                 Else
@@ -933,7 +1215,6 @@ Public Class DVDArt_GUI
                         Next
 
                         li_missing.ForeColor = Color.Black
-
                         li_missing.SubItems.Add(SQLreader(0))
 
                     End If
@@ -987,7 +1268,9 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub Load_Serie_List()
+    Private Sub LoadSerieList()
+
+        If Not FileSystem.FileExists(database & "\TVSeriesDatabase4.db3") Then Exit Sub
 
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
@@ -1006,7 +1289,7 @@ Public Class DVDArt_GUI
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_series(thetvdb_id TEXT)"
         SQLcommand.ExecuteNonQuery()
 
-        ' Read already processed movies to identify newly imported ones in TVSeries
+        ' Read already processed series to identify newly imported ones in TVSeries
 
         SQLcommand.CommandText = "SELECT thetvdb_id FROM processed_series WHERE thetvdb_id is not Null ORDER BY thetvdb_id"
         SQLreader = SQLcommand.ExecuteReader()
@@ -1023,15 +1306,7 @@ Public Class DVDArt_GUI
 
         If x = 0 Then ReDim Preserve processed_series(0)
 
-        If tbc_main.TabPages.Contains(tp_TVSeries) Then tbc_main.TabPages.Remove(tp_TVSeries)
-
-        If FileSystem.FileExists(database & "\TVSeriesDatabase4.db3") Then
-            If tbc_main.TabPages.Contains(tp_MovingPictures) Then tbc_main.TabPages.Insert(1, tp_TVSeries) Else tbc_main.TabPages.Insert(0, tp_TVSeries)
-        Else
-            Exit Sub
-        End If
-
-        SQLconnect.ConnectionString = "Data Source=" & database & "\TVSeriesDatabase4.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & "\TVSeriesDatabase4.db3;Read Only=True;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT id, pretty_name FROM online_series WHERE id is not Null and pretty_name is not Null ORDER BY sortname"
@@ -1051,7 +1326,7 @@ Public Class DVDArt_GUI
                 If processed_series.Contains(SQLreader(0)) Then
 
                     For y = 1 To 2
-                        fileexist(y) = checked(y) And FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & SQLreader(0) & ".png")
+                        fileexist(y) = checked(1, y) And FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & SQLreader(0) & ".png")
                     Next
 
                     If fileexist(1) Or fileexist(2) Then
@@ -1067,12 +1342,20 @@ Public Class DVDArt_GUI
 
                         For y = 1 To 2
 
-                            li_missing.SubItems.Add("")
+                            If checked(1, y) Then
+                                If fileexist(y) Then
+                                    li_missing.SubItems.Add("Yes")
+                                Else
+                                    li_missing.SubItems.Add("No")
+                                End If
+                            Else
+                                li_missing.SubItems.Add("")
+                            End If
 
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
 
-                            If checked(y) Then
+                            If checked(1, y) Then
                                 If fileexist(y) Then
                                     lvi.iImage = 1
                                 Else
@@ -1140,6 +1423,346 @@ Public Class DVDArt_GUI
 
     End Sub
 
+    Private Sub LoadArtistList()
+
+        If Not FileSystem.FileExists(database & "\MusicDatabaseV12.db3") Then Exit Sub
+
+        ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
+
+        Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand
+        Dim SQLreader As SQLiteDataReader
+        Dim processed_artist() As String = Nothing
+        Dim processed_MBID() As String = Nothing
+        Dim artist() As String = Nothing
+        Dim x As Integer = 0
+        Dim found, missing As Boolean
+
+        If Not FileSystem.FileExists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_artist(artist TEXT, MBID TEXT)"
+        SQLcommand.ExecuteNonQuery()
+
+        ' Read already processed movies to identify newly imported ones in music
+
+        SQLcommand.CommandText = "SELECT artist, MBID FROM processed_artist WHERE artist is not Null ORDER BY artist"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        While SQLreader.Read()
+
+            ReDim Preserve processed_artist(x)
+            ReDim Preserve processed_MBID(x)
+            processed_artist(x) = SQLreader(0)
+            processed_MBID(x) = SQLreader(1)
+            x += 1
+
+        End While
+
+        SQLconnect.Close()
+
+        If x = 0 Then ReDim Preserve processed_artist(0)
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\MusicDatabaseV12.db3;Read Only=True;"
+
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT strArtist FROM artist WHERE strArtist IS NOT NULL AND strArtist <> '' ORDER BY strArtist"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        Dim fileexist(2) As Boolean
+        Dim lvi As LVITEM
+
+        x = 0
+
+        SendMessage(lv_music_missing.Handle, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_SUBITEMIMAGES, LVS_EX_SUBITEMIMAGES)
+
+        While SQLreader.Read()
+
+            If Trim(SQLreader(0)) <> "" Then
+
+                ReDim Preserve artist(x)
+                artist(x) = SQLreader(0)
+                x += 1
+
+                If processed_artist.Contains(artist(x - 1)) Then
+
+                    found = False
+                    missing = False
+
+                    For y = 1 To 2
+                        fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & artist(x - 1) & ".png") Or FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & artist(x - 1) & ".jpg")
+                        If Not found Then found = checked(2, y) And fileexist(y)
+                        If Not missing Then missing = checked(2, y) And Not fileexist(y)
+                    Next
+
+                    If found Then
+                        li_artist = lv_artist.Items.Add(SQLreader(0))
+                        li_artist.SubItems.Add(processed_MBID(Array.IndexOf(processed_artist, SQLreader(0))))
+                    End If
+
+                    If missing Then
+
+                        li_missing = lv_music_missing.Items.Add(SQLreader(0))
+
+                        lvi = Nothing
+
+                        li_missing.ForeColor = Color.White
+
+                        For y = 0 To 2
+
+                            If checked(2, y) And y > 0 Then
+                                If fileexist(y) Then
+                                    li_missing.SubItems.Add("Yes")
+                                Else
+                                    li_missing.SubItems.Add("No")
+                                End If
+                            Else
+                                li_missing.SubItems.Add("")
+                            End If
+
+                            lvi.iItem = li_missing.Index
+                            lvi.subItem = li_missing.SubItems.Count - 1
+
+                            If checked(2, y) And y > 0 Then
+                                If fileexist(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
+                            Else
+                                lvi.iImage = 3
+                            End If
+
+                            lvi.mask = LVIF_IMAGE
+                            ListView_SetItem(lv_music_missing.Handle, lvi)
+
+                        Next
+
+                        li_missing.ForeColor = Color.Black
+
+                        li_missing.SubItems.Add(processed_MBID(Array.IndexOf(processed_artist, SQLreader(0))))
+
+                    End If
+
+                Else
+                    li_import = lv_import.Items.Add(SQLreader(0))
+                    li_import.SubItems.Add("*** searching MBID ***")
+                    li_import.SubItems.Add("Artist")
+                End If
+
+            End If
+
+        End While
+
+        If x = 0 Then ReDim Preserve artist(0)
+
+        SQLconnect.Close()
+
+        If lv_import.Items.Count > 0 Then
+            FTV_api_connector(Nothing, Nothing, "artist", "import")
+        End If
+
+        ' remove artists from dvdart that no longer exist in music
+
+        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT artist FROM processed_artist WHERE artist is not Null ORDER BY artist"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        x = 0
+
+        While SQLreader.Read()
+
+            If Not artist.Contains(SQLreader(0)) Then
+
+                SQLdelete.CommandText = "DELETE FROM processed_artist WHERE artist = """ & SQLreader(0) & """"
+                SQLdelete.ExecuteNonQuery()
+
+            End If
+
+        End While
+
+        SQLconnect.Close()
+
+    End Sub
+
+    Private Sub LoadMusicList()
+
+        If Not FileSystem.FileExists(database & "\MusicDatabaseV12.db3") Then Exit Sub
+
+        ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
+
+        Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand
+        Dim SQLreader As SQLiteDataReader
+        Dim processed_music() As String = Nothing
+        Dim processed_MBID() As String = Nothing
+        Dim album() As String = Nothing
+        Dim x As Integer = 0
+        Dim found, missing As Boolean
+
+        If Not FileSystem.FileExists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_music(album TEXT, MBID TEXT)"
+        SQLcommand.ExecuteNonQuery()
+
+        ' Read already processed movies to identify newly imported ones in music
+
+        SQLcommand.CommandText = "SELECT album, MBID FROM processed_music WHERE album is not Null ORDER BY album"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        While SQLreader.Read()
+
+            ReDim Preserve processed_music(x)
+            ReDim Preserve processed_MBID(x)
+            processed_music(x) = SQLreader(0)
+            processed_MBID(x) = SQLreader(1)
+            x += 1
+
+        End While
+
+        SQLconnect.Close()
+
+        If x = 0 Then ReDim Preserve processed_music(0)
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\MusicDatabaseV12.db3;Read Only=True;"
+
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT DISTINCT strAlbum, strAlbumArtist FROM tracks WHERE strAlbum IS NOT NULL AND strAlbum <> '' ORDER BY strAlbum"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        Dim fileexist(2) As Boolean
+        Dim lvi As LVITEM
+
+        x = 0
+
+        SendMessage(lv_music_missing.Handle, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_SUBITEMIMAGES, LVS_EX_SUBITEMIMAGES)
+
+        While SQLreader.Read()
+
+            If Trim(SQLreader(0)) <> "" Then
+
+                ReDim Preserve album(x)
+                album(x) = SQLreader(0)
+                x += 1
+
+                If processed_music.Contains(album(x - 1)) Then
+
+                    found = False
+                    missing = False
+
+                    For y = 0 To 0
+                        fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & album(x - 1) & ".png") Or FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & album(x - 1) & ".jpg")
+                        If Not found Then found = checked(2, y) And fileexist(y)
+                        If Not missing Then missing = checked(2, y) And Not fileexist(y)
+                    Next
+
+                    If found Then
+                        li_music = lv_music.Items.Add(SQLreader(0))
+                        li_music.SubItems.Add(processed_MBID(Array.IndexOf(processed_music, SQLreader(0))))
+                    End If
+
+                    If missing Then
+
+                        li_missing = lv_music_missing.Items.Add(SQLreader(0))
+
+                        lvi = Nothing
+
+                        li_missing.ForeColor = Color.White
+
+                        For y = 0 To 2
+
+                            If checked(2, y) And y = 0 Then
+                                If fileexist(y) Then
+                                    li_missing.SubItems.Add("Yes")
+                                Else
+                                    li_missing.SubItems.Add("No")
+                                End If
+                            Else
+                                li_missing.SubItems.Add("")
+                            End If
+
+                            lvi.iItem = li_missing.Index
+                            lvi.subItem = li_missing.SubItems.Count - 1
+
+                            If checked(2, y) And y = 0 Then
+                                If fileexist(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
+                            Else
+                                lvi.iImage = 3
+                            End If
+
+                            lvi.mask = LVIF_IMAGE
+                            ListView_SetItem(lv_music_missing.Handle, lvi)
+
+                        Next
+
+                        li_missing.ForeColor = Color.Black
+
+                        li_missing.SubItems.Add(SQLreader(0))
+                        li_missing.SubItems.Add(SQLreader(1))
+
+                    End If
+
+                Else
+                    li_import = lv_import.Items.Add(SQLreader(0))
+                    li_import.SubItems.Add("*** searching MBID ***")
+                    li_import.SubItems.Add("Music")
+                    li_import.SubItems.Add(Trim(SQLreader(1).Replace("| ", "").Replace(" |", "")))
+                End If
+
+            End If
+
+        End While
+
+        If x = 0 Then ReDim Preserve album(0)
+
+        SQLconnect.Close()
+
+        If lv_import.Items.Count > 0 Then
+            FTV_api_connector(Nothing, Nothing, "music", "import")
+        End If
+
+        ' remove albums and artists from dvdart that no longer exist in music
+
+        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT album FROM processed_music WHERE album is not Null ORDER BY album"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        x = 0
+
+        While SQLreader.Read()
+
+            If Not album.Contains(SQLreader(0)) Then
+
+                SQLdelete.CommandText = "DELETE FROM processed_music WHERE album = """ & SQLreader(0) & """"
+                SQLdelete.ExecuteNonQuery()
+
+            End If
+
+        End While
+
+        SQLconnect.Close()
+
+    End Sub
+
     Private Sub load_image(ByRef pb_image As PictureBox, ByVal path As String)
 
         On Error Resume Next
@@ -1196,19 +1819,21 @@ Public Class DVDArt_GUI
 
         For x = 0 To 2
 
-            If checked(x) Then
+            If checked(0, x) Then
                 thumbpath = thumbs & DVDArt_Common.folder(0, x, 1) & current_imdb_id & ".png"
                 If x = 0 Then
                     load_image(pb_movie_dvdart, thumbpath)
 
                     If pb_movie_dvdart.Image IsNot Nothing Then
-                        l_movie_size.Text = DVDArt_Common.GetSize(thumbs & DVDArt_Common.folder(0, x, 0), current_imdb_id & ".png")
+                        l_movie_size.Text = DVDArt_Common.getSize(thumbs & DVDArt_Common.folder(0, x, 0), current_imdb_id & ".png")
                         If l_movie_size.Text = "500x500" Then b_movie_compress.Visible = False Else b_movie_compress.Visible = True
                         b_movie_preview.Visible = Not b_movie_compress.Visible
+                        b_movie_delete.Visible = True
                     Else
                         l_movie_size.Text = Nothing
                         b_movie_compress.Visible = False
                         b_movie_preview.Visible = False
+                        b_movie_delete.Visible = False
                     End If
 
                 ElseIf x = 1 Then
@@ -1255,7 +1880,7 @@ Public Class DVDArt_GUI
 
         For x = 1 To 2
 
-            If checked(x) Then
+            If checked(1, x) Then
                 thumbpath = thumbs & DVDArt_Common.folder(1, x, 1) & current_thetvdb_id & ".png"
                 If x = 1 Then
                     load_image(pb_serie_clearart, thumbpath)
@@ -1274,9 +1899,16 @@ Public Class DVDArt_GUI
         cms_missing.Items.Item(3).Visible = True
     End Sub
 
-    Private Sub lv_movies_missing_ColumnClick(sender As Object, e As System.Windows.Forms.ColumnClickEventArgs) Handles lv_movies_missing.ColumnClick
+    Private Sub lv_movies_missing_ColumnClick(sender As Object, e As System.Windows.Forms.ColumnClickEventArgs) Handles lv_movies_missing.ColumnClick, lv_series_missing.ColumnClick, lv_music_missing.ColumnClick
 
-        lv_movies_missing.ListViewItemSorter = lvwColumnSorter
+        Select Case sender.name
+            Case "lv_movies_missing"
+                lv_movies_missing.ListViewItemSorter = lvwColumnSorter
+            Case "lv_series_missing"
+                lv_series_missing.ListViewItemSorter = lvwColumnSorter
+            Case "lv_music_missing"
+                lv_music_missing.ListViewItemSorter = lvwColumnSorter
+        End Select
 
         ' Determine if the clicked column is already the column that is 
         ' being sorted.
@@ -1293,10 +1925,18 @@ Public Class DVDArt_GUI
             lvwColumnSorter.Order = SortOrder.Ascending
         End If
 
-        SetSortArrow(lv_movies_missing, e.Column, lvwColumnSorter.order)
-
         ' Perform the sort with these new sort options.
-        lv_movies_missing.Sort()
+        Select Case sender.name
+            Case "lv_movies_missing"
+                SetSortArrow(lv_movies_missing, e.Column, lvwColumnSorter.order)
+                lv_movies_missing.Sort()
+            Case "lv_series_missing"
+                SetSortArrow(lv_series_missing, e.Column, lvwColumnSorter.order)
+                lv_series_missing.Sort()
+            Case "lv_music_missing"
+                SetSortArrow(lv_music_missing, e.Column, lvwColumnSorter.order)
+                lv_music_missing.Sort()
+        End Select
 
     End Sub
 
@@ -1598,54 +2238,30 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub Create_Folder_Structure()
-
-        ' Check and create directory structure
-
-        If Not FileSystem.FileExists(database + "\movingpictures.db3") And Not FileSystem.FileExists(database + "\TVSeriesDatabase4.db3") Then
-            Application.Exit()
-        End If
-
-        ' DVDArt
-        If Not FileSystem.DirectoryExists(thumbs & "\MovingPictures\DVDArt") Then FileSystem.CreateDirectory(thumbs & "\MovingPictures\DVDArt")
-
-        ' ClearArt
-        If Not FileSystem.DirectoryExists(thumbs & "\MovingPictures\ClearArt") Then FileSystem.CreateDirectory(thumbs & "\MovingPictures\ClearArt")
-        If Not FileSystem.DirectoryExists(thumbs & "\TVSeries\ClearArt") Then FileSystem.CreateDirectory(thumbs & "\TVSeries\ClearArt")
-
-        ' ClearLogo
-        If Not FileSystem.DirectoryExists(thumbs & "\MovingPictures\ClearLogo") Then FileSystem.CreateDirectory(thumbs & "\MovingPictures\ClearLogo")
-        If Not FileSystem.DirectoryExists(thumbs & "\TVSeries\ClearLogo") Then FileSystem.CreateDirectory(thumbs & "\TVSeries\ClearLogo")
-
-        For x = 0 To 2
-            For y = 0 To 1
-                For z = 0 To 1
-                    If DVDArt_Common.folder(z, x, y) IsNot Nothing Then
-                        If Not FileSystem.DirectoryExists(thumbs & DVDArt_Common.folder(z, x, y)) Then FileSystem.CreateDirectory(thumbs & DVDArt_Common.folder(z, x, y))
-                    End If
-                Next
-            Next
-        Next
-
-    End Sub
-
-    Private Sub Set_Settings()
+    Private Sub setSettings()
 
         On Error Resume Next
 
         Using XMLwriter As MediaPortal.Profile.Settings = New MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "DVDArt_Plugin.xml"))
 
+            XMLwriter.SetValue("Plugin", "version", DVDArt_Common._version)
             XMLwriter.SetValue("Settings", "delay", nud_delay.Value)
             XMLwriter.SetValue("Settings", "delay value", cb_delay.Text)
+            XMLwriter.SetValueAsBool("Settings", "backgroundscraper", cb_backgroundscraper.Checked)
             XMLwriter.SetValue("Settings", "CPU utilisation", mtb_cpu.Text)
             XMLwriter.SetValue("Settings", "scraping", nud_scraping.Value)
             XMLwriter.SetValue("Settings", "scraping value", cb_scraping.Text)
             XMLwriter.SetValue("Settings", "missing", nud_missing.Value)
             XMLwriter.SetValue("Settings", "missing value", cb_missing.Text)
-            XMLwriter.SetValueAsBool("Scraper", "dvdart", cb_DVDArt.Checked)
-            XMLwriter.SetValueAsBool("Scraper", "clearart", cb_ClearArt.Checked)
-            XMLwriter.SetValueAsBool("Scraper", "clearlogo", cb_ClearLogo.Checked)
             XMLwriter.SetValue("Scraper", "language", DVDArt_Common.langcode(Array.IndexOf(DVDArt_Common.lang, cb_language.Text)))
+            XMLwriter.SetValueAsBool("Scraper Movies", "dvdart", cb_DVDArt_movies.Checked)
+            XMLwriter.SetValueAsBool("Scraper Movies", "clearart", cb_ClearArt_movies.Checked)
+            XMLwriter.SetValueAsBool("Scraper Movies", "clearlogo", cb_ClearLogo_movies.Checked)
+            XMLwriter.SetValueAsBool("Scraper Series", "clearart", cb_ClearArt_series.Checked)
+            XMLwriter.SetValueAsBool("Scraper Series", "clearlogo", cb_ClearLogo_series.Checked)
+            XMLwriter.SetValueAsBool("Scraper Music", "cdart", cb_CDArt_music.Checked)
+            XMLwriter.SetValueAsBool("Scraper Music", "banner", cb_Banner_artist.Checked)
+            XMLwriter.SetValueAsBool("Scraper Music", "clearlogo", cb_ClearLogo_artist.Checked)
 
             If _lastrun = Nothing Then XMLwriter.SetValue("Scheduler", "lastrun", Now)
 
@@ -1655,33 +2271,79 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub Get_Settings()
+    Private Sub getSettings()
+
+        Dim xml_version As String
 
         Using XMLreader As MediaPortal.Profile.Settings = New MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "DVDArt_Plugin.xml"))
 
+            xml_version = XMLreader.GetValueAsString("Plugin", "version", "0")
             nud_delay.Value = XMLreader.GetValueAsInt("Settings", "delay", 1)
             cb_delay.Text = XMLreader.GetValueAsString("Settings", "delay value", "minutes")
+            cb_backgroundscraper.Checked = XMLreader.GetValueAsBool("Settings", "backgroundscraper", True)
             mtb_cpu.Text = XMLreader.GetValueAsString("Settings", "CPU utilisation", 30)
             nud_scraping.Value = XMLreader.GetValueAsInt("Settings", "scraping", 15)
             cb_scraping.Text = XMLreader.GetValueAsString("Settings", "scraping value", "minutes")
             nud_missing.Value = XMLreader.GetValueAsInt("Settings", "missing", 0)
             cb_missing.Text = XMLreader.GetValueAsString("Settings", "missing value", "disabled")
-            cb_DVDArt.Checked = XMLreader.GetValueAsBool("Scraper", "dvdart", False)
-            cb_ClearArt.Checked = XMLreader.GetValueAsBool("Scraper", "clearart", False)
-            cb_ClearLogo.Checked = XMLreader.GetValueAsBool("Scraper", "clearlogo", False)
             _lang = XMLreader.GetValueAsString("Scraper", "language", "##")
+
+            If xml_version > DVDArt_Common._pre_version Then
+                cb_DVDArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "dvdart", False)
+                cb_ClearArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearart", False)
+                cb_ClearLogo_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
+                cb_ClearArt_series.Checked = XMLreader.GetValueAsBool("Scraper Series", "clearart", False)
+                cb_ClearLogo_series.Checked = XMLreader.GetValueAsBool("Scraper Series", "clearlogo", False)
+                cb_CDArt_music.Checked = XMLreader.GetValueAsBool("Scraper Music", "cdart", False)
+                cb_Banner_artist.Checked = XMLreader.GetValueAsBool("Scraper Music", "banner", False)
+                cb_ClearLogo_artist.Checked = XMLreader.GetValueAsBool("Scraper Music", "clearlogo", False)
+            Else
+                cb_DVDArt_movies.Checked = XMLreader.GetValueAsBool("Scraper", "dvdart", False)
+                cb_ClearArt_movies.Checked = XMLreader.GetValueAsBool("Scraper", "clearart", False)
+                cb_ClearLogo_movies.Checked = XMLreader.GetValueAsBool("Scraper", "clearlogo", False)
+            End If
+
             cb_language.Text = DVDArt_Common.lang(Array.IndexOf(DVDArt_Common.langcode, _lang))
-            _lastrun = XMLreader.GetValueAsString("Settings", "lastrun", Nothing)
+            _lastrun = XMLreader.GetValueAsString("Scheduler", "lastrun", Nothing)
 
         End Using
 
+        If xml_version <> DVDArt_Common._version Then
+
+            cb_ClearArt_series.Checked = cb_ClearArt_movies.Checked
+            cb_ClearLogo_series.Checked = cb_ClearLogo_movies.Checked
+            cb_CDArt_music.Checked = cb_DVDArt_movies.Checked
+            cb_Banner_artist.Checked = cb_ClearArt_movies.Checked
+            cb_ClearLogo_artist.Checked = cb_ClearLogo_movies.Checked
+            cb_backgroundscraper.Checked = True
+
+            FileIO.FileSystem.DeleteFile(Config.GetFile(Config.Dir.Config, "DVDArt_Plugin.xml"))
+
+            MediaPortal.Profile.Settings.ClearCache()
+
+            setSettings()
+
+        End If
+
     End Sub
 
-    Private Sub cb_DVDArt_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cb_DVDArt.CheckedChanged
+    Private Sub cb_backgroundscraper_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_backgroundscraper.CheckedChanged
 
-        checked(0) = cb_DVDArt.Checked
+        cb_delay.Enabled = cb_backgroundscraper.Checked
+        nud_delay.Enabled = cb_backgroundscraper.Checked
+        mtb_cpu.Enabled = cb_backgroundscraper.Checked
+        nud_scraping.Enabled = cb_backgroundscraper.Checked
+        cb_scraping.Enabled = cb_backgroundscraper.Checked
+        nud_missing.Enabled = cb_backgroundscraper.Checked
+        cb_missing.Enabled = cb_backgroundscraper.Checked
 
-        If cb_DVDArt.Checked = True Then
+    End Sub
+
+    Private Sub cb_DVDArt_movies_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cb_DVDArt_movies.CheckedChanged
+
+        checked(0, 0) = cb_DVDArt_movies.Checked
+
+        If cb_DVDArt_movies.Checked = True Then
             If tbc_movies.TabPages.Contains(tp_Movie_DVDArt) Then tbc_movies.TabPages.Remove(tp_Movie_DVDArt)
             If tbc_movies.TabCount = 0 Then tbc_movies.TabPages.Add(tp_Movie_DVDArt) Else tbc_movies.TabPages.Insert(0, tp_Movie_DVDArt)
         Else
@@ -1690,45 +2352,104 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_ClearArt_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearArt.CheckedChanged
+    Private Sub cb_ClearArt_movies_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearArt_movies.CheckedChanged
 
-        checked(1) = cb_ClearArt.Checked
+        checked(0, 1) = cb_ClearArt_movies.Checked
 
-        If cb_ClearArt.Checked = True Then
+        If cb_ClearArt_movies.Checked = True Then
             If tbc_movies.TabPages.Contains(tp_Movie_ClearArt) Then tbc_movies.TabPages.Remove(tp_Movie_ClearArt)
-            If tbc_series.TabPages.Contains(tp_Serie_ClearArt) Then tbc_series.TabPages.Remove(tp_Serie_ClearArt)
 
             If tbc_movies.TabCount > 0 Then
-                If tbc_movies.TabPages.Contains(tp_Movie_DVDArt) Then
-                    tbc_movies.TabPages.Insert(1, tp_Movie_ClearArt)
-                Else
+                If tbc_movies.TabPages.Contains(tp_Movie_DVDArt) And Not tbc_movies.TabPages.Contains(tp_Movie_ClearLogo) Then
+                    tbc_movies.TabPages.Add(tp_Movie_ClearArt)
+                ElseIf Not tbc_movies.TabPages.Contains(tp_Movie_DVDArt) And tbc_movies.TabPages.Contains(tp_Movie_ClearLogo) Then
                     tbc_movies.TabPages.Insert(tbc_movies.TabCount - 1, tp_Movie_ClearArt)
+                Else
+                    tbc_movies.TabPages.Insert(1, tp_Movie_ClearArt)
                 End If
             Else
                 tbc_movies.TabPages.Add(tp_Movie_ClearArt)
             End If
-
-            If tbc_series.TabCount = 0 Then tbc_series.TabPages.Add(tp_Serie_ClearArt) Else tbc_series.TabPages.Insert(0, tp_Serie_ClearArt)
         Else
             tbc_movies.TabPages.Remove(tp_Movie_ClearArt)
+        End If
+
+    End Sub
+
+    Private Sub cb_ClearLogo_movies_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearLogo_movies.CheckedChanged
+
+        checked(0, 2) = cb_ClearLogo_movies.Checked
+
+        If cb_ClearLogo_movies.Checked = True Then
+            If tbc_movies.TabPages.Contains(tp_Movie_ClearLogo) Then tbc_movies.TabPages.Remove(tp_Movie_ClearLogo)
+            tbc_movies.TabPages.Add(tp_Movie_ClearLogo)
+        Else
+            tbc_movies.TabPages.Remove(tp_Movie_ClearLogo)
+        End If
+
+    End Sub
+
+    Private Sub cb_ClearArt_series_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearArt_series.CheckedChanged
+
+        checked(1, 1) = cb_ClearArt_series.Checked
+
+        If cb_ClearArt_series.Checked = True Then
+            If tbc_series.TabPages.Contains(tp_Serie_ClearArt) Then tbc_series.TabPages.Remove(tp_Serie_ClearArt)
+            If tbc_series.TabCount = 0 Then tbc_series.TabPages.Add(tp_Serie_ClearArt) Else tbc_series.TabPages.Insert(0, tp_Serie_ClearArt)
+        Else
             tbc_series.TabPages.Remove(tp_Serie_ClearArt)
         End If
 
     End Sub
 
-    Private Sub cb_ClearLogo_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearLogo.CheckedChanged
+    Private Sub cb_ClearLogo_series_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearLogo_series.CheckedChanged
 
-        checked(2) = cb_ClearLogo.Checked
+        checked(1, 2) = cb_ClearLogo_series.Checked
 
-        If cb_ClearLogo.Checked = True Then
-            If tbc_movies.TabPages.Contains(tp_Movie_ClearLogo) Then tbc_movies.TabPages.Remove(tp_Movie_ClearLogo)
+        If cb_ClearLogo_series.Checked = True Then
             If tbc_series.TabPages.Contains(tp_Serie_ClearLogo) Then tbc_series.TabPages.Remove(tp_Serie_ClearLogo)
-
-            tbc_movies.TabPages.Add(tp_Movie_ClearLogo)
             tbc_series.TabPages.Add(tp_Serie_ClearLogo)
         Else
-            tbc_movies.TabPages.Remove(tp_Movie_ClearLogo)
             tbc_series.TabPages.Remove(tp_Serie_ClearLogo)
+        End If
+
+    End Sub
+
+    Private Sub cb_CDArt_music_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_CDArt_music.CheckedChanged
+
+        checked(2, 0) = cb_CDArt_music.Checked
+
+        If cb_CDArt_music.Checked = True Then
+            If tbc_music.TabPages.Contains(tp_Music_CDArt) Then tbc_music.TabPages.Remove(tp_Music_CDArt)
+            If tbc_music.TabCount = 0 Then tbc_music.TabPages.Add(tp_Music_CDArt) Else tbc_music.TabPages.Insert(0, tp_Music_CDArt)
+        Else
+            tbc_music.TabPages.Remove(tp_Music_CDArt)
+        End If
+
+    End Sub
+
+    Private Sub cb_Banner_artist_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_Banner_artist.CheckedChanged
+
+        checked(2, 1) = cb_Banner_artist.Checked
+
+        If cb_Banner_artist.Checked = True Then
+            If tbc_artist.TabPages.Contains(tp_artist_banner) Then tbc_artist.TabPages.Remove(tp_artist_banner)
+            If tbc_artist.TabCount > 0 Then tbc_artist.TabPages.Add(tp_artist_banner) Else tbc_artist.TabPages.Insert(0, tp_artist_banner)
+        Else
+            tbc_artist.TabPages.Remove(tp_artist_banner)
+        End If
+
+    End Sub
+
+    Private Sub cb_ClearLogo_artist_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearLogo_artist.CheckedChanged
+
+        checked(2, 2) = cb_ClearLogo_artist.Checked
+
+        If cb_ClearLogo_artist.Checked = True Then
+            If tbc_artist.TabPages.Contains(tp_artist_clearlogo) Then tbc_music.TabPages.Remove(tp_artist_clearlogo)
+            tbc_artist.TabPages.Insert(0, tp_artist_clearlogo)
+        Else
+            tbc_artist.TabPages.Remove(tp_artist_clearlogo)
         End If
 
     End Sub
@@ -1737,7 +2458,7 @@ Public Class DVDArt_GUI
 
         DVDArt_Common.Resize(thumbs & DVDArt_Common.folder(0, 0, 0) & current_imdb_id & ".png")
 
-        l_movie_size.Text = DVDArt_Common.GetSize(thumbs & DVDArt_Common.folder(0, 0, 0), current_imdb_id & ".png")
+        l_movie_size.Text = DVDArt_Common.getSize(thumbs & DVDArt_Common.folder(0, 0, 0), current_imdb_id & ".png")
 
         If l_movie_size.Text = "500x500" Then b_movie_compress.Visible = False Else b_movie_compress.Visible = True
 
@@ -1770,6 +2491,16 @@ Public Class DVDArt_GUI
         preview.Show()
     End Sub
 
+    Private Sub b_movie_delete_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_delete.Click
+        FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 0, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+        FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 0, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+        pb_movie_dvdart.Image = Nothing
+        pb_movie_dvdart.Tag = Nothing
+        b_movie_compress.Visible = False
+        b_movie_preview.Visible = False
+        b_movie_delete.Visible = False
+    End Sub
+
     Private Sub b_serie_deleteart_Click(sender As System.Object, e As System.EventArgs) Handles b_serie_deleteart.Click
         If lv_series.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
             FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(1, 1, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
@@ -1788,6 +2519,22 @@ Public Class DVDArt_GUI
             pb_serie_clearlogo.Tag = Nothing
             b_serie_deletelogo.Visible = False
         End If
+    End Sub
+
+    Private Sub b_music_compress_Click(sender As System.Object, e As System.EventArgs) Handles b_music_compress.Click
+
+    End Sub
+
+     Private Sub b_music_preview_Click(sender As System.Object, e As System.EventArgs) Handles b_music_preview.Click
+
+    End Sub
+
+    Private Sub b_artist_deletebanner_Click(sender As System.Object, e As System.EventArgs) Handles b_artist_deletebanner.Click
+
+    End Sub
+
+    Private Sub b_artist_deletelogo_Click(sender As System.Object, e As System.EventArgs) Handles b_artist_deletelogo.Click
+
     End Sub
 
     Private Sub DVDArt_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
@@ -1820,7 +2567,7 @@ Public Class DVDArt_GUI
 
             Me.Cursor = Cursors.Default
 
-            Set_Settings()
+            setSettings()
 
         End If
 
@@ -1843,9 +2590,10 @@ Public Class DVDArt_GUI
             'initialize version
             Me.Text = Me.Text & DVDArt_Common._version
 
-            'initialize timer
-            t_import_timer.Interval = 2000
-            t_import_timer.Start()
+            'create folder structure
+            If DVDArt_Common.Create_Folder_Structure(database, thumbs) = False Then
+                Application.Exit()
+            End If
 
             'initialize importer state images
             il_state.Images.Add(My.Resources.download)
@@ -1863,38 +2611,60 @@ Public Class DVDArt_GUI
             l_movie_size.Text = Nothing
 
             'disable tabs that are not selected in settings
-            cb_DVDArt_CheckedChanged(Nothing, Nothing)
-            cb_ClearArt_CheckedChanged(Nothing, Nothing)
-            cb_ClearLogo_CheckedChanged(Nothing, Nothing)
+            cb_DVDArt_movies_CheckedChanged(Nothing, Nothing)
+            cb_ClearArt_movies_CheckedChanged(Nothing, Nothing)
+            cb_ClearLogo_movies_CheckedChanged(Nothing, Nothing)
+            cb_ClearArt_series_CheckedChanged(Nothing, Nothing)
+            cb_ClearLogo_series_CheckedChanged(Nothing, Nothing)
+            cb_CDArt_music_CheckedChanged(Nothing, Nothing)
+            cb_Banner_artist_CheckedChanged(Nothing, Nothing)
+            cb_ClearLogo_artist_CheckedChanged(Nothing, Nothing)
 
             'populate language dropdown
             cb_language.Items.AddRange(DVDArt_Common.lang)
 
-            'extract dvdart.png from resources to temporary folder
-            Dim png As String = DVDArt_Common._temp & "\dvdart.png"
-            If Not FileSystem.FileExists(png) Then
-                Dim image As Image = New Bitmap(My.Resources.dvdart)
-                image.Save(png)
+            getSettings()
+
+            'set the tab pages
+            If tbc_main.TabPages.Contains(tp_MovingPictures) Then tbc_main.TabPages.Remove(tp_MovingPictures)
+            If FileSystem.FileExists(database & "\movingpictures.db3") Then
+                tbc_main.TabPages.Insert(0, tp_MovingPictures)
             End If
 
-            'extract dvdart_mask.png from resources to temporary folder
-            png = DVDArt_Common._temp & "\dvdart_mask.png"
-            If Not FileSystem.FileExists(png) Then
-                Dim image As Image = New Bitmap(My.Resources.dvdart_mask)
-                image.Save(png)
+            If tbc_main.TabPages.Contains(tp_TVSeries) Then tbc_main.TabPages.Remove(tp_TVSeries)
+            If FileSystem.FileExists(database & "\TVSeriesDatabase4.db3") Then
+                If tbc_main.TabPages.Contains(tp_MovingPictures) Then tbc_main.TabPages.Insert(1, tp_TVSeries) Else tbc_main.TabPages.Insert(0, tp_TVSeries)
             End If
 
-            Create_Folder_Structure()
-            Get_Settings()
-            Load_Movie_List()
-            Load_Serie_List()
+            If tbc_main.TabPages.Contains(tp_Music) Then tbc_main.TabPages.Remove(tp_Music)
+            If FileSystem.FileExists(database & "\MusicDatabaseV12.db3") Then
+                If tbc_main.TabPages.Contains(tp_MovingPictures) And tbc_main.TabPages.Contains(tp_TVSeries) Then
+                    tbc_main.TabPages.Insert(2, tp_Music)
+                ElseIf Not tbc_main.TabPages.Contains(tp_MovingPictures) Or Not tbc_main.TabPages.Contains(tp_TVSeries) Then
+                    tbc_main.TabPages.Insert(1, tp_Music)
+                Else
+                    tbc_main.TabPages.Insert(0, tp_Music)
+                End If
+            End If
 
             'set focus to first tab page
             tbc_main.SelectedIndex = 0
 
+            ' load the data
+            LoadSerieList()
+            LoadMovieList()
+            'LoadArtistList()
+            'LoadMusicList()
+            If tbc_main.TabPages.Contains(tp_Music) Then tbc_main.TabPages.Remove(tp_Music)
+            If tbc_scraper.TabPages.Contains(tp_sMusic) Then tbc_scraper.TabPages.Remove(tp_sMusic)
+
             'close splashscreen
             splash.Close()
             splash.Dispose()
+
+            'initialize timer
+            t_import_timer.Interval = 5000
+            t_import_timer.Start()
 
         Else
             MsgBox("Unable to load Database & Thumbs paths from MediaPortalDirs.xml", MsgBoxStyle.Critical, "DVDArt Plugin")
