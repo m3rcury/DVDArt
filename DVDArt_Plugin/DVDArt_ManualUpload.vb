@@ -37,18 +37,18 @@ Public Class DVDArt_ManualUpload
             Me.Refresh()
 
             'enable fields according to selection in setting
-            l_dvdart.Enabled = DVDArt_GUI.checked(0) And _type <> "series"
-            tb_dvdart.Enabled = DVDArt_GUI.checked(0) And _type <> "series"
-            b_dvdart.Enabled = DVDArt_GUI.checked(0) And _type <> "series"
-            b_preview_dvdart.Enabled = DVDArt_GUI.checked(0) And _type <> "series"
-            l_clearart.Enabled = DVDArt_GUI.checked(1)
-            tb_clearart.Enabled = DVDArt_GUI.checked(1)
-            b_clearart.Enabled = DVDArt_GUI.checked(1)
-            b_preview_clearart.Enabled = DVDArt_GUI.checked(1)
-            l_clearlogo.Enabled = DVDArt_GUI.checked(2)
-            tb_clearlogo.Enabled = DVDArt_GUI.checked(2)
-            b_clearlogo.Enabled = DVDArt_GUI.checked(2)
-            b_preview_clearlogo.Enabled = DVDArt_GUI.checked(2)
+            l_dvdart.Enabled = DVDArt_GUI.checked(0, 0) And _type <> "series"
+            tb_dvdart.Enabled = DVDArt_GUI.checked(0, 0) And _type <> "series"
+            b_dvdart.Enabled = DVDArt_GUI.checked(0, 0) And _type <> "series"
+            b_preview_dvdart.Enabled = DVDArt_GUI.checked(0, 0) And _type <> "series"
+            ' l_clearart.Enabled = DVDArt_GUI.checked(1)
+            ' tb_clearart.Enabled = DVDArt_GUI.checked(1)
+            ' b_clearart.Enabled = DVDArt_GUI.checked(1)
+            ' b_preview_clearart.Enabled = DVDArt_GUI.checked(1)
+            ' l_clearlogo.Enabled = DVDArt_GUI.checked(2)
+            ' tb_clearlogo.Enabled = DVDArt_GUI.checked(2)
+            ' b_clearlogo.Enabled = DVDArt_GUI.checked(2)
+            ' b_preview_clearlogo.Enabled = DVDArt_GUI.checked(2)
         Else
             Return
         End If

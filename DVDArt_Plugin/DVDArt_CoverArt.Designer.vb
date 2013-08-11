@@ -32,6 +32,8 @@ Partial Class DVDArt_CoverArt
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tt_preview = New System.Windows.Forms.ToolTip(Me.components)
         Me.b_preview = New System.Windows.Forms.Button()
+        Me.cb_title = New System.Windows.Forms.CheckBox()
+        Me.cb_logos = New System.Windows.Forms.CheckBox()
         tp_preview = New System.Windows.Forms.TabPage()
         tp_preview.SuspendLayout()
         CType(Me.pb_coverart, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -90,7 +92,7 @@ Partial Class DVDArt_CoverArt
         Me.lv_coverart.Location = New System.Drawing.Point(509, 1)
         Me.lv_coverart.MultiSelect = False
         Me.lv_coverart.Name = "lv_coverart"
-        Me.lv_coverart.Size = New System.Drawing.Size(197, 539)
+        Me.lv_coverart.Size = New System.Drawing.Size(197, 501)
         Me.lv_coverart.TabIndex = 27
         Me.lv_coverart.UseCompatibleStateImageBehavior = False
         '
@@ -118,11 +120,39 @@ Partial Class DVDArt_CoverArt
         Me.b_preview.Text = "Preview"
         Me.b_preview.UseVisualStyleBackColor = True
         '
+        'cb_title
+        '
+        Me.cb_title.AutoSize = True
+        Me.cb_title.Checked = True
+        Me.cb_title.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.cb_title.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_title.Location = New System.Drawing.Point(470, 513)
+        Me.cb_title.Name = "cb_title"
+        Me.cb_title.Size = New System.Drawing.Size(136, 20)
+        Me.cb_title.TabIndex = 30
+        Me.cb_title.Text = "Add Movie Title"
+        Me.cb_title.UseVisualStyleBackColor = True
+        '
+        'cb_logos
+        '
+        Me.cb_logos.AutoSize = True
+        Me.cb_logos.Checked = True
+        Me.cb_logos.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.cb_logos.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_logos.Location = New System.Drawing.Point(604, 513)
+        Me.cb_logos.Name = "cb_logos"
+        Me.cb_logos.Size = New System.Drawing.Size(102, 20)
+        Me.cb_logos.TabIndex = 31
+        Me.cb_logos.Text = "Add Logos"
+        Me.cb_logos.UseVisualStyleBackColor = True
+        '
         'DVDArt_CoverArt
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(708, 541)
+        Me.Controls.Add(Me.cb_logos)
+        Me.Controls.Add(Me.cb_title)
         Me.Controls.Add(Me.b_preview)
         Me.Controls.Add(Me.lv_coverart)
         Me.Controls.Add(Me.TabControl1)
@@ -150,4 +180,6 @@ Partial Class DVDArt_CoverArt
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents tt_preview As System.Windows.Forms.ToolTip
     Friend WithEvents b_preview As System.Windows.Forms.Button
+    Friend WithEvents cb_title As System.Windows.Forms.CheckBox
+    Friend WithEvents cb_logos As System.Windows.Forms.CheckBox
 End Class
