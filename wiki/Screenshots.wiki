@@ -50,8 +50,46 @@ http://dvdart.googlecode.com/svn/wiki/screens/serials_1.jpg
 ===Clear Logo===
 http://dvdart.googlecode.com/svn/wiki/screens/serials_2.jpg
 
+===Serials Context Menu===
+http://dvdart.googlecode.com/svn/wiki/screens/serials_cm.jpg
+
+
 ===Serials missing artwork===
 http://dvdart.googlecode.com/svn/wiki/screens/serials_missing_cm.jpg
 
 ===Manually upload artwork===
 http://dvdart.googlecode.com/svn/wiki/screens/serials_manual_upload.jpg
+
+
+=Music=
+
+==Artists==
+===Banners===
+http://dvdart.googlecode.com/svn/wiki/screens/music_artist_1.jpg
+
+===Clear Logo===
+http://dvdart.googlecode.com/svn/wiki/screens/music_artist_2.jpg
+
+===Artist Context Menu===
+http://dvdart.googlecode.com/svn/wiki/screens/music_artist_cm.jpg
+
+===Manually upload artwork===
+http://dvdart.googlecode.com/svn/wiki/screens/music_manual_upload_1.jpg
+
+
+==Album==
+===CDArt===
+http://dvdart.googlecode.com/svn/wiki/screens/music_album.jpg
+
+===Album Context Menu===
+http://dvdart.googlecode.com/svn/wiki/screens/music_album_cm.jpg
+
+===Music missing artwork===
+http://dvdart.googlecode.com/svn/wiki/screens/music_missing_cm.jpg
+
+===Manually upload artwork===
+http://dvdart.googlecode.com/svn/wiki/screens/music_manual_upload_2.jpg
+
+
+==You can change the MBID of either an artist or an album==
+http://dvdart.googlecode.com/svn/wiki/screens/music_change_mbid.jpg
