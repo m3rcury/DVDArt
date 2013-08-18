@@ -165,6 +165,13 @@ Namespace My.Resources
             End Get
         End Property
         
+        Friend ReadOnly Property lastfm() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("lastfm", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
         Friend ReadOnly Property logo() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("logo", resourceCulture)
@@ -196,6 +203,13 @@ Namespace My.Resources
         Friend ReadOnly Property music() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("music", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property musicbrainz_picard() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("musicbrainz-picard", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -287,6 +301,34 @@ Namespace My.Resources
         Friend ReadOnly Property sort_none() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("sort_none", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property template_1() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("template_1", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property template_1_disabled() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("template_1_disabled", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property template_2() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("template_2", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property template_2_disabled() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("template_2_disabled", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

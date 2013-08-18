@@ -109,6 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="DVDArt_ChangeMBID.Designer.vb">
+      <DependentUpon>DVDArt_ChangeMBID.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DVDArt_ChangeMBID.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DVDArt_CoverArt.Designer.vb">
       <DependentUpon>DVDArt_CoverArt.vb</DependentUpon>
     </Compile>
@@ -116,6 +122,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DVDArt_Common.vb" />
+    <Compile Include="DVDArt_Layout.Designer.vb">
+      <DependentUpon>DVDArt_Layout.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DVDArt_Layout.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DVDArt_ManualUpload.Designer.vb">
       <DependentUpon>DVDArt_ManualUpload.vb</DependentUpon>
     </Compile>
@@ -161,11 +173,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DVDArt_ChangeMBID.resx">
+      <DependentUpon>DVDArt_ChangeMBID.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DVDArt_CoverArt.resx">
       <DependentUpon>DVDArt_CoverArt.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DVDArt_GUI.resx">
       <DependentUpon>DVDArt_GUI.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DVDArt_Layout.resx">
+      <DependentUpon>DVDArt_Layout.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DVDArt_ManualUpload.resx">
       <DependentUpon>DVDArt_ManualUpload.vb</DependentUpon>
@@ -207,7 +225,9 @@
     <Content Include="Resources\grimm_clearlogo.png" />
     <None Include="Resources\movingpictures.png" />
     <Content Include="Resources\hd.png" />
+    <None Include="Resources\lastfm.gif" />
     <Content Include="Resources\music.png" />
+    <None Include="Resources\musicbrainz-picard.png" />
     <Content Include="Resources\na.png" />
     <Content Include="Resources\process.png" />
     <Content Include="Resources\queen_banner.jpg" />
@@ -218,6 +238,10 @@
     <Content Include="Resources\sort_asc.png" />
     <Content Include="Resources\sort_desc.png" />
     <Content Include="Resources\sort_none.png" />
+    <None Include="Resources\template_1.png" />
+    <None Include="Resources\template_2.png" />
+    <None Include="Resources\template_1_disabled.png" />
+    <Content Include="Resources\template_2_disabled.png" />
     <Content Include="Resources\tvseries.png" />
     <Content Include="Resources\upload.png" />
     <None Include="Resources\compress.png" />

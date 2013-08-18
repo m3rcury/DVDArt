@@ -3,6 +3,8 @@ Imports System.Data.SQLite
 
 Public Class DVDArt_CoverArt
 
+    Public this_template_type As Integer = DVDArt_GUI.template_type
+
     Private _images(), _thumbs, _imdb_id, _movie_name As String
     Private lv_images As New ListView
     Private dvdart, dvdart_mask As Bitmap
@@ -65,6 +67,8 @@ Public Class DVDArt_CoverArt
 
     Private Sub DVDArt_CoverArt_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
 
+        cb_title_and_logos_CheckedChanged(Nothing, Nothing)
+
         Dim fs As System.IO.FileStream
         Dim imagekey As String
         Dim x As Integer
@@ -126,6 +130,11 @@ Public Class DVDArt_CoverArt
 
     End Sub
 
+    Private Sub b_change_layout_Click(sender As System.Object, e As System.EventArgs) Handles b_change_layout.Click
+        Dim layout As New DVDArt_layout
+        layout.ChangeLayout(this_template_type, this_template_type)
+    End Sub
+
     Private Sub b_done_Click(sender As System.Object, e As System.EventArgs) Handles b_done.Click
 
         Dim file2 As String = _thumbs & DVDArt_Common.folder(0, 0, 0) & _imdb_id & ".png"
@@ -149,7 +158,7 @@ Public Class DVDArt_CoverArt
 
         CropImage.Save(file)
 
-        DVDArt_Common.create_CoverArt(file, _imdb_id, _movie_name, cb_title.Checked, cb_logos.Checked)
+        DVDArt_Common.create_CoverArt(file, _imdb_id, _movie_name, cb_title.Checked, cb_logos.Checked, this_template_type)
 
         If Not FileSystem.FileExists(file2) Then
             MsgBox("Failed to create DVDArt from " & file & " to " & file2 & ".png", MsgBoxStyle.Critical)
@@ -161,6 +170,10 @@ Public Class DVDArt_CoverArt
 
         Return
 
+    End Sub
+
+    Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.CheckedChanged, cb_logos.CheckedChanged
+        b_change_layout.Enabled = cb_title.Checked Or cb_logos.Checked
     End Sub
 
 End Class

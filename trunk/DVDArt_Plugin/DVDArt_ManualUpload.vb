@@ -3,6 +3,8 @@ Imports Microsoft.VisualBasic.FileIO
 
 Public Class DVDArt_ManualUpload
 
+    Public this_template_type As Integer = DVDArt_GUI.template_type
+
     Private _imdb_id, _title, _type, thumbs As String
     Private _process(2) As Boolean
 
@@ -32,23 +34,46 @@ Public Class DVDArt_ManualUpload
         Dim database As String = String.Empty
 
         If DVDArt_Common.Get_Paths(database, thumbs) Then
+
+            cb_title_and_logos_CheckedChanged(Nothing, Nothing)
+
             'change window title to reflect movie name
             Me.Text = Me.Text & " - " & _title
             Me.Refresh()
 
+            'change labels depending of type
+            If _type = "artist" Then
+                l_clearart.Text = "Banner"
+            End If
+
+            If _type = "music" Then
+                l_dvdart.Text = "CD Art"
+            End If
+
             'enable fields according to selection in setting
-            l_dvdart.Enabled = DVDArt_GUI.checked(0, 0) And _type <> "series"
-            tb_dvdart.Enabled = DVDArt_GUI.checked(0, 0) And _type <> "series"
-            b_dvdart.Enabled = DVDArt_GUI.checked(0, 0) And _type <> "series"
-            b_preview_dvdart.Enabled = DVDArt_GUI.checked(0, 0) And _type <> "series"
-            ' l_clearart.Enabled = DVDArt_GUI.checked(1)
-            ' tb_clearart.Enabled = DVDArt_GUI.checked(1)
-            ' b_clearart.Enabled = DVDArt_GUI.checked(1)
-            ' b_preview_clearart.Enabled = DVDArt_GUI.checked(1)
-            ' l_clearlogo.Enabled = DVDArt_GUI.checked(2)
-            ' tb_clearlogo.Enabled = DVDArt_GUI.checked(2)
-            ' b_clearlogo.Enabled = DVDArt_GUI.checked(2)
-            ' b_preview_clearlogo.Enabled = DVDArt_GUI.checked(2)
+            l_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
+            tb_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
+            b_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
+            b_preview_dvdart.Enabled = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
+
+            cb_title.Visible = (_type = "movie")
+            cb_logos.Visible = (_type = "movie")
+            b_change_layout.Visible = (_type = "movie")
+
+            l_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+            tb_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+            b_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+            b_preview_clearart.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+            l_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+            tb_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+            b_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+            b_preview_clearlogo.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+
+            'centre upload button
+            If _type <> "movie" Then
+                b_upload.Left = (Me.ClientSize.Width / 2) - (b_upload.Width / 2)
+            End If
+
         Else
             Return
         End If
@@ -64,6 +89,9 @@ Public Class DVDArt_ManualUpload
         Else
             b_process_dvdart.Visible = False
         End If
+
+        _process(0) = Not b_process_dvdart.Visible
+
     End Sub
 
     Private Sub b_clearart_Click(sender As System.Object, e As System.EventArgs) Handles b_clearart.Click
@@ -75,6 +103,9 @@ Public Class DVDArt_ManualUpload
         Else
             b_process_clearart.Visible = False
         End If
+
+        _process(1) = Not b_process_clearart.Visible
+
     End Sub
 
     Private Sub b_clearlogo_Click(sender As System.Object, e As System.EventArgs) Handles b_clearlogo.Click
@@ -86,6 +117,9 @@ Public Class DVDArt_ManualUpload
         Else
             b_process_clearlogo.Visible = False
         End If
+
+        _process(2) = Not b_process_clearlogo.Visible
+
     End Sub
 
     Private Function Check_Image(ByVal path As String, ByVal width As Integer, ByVal height As Integer) As Boolean
@@ -137,9 +171,9 @@ Public Class DVDArt_ManualUpload
 
             'create image with transparency
             Dim file As String = tb_dvdart.Text.Replace(IO.Path.GetExtension(tb_dvdart.Text), ".png")
-            Dim params() As String = {"-resize", "500x500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", DVDArt_Common._temp & "\dvdart_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", DVDArt_Common._temp & "\dvdart.png", "-compose", "over", "-composite"}
 
-            DVDArt_Common.Convert(tb_dvdart.Text, file, params)
+            DVDArt_Common.create_CoverArt(tb_dvdart.Text, _imdb_id, _title, cb_title.Checked, cb_logos.Checked, this_template_type, True, file)
+
         End If
 
     End Sub
@@ -257,6 +291,15 @@ Public Class DVDArt_ManualUpload
 
         Return
 
+    End Sub
+
+    Private Sub b_change_layout_Click(sender As System.Object, e As System.EventArgs) Handles b_change_layout.Click
+        Dim layout As New DVDArt_layout
+        layout.ChangeLayout(this_template_type, this_template_type)
+    End Sub
+
+    Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.CheckedChanged, cb_logos.CheckedChanged
+        b_change_layout.Enabled = cb_title.Checked Or cb_logos.Checked
     End Sub
 
 End Class
