@@ -17,37 +17,26 @@ Public Class DVDArt_Common
         System.Threading.Thread.Sleep(milliseconds)
     End Sub
 
-    Public Shared Function Get_MBID(ByVal album As String, ByVal artist As String, ByVal database As String) As String
+    Public Shared Function Get_MBID(ByVal database As String, ByVal album As String, ByVal artist As String) As String
 
-        Dim WebClient As New System.Net.WebClient
-        Dim startp, endp, len As Integer
-        Dim MBz_XML As String
         Dim MBID As String = Nothing
 
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3;Read Only=True;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT MBID FROM processed_artist WHERE artist = '" & artist & "'"
-        SQLreader = SQLcommand.ExecuteReader()
-        SQLreader.Read()
+        SQLcommand.CommandText = "SELECT MBID FROM processed_artist WHERE LOWER(artist) = """ & LCase(artist) & """"
+        SQLreader = SQLcommand.ExecuteReader(CommandBehavior.SingleRow)
 
-        Dim url As String = "http://www.musicbrainz.org/ws/2/release?artist=" & SQLreader(0)
+        MBID = SQLreader(0)
 
         SQLconnect.Close()
 
-        MBz_XML = WebClient.DownloadString(url)
-
-        ' if a match is found
-        If MBz_XML.Contains("<title>" & album & "</title>") Then
-            startp = InStr(MBz_XML, "<release id=") + 13
-            endp = InStr(startp, MBz_XML, """")
-            len = endp - startp
-            MBID = Mid(MBz_XML, startp, len)
-        End If
+        If MBID = Nothing Then MBID = Last_fm(artist, "artist")
+        If MBID = Nothing Then MBID = MusicBrainz(artist, "artist")
 
         Return MBID
 
@@ -55,24 +44,123 @@ Public Class DVDArt_Common
 
     Public Shared Function Get_Artist_MBID(ByVal artist As String) As String
 
-        Dim WebClient As New System.Net.WebClient
-        Dim startp, endp, len As Integer
-        Dim MBz_XML As String
         Dim MBID As String = Nothing
 
-        Dim url As String = "http://www.musicbrainz.org/ws/2/artist/?query=" & artist.Replace(" ", "%20")
+        MBID = Last_fm(artist, "artist")
 
-        MBz_XML = WebClient.DownloadString(url)
+        If MBID = Nothing Then MBID = MusicBrainz(artist, "artist")
 
-        ' if a match is found
-        If MBz_XML.Contains("ext:score=""100""") Then
-            startp = InStr(MBz_XML, "<artist id=") + 12
-            endp = InStr(startp, MBz_XML, """")
-            len = endp - startp
-            MBID = Mid(MBz_XML, startp, len)
+        Return MBID
+
+    End Function
+
+    Public Shared Function Last_fm(ByVal artist As String, ByVal mode As String, Optional ByVal search As String = Nothing) As String
+
+        Dim WebClient As New System.Net.WebClient
+        Dim startp, endp, len As Integer
+        Dim Lastfm_XML As String
+        Dim url As String = Nothing
+        Dim MBID As String = Nothing
+
+        If mode = "artist" Then
+            url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" & artist.Replace(" ", "%20") & "&lang=en&autocorrect=1&api_key=80c3a2a37a2b6666b38c107759645e48&format=json"
+        ElseIf mode = "track" Then
+            url = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&autocorrect=1&api_key=80c3a2a37a2b6666b38c107759645e48&artist=" & artist.Replace(" ", "%20") & "&track=" & search.Replace(" ", "%20") & "&format=json"
+        ElseIf mode = "album" Then
+            url = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&lang=en&autocorrect=1&api_key=80c3a2a37a2b6666b38c107759645e48&artist=" & artist.Replace(" ", "%20") & "&album=" & search.Replace(" ", "%20") & "&format=json"
         Else
             Return Nothing
         End If
+
+        Try
+
+            Lastfm_XML = WebClient.DownloadString(url)
+
+            ' if a match is found
+            If Not Lastfm_XML.Contains("error") Then
+
+                If mode = "artist" Or mode = "album" Then
+                    startp = InStr(Lastfm_XML, "mbid"":") + 7
+                ElseIf mode = "track" Then
+                    startp = InStr(Lastfm_XML, "title"":")
+                    startp = InStr(startp, Lastfm_XML, "mbid"":") + 7
+                End If
+
+                endp = InStr(startp, Lastfm_XML, """,")
+                len = endp - startp
+
+                If len > 0 Then
+                    MBID = Mid(Lastfm_XML, startp, len)
+                Else
+                    MBID = Nothing
+                End If
+
+            Else
+                MBID = Nothing
+            End If
+
+        Catch ex As Exception
+            MBID = Nothing
+        End Try
+
+        Return MBID
+
+    End Function
+
+    Public Shared Function MusicBrainz(ByVal artist As String, ByVal mode As String, Optional ByVal track As String = Nothing) As String
+
+        Dim WebClient As New System.Net.WebClient
+        Dim startp, endp, len As Integer
+        Dim MBz_XML As String
+        Dim url As String = Nothing
+        Dim MBID As String = Nothing
+
+        If mode = "artist" Then
+            url = "http://www.musicbrainz.org/ws/2/artist/?query=" & artist.Replace(" ", "%20")
+        ElseIf mode = "track" Then
+            url = "http://www.musicbrainz.org/ws/2/release?artist=" & artist.Replace(" ", "%20")
+        ElseIf mode = "album" Then
+            url = "http://www.musicbrainz.org/ws/2/release?artist=" & artist.Replace(" ", "%20")
+        Else
+            Return Nothing
+        End If
+
+        Try
+
+            MBz_XML = WebClient.DownloadString(url)
+
+            ' if a match is found
+            If mode = "artist" Then
+
+                If MBz_XML.Contains("ext:score=""100""") Then
+                    startp = InStr(MBz_XML, "<artist id=") + 12
+                    endp = InStr(startp, MBz_XML, """")
+                    len = endp - startp
+                    If len > 0 Then
+                        MBID = Mid(MBz_XML, startp, len)
+                    Else
+                        MBID = Nothing
+                    End If
+                Else
+                    MBID = Nothing
+                End If
+
+            Else
+
+                If MBz_XML.Contains("<title>" & track & "</title>") Then
+                    startp = InStr(MBz_XML, "<release id=") + 13
+                    endp = InStr(startp, MBz_XML, """")
+                    len = endp - startp
+                    MBID = Mid(MBz_XML, startp, len)
+                Else
+                    MBID = Nothing
+                End If
+
+            End If
+
+        Catch ex As Exception
+            MBID = Nothing
+        End Try
 
         Return MBID
 
@@ -89,7 +177,7 @@ Public Class DVDArt_Common
             keyword = {"hdmovielogo", "**n/a**", "moviedisc", "movieart", "movielogo"}
         ElseIf type = "series" Then
             keyword = {"hdtvlogo", "hdclearart", "**n/a**", "clearart", "clearlogo"}
-        ElseIf type = "artist" Then
+        ElseIf type = "artist" Or type = "music" Then
             keyword = {"hdmusiclogo", "**n/a**", "cdart", "musicbanner", "musiclogo"}
         End If
 
@@ -244,12 +332,73 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Function JSON_request(ByVal imdb_id As String, ByVal type As String, ByVal nbrimages As String) As String
+    Public Shared Function parse_music(ByVal jsonresponse As String, ByVal album As String) As Array
+
+        Dim details(5, 0), parsestring As String
+        Dim startp, endp, len, x, y, j As Integer
+
+        ' find the starting place of the respective sections
+
+        startp = InStr(jsonresponse, "cdart"":")
+
+        If startp > 0 Then
+
+            If x > y Then y = x
+
+            x = 0
+            j = 0
+
+            Do Until startp = 0
+
+                endp = InStr(startp, jsonresponse, "]") - startp + 1
+                parsestring = Mid(jsonresponse, startp, endp)
+                jsonresponse = Right(jsonresponse, Microsoft.VisualBasic.Len(jsonresponse) - startp + 1)
+
+                startp = InStr(parsestring, "id"":")
+
+                If startp > 0 Then
+
+                    startp = InStr(startp, parsestring, "url"":")
+
+                    If startp > 0 Then
+
+                        startp += 6
+                        endp = InStr(startp, parsestring, """,")
+                        len = endp - startp
+
+                        'url
+                        If Mid(parsestring, startp, len).Contains("/cdart/" & album) Then
+
+                            If x >= y Then ReDim Preserve details(5, x)
+
+                            details(j, x) = Mid(parsestring, startp, len).Replace("\", "")
+
+                            x += 1
+                        End If
+
+                        startp = InStr(InStr(jsonresponse, "]"), jsonresponse, "cdart"":")
+
+                    Else
+                        Exit Do
+                    End If
+                Else
+                    Exit Do
+                End If
+
+            Loop
+
+        End If
+
+        Return details
+
+    End Function
+
+    Public Shared Function JSON_request(ByVal id As String, ByVal type As String, ByVal nbrimages As String) As String
 
         Dim WebClient As New System.Net.WebClient
         Dim apikey As String = "bfd6e4e0d4e71237f784b70fc43f8269"
 
-        Dim url As String = "http://fanart.tv/webservice/" & type & "/" & apikey & "/" & imdb_id & "/json/all/1/" & nbrimages
+        Dim url As String = "http://fanart.tv/webservice/" & type & "/" & apikey & "/" & id & "/json/all/1/" & nbrimages
 
         Return WebClient.DownloadString(url)
 
@@ -297,7 +446,6 @@ Public Class DVDArt_Common
     Public Shared Function download(ByVal thumbs As String, ByVal folder(,,) As String, ByVal id As String, ByVal overwrite As Boolean, _
                                     ByVal try2download() As Boolean, ByVal type As String, Optional ByVal language As String = "##") As Array
 
-        Dim WebClient As New System.Net.WebClient
         Dim url(5, 0) As String
         Dim found(2) As Boolean
         Dim parm As Object
@@ -307,15 +455,23 @@ Public Class DVDArt_Common
         Dim fullpath As String = Nothing
         Dim jsonresponse As String
 
-        If language = "##" Then
-            jsonresponse = JSON_request(id, type, "1")
+        If Left(type, 5) <> "music" Then
+            If language = "##" Then
+                jsonresponse = JSON_request(id, type, "1")
+            Else
+                jsonresponse = JSON_request(id, type, "2")
+            End If
         Else
-            jsonresponse = JSON_request(id, type, "2")
+            jsonresponse = JSON_request(id, "artist", "2")
         End If
 
         If jsonresponse <> "null" Then
 
-            url = parse(jsonresponse, type, language)
+            If Left(type, 5) <> "music" Then
+                url = parse(jsonresponse, type, language)
+            Else
+                url = parse_music(jsonresponse, LCase(Right(type, Len(type) - 6).Replace(" ", "-")))
+            End If
 
             For y = 0 To 2
 
@@ -325,7 +481,7 @@ Public Class DVDArt_Common
                 ElseIf type = "series" Then
                     fullpath = thumbs & folder(1, y, 0) & id & ".png"
                     thumbpath = thumbs & folder(1, y, 1) & id & ".png"
-                ElseIf type = "artist" Or type = "music" Then
+                ElseIf type = "artist" Or Left(type, 5) = "music" Then
                     fullpath = thumbs & folder(2, y, 0) & id & ".png"
                     thumbpath = thumbs & folder(2, y, 1) & id & ".png"
                 End If
@@ -379,7 +535,7 @@ Public Class DVDArt_Common
 
         End If
 
-        Return found
+            Return found
 
     End Function
 
@@ -446,7 +602,7 @@ Public Class DVDArt_Common
 
     End Sub
 
-    Public Shared Sub create_CoverArt(ByVal file As String, ByVal imdb_id As String, ByVal movie_name As String, ByVal _title As Boolean, ByVal _logos As Boolean)
+    Public Shared Sub create_CoverArt(ByVal file As String, ByVal imdb_id As String, ByVal movie_name As String, ByVal _title As Boolean, ByVal _logos As Boolean, ByVal template As Integer, Optional ByVal preview As Boolean = False, Optional ByVal previewfile As String = Nothing)
 
         If Trim(file) = "" Then Exit Sub
 
@@ -503,70 +659,85 @@ Public Class DVDArt_Common
                 image.Save(tempfile)
             End If
 
-            logos = {tempfile, "-geometry", "+0+200", "-composite"}
+            If template = 1 Then
+                logos = {tempfile, "-geometry", "-148+60", "-composite"}
+            Else
+                logos = {tempfile, "-geometry", "+0+200", "-composite"}
+            End If
+
             For x = 0 To UBound(logos)
                 ReDim Preserve params(UBound(params) + 1)
                 params(UBound(params)) = logos(x)
             Next
 
             ' Studios Logo
-            For x = 0 To UBound(studios)
+            If studios IsNot Nothing Then
+                For x = 0 To UBound(studios)
 
-                If studios(x) <> "" And studios(x) <> "_" And studios(x) <> Nothing Then
-                    tempfile = _temp & "\" & studios(x) & ".png"
-                    If Not FileSystem.FileExists(tempfile) Then
-                        Try
-                            url = New Uri("https://dvdart.googlecode.com/svn/trunk/Studio/logos/" + studios(x) + ".png")
-                            objDL.DownloadFile(url, tempfile)
-                        Catch ex As Exception
-                            tempfile = ""
-                        End Try
+                    If studios(x) <> "" And studios(x) <> "_" And studios(x) <> Nothing Then
+                        tempfile = _temp & "\" & studios(x) & ".png"
+                        If Not FileSystem.FileExists(tempfile) Then
+                            Try
+                                url = New Uri("https://dvdart.googlecode.com/svn/trunk/Studio/logos/" + studios(x) + ".png")
+                                objDL.DownloadFile(url, tempfile)
+                            Catch ex As Exception
+                                tempfile = ""
+                            End Try
+                        End If
+                        studios(x) = tempfile
+                    Else
+                        studios(x) = ""
                     End If
-                    studios(x) = tempfile
-                Else
-                    studios(x) = ""
-                End If
 
-            Next
-
-            Dim studio = (From str In studios Where Not {""}.Contains(str)).ToArray()
-
-            If studio.Length > 0 Then
-
-                Select Case studio.Length
-                    Case 1
-                        logos = {"""" & studio(0) & """", "-geometry", "+155", "-composite"}
-                    Case 2
-                        logos = {"""" & studio(0) & """", "-geometry", "+148-50", "-composite", """" & studio(1) & """", "-geometry", "+148+50", "-composite"}
-                    Case 3
-                        logos = {"""" & studio(0) & """", "-geometry", "+130-85", "-composite", """" & studio(1) & """", "-geometry", "+155", "-composite", """" & studio(2) & """", "-geometry", "+130+85", "-composite"}
-                End Select
-
-                For x = 0 To UBound(logos)
-                    ReDim Preserve params(UBound(params) + 1)
-                    params(UBound(params)) = logos(x)
                 Next
+
+                Dim studio = (From str In studios Where Not {""}.Contains(str)).ToArray()
+
+                If studio.Length > 0 Then
+
+                    Select Case studio.Length
+                        Case 1
+                            logos = {"""" & studio(0) & """", "-geometry", "+155", "-composite"}
+                        Case 2
+                            logos = {"""" & studio(0) & """", "-geometry", "+148-50", "-composite", """" & studio(1) & """", "-geometry", "+148+50", "-composite"}
+                        Case 3
+                            logos = {"""" & studio(0) & """", "-geometry", "+130-85", "-composite", """" & studio(1) & """", "-geometry", "+155", "-composite", """" & studio(2) & """", "-geometry", "+130+85", "-composite"}
+                    End Select
+
+                    For x = 0 To UBound(logos)
+                        ReDim Preserve params(UBound(params) + 1)
+                        params(UBound(params)) = logos(x)
+                    Next
+                End If
             End If
 
             ' Certification logo
             If certification <> "" And certification <> Nothing Then
-                certification = _temp & "\" & certification & ".png"
 
                 If Not FileSystem.FileExists(certification) Then
                     Try
                         url = New Uri("https://dvdart.googlecode.com/svn/trunk/Certification/logos/" + certification + ".png")
+                        certification = _temp & "\" & certification & ".png"
                         objDL.DownloadFile(url, certification)
                     Catch ex As Exception
                     End Try
                 End If
 
                 If FileSystem.FileExists(certification) Then
-                    logos = {certification, "-geometry", "-155", "-composite"}
+
+                    If template = 1 Then
+                        logos = {certification, "-geometry", "-148-60", "-composite"}
+                    Else
+                        logos = {certification, "-geometry", "-155", "-composite"}
+                    End If
+
                     For x = 0 To UBound(logos)
                         ReDim Preserve params(UBound(params) + 1)
                         params(UBound(params)) = logos(x)
                     Next
+
                 End If
+
             End If
 
         End If
@@ -581,7 +752,11 @@ Public Class DVDArt_Common
             Next
         End If
 
-        fullsize = thumbs & folder(0, 0, 0) & imdb_id & ".png"
+        If Not preview Then
+            fullsize = thumbs & folder(0, 0, 0) & imdb_id & ".png"
+        Else
+            fullsize = previewfile
+        End If
 
         If FileIO.FileSystem.FileExists(fullsize) Then FileIO.FileSystem.DeleteFile(fullsize)
 
@@ -598,10 +773,13 @@ Public Class DVDArt_Common
 
             'move to Thumbs folder
             FileIO.FileSystem.MoveFile(file2, fullsize, True)
-            'copy to Thumbs folder and resize to thumb size
-            thumb = thumbs & folder(0, 0, 1) & imdb_id & ".png"
-            FileIO.FileSystem.CopyFile(fullsize, thumb, True)
-            Resize(thumb, 200, 200)
+
+            If Not preview Then
+                'copy to Thumbs folder and resize to thumb size
+                thumb = thumbs & folder(0, 0, 1) & imdb_id & ".png"
+                FileIO.FileSystem.CopyFile(fullsize, thumb, True)
+                Resize(thumb, 200, 200)
+            End If
 
         End If
 
@@ -724,7 +902,7 @@ Public Class DVDArt_Common
 
         ' initialize version
         _pre_version = "v1.0.1.2"
-        _version = "v1.0.1.3"
+        _version = "v1.0.1.4"
 
         ' initialize folder paths
         folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"

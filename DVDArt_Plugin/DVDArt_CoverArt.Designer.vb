@@ -31,6 +31,7 @@ Partial Class DVDArt_CoverArt
         Me.il_coverart = New System.Windows.Forms.ImageList(Me.components)
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tt_preview = New System.Windows.Forms.ToolTip(Me.components)
+        Me.b_change_layout = New System.Windows.Forms.Button()
         Me.b_preview = New System.Windows.Forms.Button()
         Me.cb_title = New System.Windows.Forms.CheckBox()
         Me.cb_logos = New System.Windows.Forms.CheckBox()
@@ -78,7 +79,7 @@ Partial Class DVDArt_CoverArt
         '
         'b_done
         '
-        Me.b_done.Location = New System.Drawing.Point(254, 511)
+        Me.b_done.Location = New System.Drawing.Point(312, 511)
         Me.b_done.Name = "b_done"
         Me.b_done.Size = New System.Drawing.Size(75, 23)
         Me.b_done.TabIndex = 26
@@ -89,10 +90,10 @@ Partial Class DVDArt_CoverArt
         '
         Me.lv_coverart.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.lv_coverart.LargeImageList = Me.il_coverart
-        Me.lv_coverart.Location = New System.Drawing.Point(509, 1)
+        Me.lv_coverart.Location = New System.Drawing.Point(510, 2)
         Me.lv_coverart.MultiSelect = False
         Me.lv_coverart.Name = "lv_coverart"
-        Me.lv_coverart.Size = New System.Drawing.Size(197, 501)
+        Me.lv_coverart.Size = New System.Drawing.Size(197, 506)
         Me.lv_coverart.TabIndex = 27
         Me.lv_coverart.UseCompatibleStateImageBehavior = False
         '
@@ -111,9 +112,19 @@ Partial Class DVDArt_CoverArt
         Me.TabControl1.Size = New System.Drawing.Size(512, 530)
         Me.TabControl1.TabIndex = 28
         '
+        'b_change_layout
+        '
+        Me.b_change_layout.Location = New System.Drawing.Point(231, 511)
+        Me.b_change_layout.Name = "b_change_layout"
+        Me.b_change_layout.Size = New System.Drawing.Size(75, 23)
+        Me.b_change_layout.TabIndex = 32
+        Me.b_change_layout.Text = "Change"
+        Me.tt_preview.SetToolTip(Me.b_change_layout, "Change DVDArt layout options")
+        Me.b_change_layout.UseVisualStyleBackColor = True
+        '
         'b_preview
         '
-        Me.b_preview.Location = New System.Drawing.Point(173, 511)
+        Me.b_preview.Location = New System.Drawing.Point(150, 511)
         Me.b_preview.Name = "b_preview"
         Me.b_preview.Size = New System.Drawing.Size(75, 23)
         Me.b_preview.TabIndex = 29
@@ -126,7 +137,7 @@ Partial Class DVDArt_CoverArt
         Me.cb_title.Checked = True
         Me.cb_title.CheckState = System.Windows.Forms.CheckState.Checked
         Me.cb_title.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_title.Location = New System.Drawing.Point(470, 513)
+        Me.cb_title.Location = New System.Drawing.Point(465, 513)
         Me.cb_title.Name = "cb_title"
         Me.cb_title.Size = New System.Drawing.Size(136, 20)
         Me.cb_title.TabIndex = 30
@@ -151,6 +162,7 @@ Partial Class DVDArt_CoverArt
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(708, 541)
+        Me.Controls.Add(Me.b_change_layout)
         Me.Controls.Add(Me.cb_logos)
         Me.Controls.Add(Me.cb_title)
         Me.Controls.Add(Me.b_preview)
@@ -182,4 +194,5 @@ Partial Class DVDArt_CoverArt
     Friend WithEvents b_preview As System.Windows.Forms.Button
     Friend WithEvents cb_title As System.Windows.Forms.CheckBox
     Friend WithEvents cb_logos As System.Windows.Forms.CheckBox
+    Friend WithEvents b_change_layout As System.Windows.Forms.Button
 End Class
