@@ -1,10 +1,57 @@
+=Settings=
+
+==Movie Settings==
+===Select which artwork to scrape===
+http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_1.jpg
+
+===Set default layout for manually created DVDArt===
+http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_2.jpg
+
+==Series Settings==
+===Select which artwork to scrape===
+http://dvdart.googlecode.com/svn/wiki/screens/Settings_series.jpg
+
+==Music Settings==
+===Select which artwork to scrape===
+http://dvdart.googlecode.com/svn/wiki/screens/Settings_music.jpg
+
 =Movies=
+
+===DVD Art===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_1.jpg
 
+===Clear Art===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_2.jpg
 
+===Clear Logo===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_3.jpg
 
+===Movies missing artwork===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_missing_cm.jpg
 
+===Manually upload artwork===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_manual_upload_1.jpg
+
+===You can change default DVDArt layout for this particular creation===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_manual_upload_2.jpg
+
+===Use existing Cover Art to generate DVDArt===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_use_cover_art.jpg
+
+===Preview your creation===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_manual_upload_preview.jpg
+
+
+=Series=
+
+===Clear Art===
+http://dvdart.googlecode.com/svn/wiki/screens/serials_1.jpg
+
+===Clear Logo===
+http://dvdart.googlecode.com/svn/wiki/screens/serials_2.jpg
+
+===Serials missing artwork===
+http://dvdart.googlecode.com/svn/wiki/screens/serials_missing_cm.jpg
+
+===Manually upload artwork===
+http://dvdart.googlecode.com/svn/wiki/screens/serials_manual_upload.jpg
