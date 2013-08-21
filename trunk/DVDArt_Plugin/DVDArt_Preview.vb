@@ -38,9 +38,15 @@
 
     Private Sub DVDArt_Preview_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
 
-        Dim imagesize As String = DVDArt_Common.GetSize(IO.Path.GetDirectoryName(_path), IO.Path.GetFileName(_path))
+        Dim imagesize As String = DVDArt_Common.getSize(IO.Path.GetDirectoryName(_path) & "\" & IO.Path.GetFileName(_path))
 
-        If imagesize = "500x500" Then
+        If imagesize = "1000x185" Then
+            Me.Width = 1010
+            Me.Height = 224
+            pb_preview.Width = 1000
+            pb_preview.Height = 185
+            l_copyright.Top = 186
+        ElseIf imagesize = "500x500" Then
             Me.Width = 510
             Me.Height = 527
             pb_preview.Width = 500
@@ -67,6 +73,7 @@
         Dim fs As System.IO.FileStream
         fs = New System.IO.FileStream(_path, IO.FileMode.Open, IO.FileAccess.Read)
         pb_preview.Image = System.Drawing.Image.FromStream(fs)
+        pb_preview.Refresh()
         fs.Close()
 
         If _animate Then
