@@ -121,3 +121,14 @@ In order to facilitate skin file modding, a number of property fields have been 
     <!-- You can define multiple properties -->
   </videoplayimages>
 }}}
+
+  * *#Music.CDArt*
+ This property holds the folder under which full size Album CDArt images are stored.  This resolves to *_thumbspath_\Music\CDArt\FullSize*
+
+
+  * *#Music.Banner*
+ This property holds the folder under which full size Artist Banner images are stored.  This resolves to *_thumbspath_\Music\Banner\FullSize*
+
+
+  * *#Music.ClearLogo*
+ This property holds the folder under which full size Artist Clear Logo images are stored.  This resolves to *_thumbspath_\Music\ClearLogo\FullSize*
