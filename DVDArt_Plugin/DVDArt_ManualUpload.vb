@@ -1,12 +1,14 @@
 ﻿Imports System.IO
+Imports System.Text.RegularExpressions
 Imports Microsoft.VisualBasic.FileIO
 
 Public Class DVDArt_ManualUpload
 
     Public this_template_type As Integer = DVDArt_GUI.template_type
 
-    Private _imdb_id, _title, _type, thumbs As String
+    Private _imagename, _title, _type, thumbs As String
     Private _process(2) As Boolean
+    Private invchar As String = "[^\w\(){}@'-+. ]"
 
     Private Function load_image(ByVal path As String) As System.Drawing.Image
 
@@ -22,9 +24,9 @@ Public Class DVDArt_ManualUpload
 
     End Function
 
-    Public Sub New(imdb_id As String, title As String, type As String)
+    Public Sub New(imagename As String, title As String, type As String)
         InitializeComponent()
-        _imdb_id = imdb_id
+        _imagename = imagename
         _title = title
         _type = type
     End Sub
@@ -128,7 +130,7 @@ Public Class DVDArt_ManualUpload
 
         If FileIO.FileSystem.FileExists(path) Then
 
-            imagesize = DVDArt_Common.GetSize(IO.Path.GetDirectoryName(path), IO.Path.GetFileName(path))
+            imagesize = DVDArt_Common.getSize(IO.Path.GetDirectoryName(path) & "\" & IO.Path.GetFileName(path))
             size = width.ToString & "x" & height.ToString
 
             If imagesize <> size Then
@@ -147,8 +149,13 @@ Public Class DVDArt_ManualUpload
     End Sub
 
     Private Sub b_preview_clearart_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_clearart.Click
-        Dim preview As New DVDArt_Preview(tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png"), False)
-        preview.Show()
+        If _type <> "artist" Then
+            Dim preview As New DVDArt_Preview(tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png"), False)
+            preview.Show()
+        Else
+            Dim preview As New DVDArt_Preview(tb_clearart.Text, False)
+            preview.Show()
+        End If
     End Sub
 
     Private Sub b_preview_clearlogo_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_clearlogo.Click
@@ -171,8 +178,16 @@ Public Class DVDArt_ManualUpload
 
             'create image with transparency
             Dim file As String = tb_dvdart.Text.Replace(IO.Path.GetExtension(tb_dvdart.Text), ".png")
+            Dim type As String
 
-            DVDArt_Common.create_CoverArt(tb_dvdart.Text, _imdb_id, _title, cb_title.Checked, cb_logos.Checked, this_template_type, True, file)
+            If file = tb_dvdart.Text Then
+                tb_dvdart.Text = tb_dvdart.Text.Replace(IO.Path.GetExtension(tb_dvdart.Text), ".jpg")
+                FileIO.FileSystem.RenameFile(file, IO.Path.GetFileName(tb_dvdart.Text))
+            End If
+
+            If _type = "music" Then type = "cdart" Else type = "dvdart"
+
+            DVDArt_Common.create_CoverArt(tb_dvdart.Text, _imagename, _title, cb_title.Checked, cb_logos.Checked, this_template_type, True, file, type)
 
         End If
 
@@ -180,22 +195,40 @@ Public Class DVDArt_ManualUpload
 
     Private Sub b_process_clearart_Click(sender As System.Object, e As System.EventArgs) Handles b_process_clearart.Click
 
-        If Check_Image(tb_clearart.Text, 500, 281) Then
-            b_process_clearart.Visible = False
-            b_preview_clearart.Visible = True
-            _process(1) = True
+        If _type <> "artist" Then
 
-            If InStr(tb_clearart.Text, " ") > 0 Then
-                FileIO.FileSystem.RenameFile(tb_clearart.Text, IO.Path.GetFileName(tb_clearart.Text.Replace(" ", "")))
-                tb_clearart.Text = tb_clearart.Text.Replace(" ", "")
-                tb_clearart.Refresh()
+            If Check_Image(tb_clearart.Text, 500, 281) Then
+                b_process_clearart.Visible = False
+                b_preview_clearart.Visible = True
+                _process(1) = True
+
+                If InStr(tb_clearart.Text, " ") > 0 Then
+                    FileIO.FileSystem.RenameFile(tb_clearart.Text, IO.Path.GetFileName(tb_clearart.Text.Replace(" ", "")))
+                    tb_clearart.Text = tb_clearart.Text.Replace(" ", "")
+                    tb_clearart.Refresh()
+                End If
+
+                'create image with transparency
+                Dim file As String = tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png")
+                Dim params() As String = {"-bordercolor", "white", "-border", "1x1", "-alpha", "set", "-channel", "RGBA", "-fuzz", "1%", "-fill", "none", "-floodfill", "+0+0", "white", "-shave", "1x1"}
+
+                DVDArt_Common.Convert(tb_clearart.Text, file, params)
             End If
 
-            'create image with transparency
-            Dim file As String = tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png")
-            Dim params() As String = {"-bordercolor", "white", "-border", "1x1", "-alpha", "set", "-channel", "RGBA", "-fuzz", "1%", "-fill", "none", "-floodfill", "+0+0", "white", "-shave", "1x1"}
+        Else
 
-            DVDArt_Common.Convert(tb_clearart.Text, file, params)
+            If Check_Image(tb_clearart.Text, 1000, 185) Then
+                b_process_clearart.Visible = False
+                b_preview_clearart.Visible = True
+                _process(1) = True
+
+                If InStr(tb_clearart.Text, " ") > 0 Then
+                    FileIO.FileSystem.RenameFile(tb_clearart.Text, IO.Path.GetFileName(tb_clearart.Text.Replace(" ", "")))
+                    tb_clearart.Text = tb_clearart.Text.Replace(" ", "")
+                    tb_clearart.Refresh()
+                End If
+            End If
+
         End If
 
     End Sub
@@ -215,7 +248,7 @@ Public Class DVDArt_ManualUpload
 
             'create image with transparency
             Dim file As String = tb_clearlogo.Text.Replace(IO.Path.GetExtension(tb_clearlogo.Text), ".png")
-            Dim params() As String = {"-bordercolor", "white", "-border", "1x1", "-alpha", "set", "-channel", "RGBA", "-fuzz", "1%", "-fill", "none", "-floodfill", "+0+0", "white", "-shave", "1x1"}
+            Dim params() As String = {"-bordercolor", "white", "-border", "1x1", "-alpha", "set", "-channel", "RGBA", "-fuzz", "20%", "-fill", "none", "-floodfill", "+0+0", "white", "-shave", "1x1"}
 
             DVDArt_Common.Convert(tb_clearlogo.Text, file, params)
         End If
@@ -226,7 +259,9 @@ Public Class DVDArt_ManualUpload
 
         Me.Cursor = Cursors.WaitCursor
 
-        Dim file As String
+        Dim file As String = Nothing
+        Dim fullsize As String = Nothing
+        Dim thumb As String = Nothing
 
         If tb_dvdart.Text <> Nothing Then
 
@@ -238,12 +273,21 @@ Public Class DVDArt_ManualUpload
                 DVDArt_Common.wait(500)
             Loop
 
-            'copy to FullSize folder
-            FileIO.FileSystem.CopyFile(file, thumbs & DVDArt_Common.folder(0, 0, 0) & _imdb_id & ".png", True)
+            _imagename = Regex.Replace(_imagename, invchar, "_")
 
+            If _type = "music" Then
+                fullsize = thumbs & DVDArt_Common.folder(2, 0, 0) & _imagename & ".png"
+                thumb = thumbs & DVDArt_Common.folder(2, 0, 1) & _imagename & ".png"
+            Else
+                fullsize = thumbs & DVDArt_Common.folder(0, 0, 0) & _imagename & ".png"
+                thumb = thumbs & DVDArt_Common.folder(0, 0, 1) & _imagename & ".png"
+            End If
+
+            'copy to FullSize folder
+            FileIO.FileSystem.CopyFile(file, fullsize, True)
             'resize to thumb size and copy to Thumbs folder
-            DVDArt_Common.Resize(file, 200, 200)
-            FileIO.FileSystem.MoveFile(file, thumbs & DVDArt_Common.folder(0, 0, 1) & _imdb_id & ".png", True)
+            DVDArt_Common.Resize(file, 200, 200, True)
+            FileIO.FileSystem.MoveFile(file, thumb, True)
             If FileIO.FileSystem.FileExists(tb_dvdart.Text) Then FileIO.FileSystem.DeleteFile(tb_dvdart.Text)
 
         End If
@@ -252,44 +296,81 @@ Public Class DVDArt_ManualUpload
 
             If Not _process(1) Then b_process_clearart_Click(sender, e)
 
-            file = tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png")
+            If _type <> "artist" Then
+                file = tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png")
+            Else
+                file = tb_clearart.Text
+            End If
 
             Do While Not FileSystem.FileExists(file)
                 DVDArt_Common.wait(500)
             Loop
 
+            _imagename = Regex.Replace(_imagename, invchar, "_")
+
+            If _type = "artist" Then
+                fullsize = thumbs & DVDArt_Common.folder(2, 1, 0) & _imagename & ".png"
+                thumb = thumbs & DVDArt_Common.folder(2, 1, 1) & _imagename & ".png"
+            ElseIf _type = "series" Then
+                fullsize = thumbs & DVDArt_Common.folder(1, 1, 0) & _imagename & ".png"
+                thumb = thumbs & DVDArt_Common.folder(1, 1, 1) & _imagename & ".png"
+            Else
+                fullsize = thumbs & DVDArt_Common.folder(0, 1, 0) & _imagename & ".png"
+                thumb = thumbs & DVDArt_Common.folder(0, 1, 1) & _imagename & ".png"
+            End If
+
             'copy to FullSize folder
-            FileIO.FileSystem.CopyFile(file, thumbs & DVDArt_Common.folder(0, 1, 0) & _imdb_id & ".png", True)
+            FileIO.FileSystem.CopyFile(file, fullsize, True)
             'resize to thumb size and copy to Thumbs folder
-            DVDArt_Common.Resize(file, 200, 112)
-            FileIO.FileSystem.MoveFile(file, thumbs & DVDArt_Common.folder(0, 1, 1) & _imdb_id & ".png", True)
+            If _type <> "artist" Then
+                DVDArt_Common.Resize(file, 200, 112, True)
+            Else
+                DVDArt_Common.Resize(file, 200, 37, True)
+            End If
+
+            FileIO.FileSystem.MoveFile(file, thumb, True)
             If FileIO.FileSystem.FileExists(tb_clearart.Text) Then FileIO.FileSystem.DeleteFile(tb_clearart.Text)
 
         End If
 
-        If tb_clearlogo.Text <> Nothing Then
+            If tb_clearlogo.Text <> Nothing Then
 
-            If Not _process(2) Then b_process_clearlogo_Click(sender, e)
+                If Not _process(2) Then b_process_clearlogo_Click(sender, e)
 
-            file = tb_clearlogo.Text.Replace(IO.Path.GetExtension(tb_clearlogo.Text), ".png")
+                file = tb_clearlogo.Text.Replace(IO.Path.GetExtension(tb_clearlogo.Text), ".png")
 
-            Do While Not FileSystem.FileExists(file)
-                DVDArt_Common.wait(500)
-            Loop
+                Do While Not FileSystem.FileExists(file)
+                    DVDArt_Common.wait(500)
+                Loop
 
-            'copy to FullSize folder
-            FileIO.FileSystem.CopyFile(file, """" & thumbs & DVDArt_Common.folder(0, 2, 0) & _imdb_id & ".png""", True)
-            'resize to thumb size and copy to Thumbs folder
-            DVDArt_Common.Resize(file, 200, 77)
-            FileIO.FileSystem.MoveFile(file, """" & thumbs & DVDArt_Common.folder(0, 2, 1) & _imdb_id & ".png""", True)
-            If FileIO.FileSystem.FileExists(tb_clearlogo.Text) Then FileIO.FileSystem.DeleteFile(tb_clearlogo.Text)
+                For Each c As Char In Path.GetInvalidFileNameChars()
+                    _imagename = _imagename.Replace(c, "_")
+                Next
 
-        End If
+                If _type = "artist" Then
+                    fullsize = thumbs & DVDArt_Common.folder(2, 2, 0) & _imagename & ".png"
+                    thumb = thumbs & DVDArt_Common.folder(2, 2, 1) & _imagename & ".png"
+                ElseIf _type = "series" Then
+                    fullsize = thumbs & DVDArt_Common.folder(1, 2, 0) & _imagename & ".png"
+                    thumb = thumbs & DVDArt_Common.folder(1, 2, 1) & _imagename & ".png"
+                Else
+                    fullsize = thumbs & DVDArt_Common.folder(0, 2, 0) & _imagename & ".png"
+                    thumb = thumbs & DVDArt_Common.folder(0, 2, 1) & _imagename & ".png"
+                End If
 
-        Me.Cursor = Cursors.Default
-        Me.Close()
+                'copy to FullSize folder
+                FileIO.FileSystem.CopyFile(file, fullsize, True)
+                'resize to thumb size and copy to Thumbs folder
+                DVDArt_Common.Resize(file, 200, 77, True)
+                FileIO.FileSystem.MoveFile(file, thumb, True)
+                If FileIO.FileSystem.FileExists(tb_clearlogo.Text) Then FileIO.FileSystem.DeleteFile(tb_clearlogo.Text)
 
-        Return
+            End If
+
+            Me.Cursor = Cursors.Default
+            Me.Close()
+
+            Return
 
     End Sub
 

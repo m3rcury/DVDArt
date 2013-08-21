@@ -36,6 +36,7 @@ Public Class DVDArt_Common
         SQLconnect.Close()
 
         If MBID = Nothing Then MBID = Last_fm(artist, "artist")
+        If MBID = Nothing Then MBID = theAudioDB(artist, "artist")
         If MBID = Nothing Then MBID = MusicBrainz(artist, "artist")
 
         Return MBID
@@ -48,6 +49,7 @@ Public Class DVDArt_Common
 
         MBID = Last_fm(artist, "artist")
 
+        If MBID = Nothing Then MBID = theAudioDB(artist, "artist")
         If MBID = Nothing Then MBID = MusicBrainz(artist, "artist")
 
         Return MBID
@@ -91,6 +93,54 @@ Public Class DVDArt_Common
 
                 If len > 0 Then
                     MBID = Mid(Lastfm_XML, startp, len)
+                Else
+                    MBID = Nothing
+                End If
+
+            Else
+                MBID = Nothing
+            End If
+
+        Catch ex As Exception
+            MBID = Nothing
+        End Try
+
+        Return MBID
+
+    End Function
+
+    Public Shared Function theAudioDB(ByVal artist As String, ByVal mode As String, Optional ByVal search As String = Nothing) As String
+
+        Dim WebClient As New System.Net.WebClient
+        Dim startp, endp, len As Integer
+        Dim theAudioDB_XML As String
+        Dim url As String = Nothing
+        Dim MBID As String = Nothing
+
+        If mode = "artist" Then
+            url = "http://www.theaudiodb.com/api/v1/json/58424d43204d6564696120/search.php?s=" & artist.Replace(" ", "%20")
+        ElseIf mode = "track" Then
+            url = "http://www.theaudiodb.com/api/v1/json/58424d43204d6564696120/search.php?s=" & artist.Replace(" ", "%20") & "&t=" & search.Replace(" ", "%20")
+        ElseIf mode = "album" Then
+            url = "http://www.theaudiodb.com/api/v1/json/58424d43204d6564696120/search.php?s=" & artist.Replace(" ", "%20") & "&a=" & search.Replace(" ", "%20")
+        Else
+            Return Nothing
+        End If
+
+        Try
+
+            theAudioDB_XML = WebClient.DownloadString(url)
+
+            ' if a match is found
+            If Not theAudioDB_XML.Contains(":null}") Then
+
+                startp = InStr(theAudioDB_XML, "strMusicBrainzID"":") + 19
+
+                endp = InStr(startp, theAudioDB_XML, """,")
+                len = endp - startp
+
+                If len > 0 Then
+                    MBID = Mid(theAudioDB_XML, startp, len)
                 Else
                     MBID = Nothing
                 End If
@@ -174,7 +224,7 @@ Public Class DVDArt_Common
         Dim starting(2), startHD_l, startHD_c, startp, endp, len, x, y, i, j As Integer
 
         If type = "movie" Then
-            keyword = {"hdmovielogo", "**n/a**", "moviedisc", "movieart", "movielogo"}
+            keyword = {"hdmovielogo", "hdmovieclearart", "moviedisc", "movieart", "movielogo"}
         ElseIf type = "series" Then
             keyword = {"hdtvlogo", "hdclearart", "**n/a**", "clearart", "clearlogo"}
         ElseIf type = "artist" Or type = "music" Then
@@ -257,7 +307,11 @@ Public Class DVDArt_Common
                                 len = endp - startp
 
                                 'language
-                                details(j + 1, x) = UCase(Mid(parsestring(i), startp, len).Replace("""", ""))
+                                If InStr(details(j, x), "/hd") Then
+                                    details(j + 1, x) = "HD - " & UCase(Mid(parsestring(i), startp, len).Replace("""", ""))
+                                Else
+                                    details(j + 1, x) = UCase(Mid(parsestring(i), startp, len).Replace("""", ""))
+                                End If
 
                                 startp = InStr(endp, parsestring(i), "disc_type"":")
 
@@ -438,6 +492,7 @@ Public Class DVDArt_Common
 
         image = New Bitmap(image, New Size(image.Size.Width * factor, image.Size.Height * factor))
         image.Save(path)
+        image.Dispose()
 
         e.Result = "DONE"
 
@@ -451,11 +506,19 @@ Public Class DVDArt_Common
         Dim parm As Object
         Dim y As Integer
 
+        Dim title As String = Nothing
         Dim thumbpath As String = Nothing
         Dim fullpath As String = Nothing
         Dim jsonresponse As String
 
-        If Left(type, 5) <> "music" Then
+        y = InStr(type, "|")
+
+        If y > 0 Then
+            title = Right(type, Len(type) - y)
+            type = Left(type, y - 1)
+        End If
+
+        If type <> "music" Then
             If language = "##" Then
                 jsonresponse = JSON_request(id, type, "1")
             Else
@@ -470,7 +533,7 @@ Public Class DVDArt_Common
             If Left(type, 5) <> "music" Then
                 url = parse(jsonresponse, type, language)
             Else
-                url = parse_music(jsonresponse, LCase(Right(type, Len(type) - 6).Replace(" ", "-")))
+                url = parse_music(jsonresponse, LCase(title.Replace(" ", "-")))
             End If
 
             For y = 0 To 2
@@ -481,9 +544,14 @@ Public Class DVDArt_Common
                 ElseIf type = "series" Then
                     fullpath = thumbs & folder(1, y, 0) & id & ".png"
                     thumbpath = thumbs & folder(1, y, 1) & id & ".png"
-                ElseIf type = "artist" Or Left(type, 5) = "music" Then
-                    fullpath = thumbs & folder(2, y, 0) & id & ".png"
-                    thumbpath = thumbs & folder(2, y, 1) & id & ".png"
+                ElseIf type = "artist" Then
+                    If y = 0 Then Continue For
+                    fullpath = thumbs & folder(2, y, 0) & title & ".png"
+                    thumbpath = thumbs & folder(2, y, 1) & title & ".png"
+                ElseIf Left(type, 5) = "music" Then
+                    If y <> 0 Then Continue For
+                    fullpath = thumbs & folder(2, y, 0) & title & ".png"
+                    thumbpath = thumbs & folder(2, y, 1) & title & ".png"
                 End If
 
                 If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
@@ -507,6 +575,8 @@ Public Class DVDArt_Common
                         End If
                     Loop
                 End If
+
+                wait(250)
 
                 found(y) = found(y) Or FileSystem.FileExists(thumbpath)
 
@@ -535,52 +605,47 @@ Public Class DVDArt_Common
 
         End If
 
-            Return found
+        Return found
 
     End Function
 
-    Public Shared Function getSize(ByVal path As String, ByVal image As String) As String
+    Public Shared Function getSize(ByVal path As String) As String
 
         Dim size As String = String.Empty
-        Dim shell As New Shell32.Shell
-        Dim folder = shell.NameSpace(path)
 
-        Dim columns As New Dictionary(Of String, Integer)
-
-        For i As Integer = 0 To Short.MaxValue
-            Dim header = folder.GetDetailsOf(folder.Items, i)
-            If String.IsNullOrEmpty(header) Then
-                Exit For 'no more columns
-            Else
-                columns(header) = i
-            End If
-        Next
-
-        If columns.ContainsKey("Dimensions") Then
-            size = folder.GetDetailsOf(folder.ParseName(image), columns("Dimensions")).Replace(" ", String.Empty)
-            size = Mid(size, 2, size.Length - 2)
+        If IO.File.Exists(path) Then
+            Dim img As Image = Image.FromFile(path)
+            size = img.Width.ToString & "x" & img.Height.ToString
+            img.Dispose()
         End If
 
         Return size
 
     End Function
 
-    Public Shared Sub Resize(ByVal path As String, Optional ByVal width As Integer = 500, Optional ByVal height As Integer = 500)
+    Public Shared Sub Resize(ByVal path As String, Optional ByVal width As Integer = 500, Optional ByVal height As Integer = 500, Optional ByVal thumb As Boolean = False)
 
-        Dim hfactor, wfactor As Decimal
-        Dim image As Image
-        Dim ImageInBytes() As Byte
-        Dim stream As System.IO.MemoryStream
-        Dim imagekey As String = Guid.NewGuid().ToString()
-        ImageInBytes = FileSystem.ReadAllBytes(path)
-        stream = New System.IO.MemoryStream(ImageInBytes)
-        image = image.FromStream(stream)
+        If thumb Then
+            Dim hfactor, wfactor As Decimal
+            Dim image As Image
+            Dim ImageInBytes() As Byte
+            Dim stream As System.IO.MemoryStream
+            Dim imagekey As String = Guid.NewGuid().ToString()
+            ImageInBytes = FileSystem.ReadAllBytes(path)
+            stream = New System.IO.MemoryStream(ImageInBytes)
+            image = image.FromStream(stream)
 
-        hfactor = height / image.Size.Height
-        wfactor = width / image.Size.Width
+            hfactor = height / image.Size.Height
+            wfactor = width / image.Size.Width
 
-        image = New Bitmap(image, New Size(image.Size.Width * wfactor, image.Size.Height * hfactor))
-        image.Save(path)
+            image = New Bitmap(image, New Size(image.Size.Width * wfactor, image.Size.Height * hfactor))
+            image.Save(path)
+            image.Dispose()
+        Else
+            Dim params() As String = {"-format", "PNG32", "-background", "transparent", "-adaptive-resize", width.ToString & "x" & height.ToString & "! ", "-gravity", "Center", "-extent", width.ToString & "x" & height.ToString}
+
+            Convert(path, path, params)
+        End If
 
     End Sub
 
@@ -598,16 +663,16 @@ Public Class DVDArt_Common
 
         cmd = cmd & " " & destination
 
-        Shell(cmd, vbHide)
+        Shell(cmd, vbHide, True)
 
     End Sub
 
-    Public Shared Sub create_CoverArt(ByVal file As String, ByVal imdb_id As String, ByVal movie_name As String, ByVal _title As Boolean, ByVal _logos As Boolean, ByVal template As Integer, Optional ByVal preview As Boolean = False, Optional ByVal previewfile As String = Nothing)
+    Public Shared Sub create_CoverArt(ByVal file As String, ByVal imagename As String, ByVal name As String, ByVal _title As Boolean, ByVal _logos As Boolean, ByVal template As Integer, Optional ByVal preview As Boolean = False, Optional ByVal previewfile As String = Nothing, Optional ByVal type As String = "dvdart")
 
         If Trim(file) = "" Then Exit Sub
 
         'create image with transparency from cover art
-        Dim fullsize, dvdart, thumb, tempfile As String
+        Dim fullsize, discart, thumb, tempfile As String
         Dim url As System.Uri
         Dim objDL As New System.Net.WebClient
         Dim file2 As String = _temp & "\" & IO.Path.GetFileName(file.Replace(IO.Path.GetExtension(file), ".png"))
@@ -617,9 +682,9 @@ Public Class DVDArt_Common
 
         Get_Paths(database, thumbs)
 
-        If _title Then dvdart = _temp & "\dvdart_title.png" Else dvdart = _temp & "\dvdart.png"
+        If _title Then discart = _temp & "\" & type & "_title.png" Else discart = _temp & "\" & type & ".png"
 
-        Dim params() As String = {"-resize", "500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", _temp & "\dvdart_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", dvdart, "-compose", "over", "-composite"}
+        Dim params() As String = {"-resize", "500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", _temp & "\" & type & "_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", discart, "-compose", "over", "-composite"}
 
         If _logos Then
 
@@ -630,7 +695,7 @@ Public Class DVDArt_Common
             SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
             SQLconnect.Open()
             SQLcommand = SQLconnect.CreateCommand
-            SQLcommand.CommandText = "SELECT l.videoresolution, m.certification, m.studios FROM local_media l, movie_info m, local_media__movie_info lm WHERE lm.movie_info_id = m.id AND l.id = lm.local_media_id AND m.imdb_id = """ & imdb_id & """"
+            SQLcommand.CommandText = "SELECT l.videoresolution, m.certification, m.studios FROM local_media l, movie_info m, local_media__movie_info lm WHERE lm.movie_info_id = m.id AND l.id = lm.local_media_id AND m.imdb_id = """ & imagename & """"
             SQLreader = SQLcommand.ExecuteReader(CommandBehavior.SingleRow)
 
             Dim videoresolution As String = "sd"
@@ -658,6 +723,8 @@ Public Class DVDArt_Common
             If Not FileSystem.FileExists(tempfile) Then
                 image.Save(tempfile)
             End If
+
+            image.Dispose()
 
             If template = 1 Then
                 logos = {tempfile, "-geometry", "-148+60", "-composite"}
@@ -744,8 +811,8 @@ Public Class DVDArt_Common
 
         If _title Then
             Dim pointsize As Integer = 36
-            If Len(movie_name) > 20 Then pointsize = (20 / Len(movie_name)) * pointsize
-            title = {"-background", "transparent", "-fill white", "-font", "segoe-ui-bold", "-pointsize", pointsize.ToString, "-gravity", "center", "-size", "500x49", "label:""" & movie_name & """", "-geometry", "+0+362", "-gravity", "north", "-composite"}
+            If Len(name) > 20 Then pointsize = (20 / Len(name)) * pointsize
+            title = {"-background", "transparent", "-fill white", "-font", "segoe-ui-bold", "-pointsize", pointsize.ToString, "-gravity", "center", "-size", "500x49", "label:""" & name & """", "-geometry", "+0+362", "-gravity", "north", "-composite"}
             For x = 0 To UBound(title)
                 ReDim Preserve params(UBound(params) + 1)
                 params(UBound(params)) = title(x)
@@ -753,12 +820,21 @@ Public Class DVDArt_Common
         End If
 
         If Not preview Then
-            fullsize = thumbs & folder(0, 0, 0) & imdb_id & ".png"
+            If type = "dvdart" Then
+                fullsize = thumbs & folder(0, 0, 0) & imagename & ".png"
+            Else
+                fullsize = thumbs & folder(2, 0, 0) & imagename & ".png"
+            End If
         Else
             fullsize = previewfile
         End If
 
-        If FileIO.FileSystem.FileExists(fullsize) Then FileIO.FileSystem.DeleteFile(fullsize)
+        If FileIO.FileSystem.FileExists(fullsize) Then
+            Do While FileInUse(fullsize)
+                wait(250)
+            Loop
+            FileIO.FileSystem.DeleteFile(fullsize)
+        End If
 
         Convert(file, file2, params)
 
@@ -772,13 +848,17 @@ Public Class DVDArt_Common
         If counter < 5 Then
 
             'move to Thumbs folder
-            FileIO.FileSystem.MoveFile(file2, fullsize, True)
+            If file2 <> fullsize Then FileIO.FileSystem.MoveFile(file2, fullsize, True)
 
             If Not preview Then
                 'copy to Thumbs folder and resize to thumb size
-                thumb = thumbs & folder(0, 0, 1) & imdb_id & ".png"
+                If type = "dvdart" Then
+                    thumb = thumbs & folder(0, 0, 1) & imagename & ".png"
+                Else
+                    thumb = thumbs & folder(2, 0, 1) & imagename & ".png"
+                End If
                 FileIO.FileSystem.CopyFile(fullsize, thumb, True)
-                Resize(thumb, 200, 200)
+                Resize(thumb, 200, 200, True)
             End If
 
         End If
@@ -902,7 +982,7 @@ Public Class DVDArt_Common
 
         ' initialize version
         _pre_version = "v1.0.1.2"
-        _version = "v1.0.1.4"
+        _version = "v1.0.1.5"
 
         ' initialize folder paths
         folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"
@@ -925,14 +1005,15 @@ Public Class DVDArt_Common
         folder(2, 2, 1) = "\Music\ClearLogo\Thumbs\"
 
         ' initialize language array
-        lang = {"English", "Deutsch", "Française", "Italiano", "Any"}
-        langcode = {"EN", "DE", "FR", "IT", "##"}
+        lang = {"English", "Deutsch", "Française", "Italiano", "русский", "Any"}
+        langcode = {"EN", "DE", "FR", "IT", "RU", "##"}
 
         'extract dvdart.png from resources to temporary folder
         Dim png As String = DVDArt_Common._temp & "\dvdart.png"
         If Not FileSystem.FileExists(png) Then
             Dim image As Image = New Bitmap(My.Resources.dvdart)
             image.Save(png)
+            image.Dispose()
         End If
 
         'extract dvdart_title.png from resources to temporary folder
@@ -940,6 +1021,7 @@ Public Class DVDArt_Common
         If Not FileSystem.FileExists(png) Then
             Dim image As Image = New Bitmap(My.Resources.dvdart_title)
             image.Save(png)
+            image.Dispose()
         End If
 
         'extract dvdart_mask.png from resources to temporary folder
@@ -947,6 +1029,23 @@ Public Class DVDArt_Common
         If Not FileSystem.FileExists(png) Then
             Dim image As Image = New Bitmap(My.Resources.dvdart_mask)
             image.Save(png)
+            image.Dispose()
+        End If
+
+        'extract cdart.png from resources to temporary folder
+        png = DVDArt_Common._temp & "\cdart.png"
+        If Not FileSystem.FileExists(png) Then
+            Dim image As Image = New Bitmap(My.Resources.cdart)
+            image.Save(png)
+            image.Dispose()
+        End If
+
+        'extract cdart_mask.png from resources to temporary folder
+        png = DVDArt_Common._temp & "\cdart_mask.png"
+        If Not FileSystem.FileExists(png) Then
+            Dim image As Image = New Bitmap(My.Resources.cdart_mask)
+            image.Save(png)
+            image.Dispose()
         End If
 
     End Sub

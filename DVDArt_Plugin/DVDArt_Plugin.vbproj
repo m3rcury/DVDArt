@@ -217,6 +217,8 @@
     <None Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\cdart.png" />
+    <Content Include="Resources\cdart_mask.png" />
     <Content Include="Resources\convert.png" />
     <Content Include="Resources\dvdart.png" />
     <Content Include="Resources\dvdart_mask.png" />
@@ -242,6 +244,7 @@
     <None Include="Resources\template_2.png" />
     <None Include="Resources\template_1_disabled.png" />
     <Content Include="Resources\template_2_disabled.png" />
+    <None Include="Resources\theAudioDB.png" />
     <Content Include="Resources\tvseries.png" />
     <Content Include="Resources\upload.png" />
     <None Include="Resources\compress.png" />

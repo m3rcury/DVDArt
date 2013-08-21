@@ -88,6 +88,20 @@ Namespace My.Resources
             End Get
         End Property
         
+        Friend ReadOnly Property cdart() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("cdart", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property cdart_mask() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("cdart_mask", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
         Friend ReadOnly Property compress() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("compress", resourceCulture)
@@ -209,7 +223,7 @@ Namespace My.Resources
         
         Friend ReadOnly Property musicbrainz_picard() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("musicbrainz-picard", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("musicbrainz_picard", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -329,6 +343,13 @@ Namespace My.Resources
         Friend ReadOnly Property template_2_disabled() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("template_2_disabled", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property theAudioDB() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("theAudioDB", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

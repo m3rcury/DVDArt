@@ -100,33 +100,38 @@ Public Class DVDArt_CoverArt
 
     End Sub
 
-    Private Sub b_preview_Click(sender As System.Object, e As System.EventArgs) Handles b_preview.Click
-
-        'Copy the mask onto the main picture.
-        Dim coverart As New Bitmap(pb_coverart.Image)
+    Private Sub create_Disc(ByVal tempfile As String, Optional ByVal preview As Boolean = False, Optional ByVal previewfile As String = Nothing)
 
         Dim CropRect As New Rectangle(0, Math.Abs(pb_coverart.Bounds.Top), 500, 500)
         Dim CropImage = New Bitmap(CropRect.Width, CropRect.Height)
+
         Using grp = Graphics.FromImage(CropImage)
-            grp.DrawImage(coverart, New Rectangle(0, 0, CropRect.Width, CropRect.Height), CropRect, GraphicsUnit.Pixel)
+            grp.DrawImage(pb_coverart.Image, New Rectangle(0, 0, CropRect.Width, CropRect.Height), CropRect, GraphicsUnit.Pixel)
         End Using
 
-        Dim g As Graphics = Graphics.FromImage(CropImage)
+        CropImage.Save(tempfile)
+        CropImage.Dispose()
 
-        g.DrawImage(CropImage, 0, 0)
-        g.DrawImage(dvdart_mask, 0, 0)
-        g.DrawImage(dvdart, 0, 0)
-        coverart = CropImage
-        g.Dispose()
+        DVDArt_Common.create_CoverArt(tempfile, _imdb_id, _movie_name, cb_title.Checked, cb_logos.Checked, this_template_type, preview, previewfile)
 
-        Dim file As String = DVDArt_Common._temp & "\" & _imdb_id & ".png"
-        coverart.MakeTransparent(Color.Black)
-        coverart.Save(file)
+        If FileIO.FileSystem.FileExists(tempfile) Then
+            Do While DVDArt_Common.FileInUse(tempfile)
+                DVDArt_Common.wait(250)
+            Loop
+            FileIO.FileSystem.DeleteFile(tempfile)
+        End If
 
-        Dim preview As New DVDArt_Preview(file)
+    End Sub
+
+    Private Sub b_preview_Click(sender As System.Object, e As System.EventArgs) Handles b_preview.Click
+
+        Dim file As String = DVDArt_Common._temp & "\" & _imdb_id & ".jpg"
+        Dim file2 As String = DVDArt_Common._temp & "\" & _imdb_id & ".png"
+
+        create_Disc(file, True, file2)
+
+        Dim preview As New DVDArt_Preview(file2)
         preview.Show()
-
-        FileIO.FileSystem.DeleteFile(file)
 
     End Sub
 
@@ -144,26 +149,37 @@ Public Class DVDArt_CoverArt
                 Me.Close()
                 Return
             Else
+                Do While DVDArt_Common.FileInUse(file2)
+                    DVDArt_Common.wait(250)
+                Loop
                 FileIO.FileSystem.DeleteFile(file2)
             End If
         End If
 
-        Dim file As String = DVDArt_Common._temp & "\" & _imdb_id & ".jpg"
-        Dim CropRect As New Rectangle(0, Math.Abs(pb_coverart.Bounds.Top), 500, 500)
-        Dim CropImage = New Bitmap(CropRect.Width, CropRect.Height)
+        Dim file As String = DVDArt_Common._temp & "\" & _imdb_id & ".png"
+        Dim thumb As String = _thumbs & DVDArt_Common.folder(0, 0, 1) & _imdb_id & ".png"
 
-        Using grp = Graphics.FromImage(CropImage)
-            grp.DrawImage(pb_coverart.Image, New Rectangle(0, 0, CropRect.Width, CropRect.Height), CropRect, GraphicsUnit.Pixel)
-        End Using
+        If Not FileIO.FileSystem.FileExists(file) Then
+            create_Disc(file, True, file2)
+        Else
+            Do While DVDArt_Common.FileInUse(file) Or DVDArt_Common.FileInUse(file2)
+                DVDArt_Common.wait(250)
+            Loop
+            FileIO.FileSystem.MoveFile(file, file2)
+        End If
 
-        CropImage.Save(file)
-
-        DVDArt_Common.create_CoverArt(file, _imdb_id, _movie_name, cb_title.Checked, cb_logos.Checked, this_template_type)
+        FileIO.FileSystem.CopyFile(file2, thumb, True)
+        DVDArt_Common.Resize(thumb, 200, 200, True)
 
         If Not FileSystem.FileExists(file2) Then
-            MsgBox("Failed to create DVDArt from " & file & " to " & file2 & ".png", MsgBoxStyle.Critical)
+            MsgBox("Failed to create DVDArt from " & file & " to " & file2, MsgBoxStyle.Critical)
         Else
-            FileIO.FileSystem.DeleteFile(file)
+            If FileIO.FileSystem.FileExists(file) Then
+                Do While DVDArt_Common.FileInUse(file)
+                    DVDArt_Common.wait(250)
+                Loop
+                FileIO.FileSystem.DeleteFile(file)
+            End If
         End If
 
         Me.Close()
