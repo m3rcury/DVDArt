@@ -1056,7 +1056,7 @@ Public Class DVDArt_Common
 
         ' initialize version
         _pre_version = "v1.0.1.2"
-        _version = "v1.0.1.6"
+        _version = "v1.0.1.7"
 
         ' initialize folder paths
         folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"

@@ -13,9 +13,9 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>DVDArt_Plugin.dll</LocalFileName>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{9d3d7efb-e025-422a-8fdd-f24ccf451cfd}-DVDArt_Plugin.dll</ZipFileName>
-              <DestinationFilename>%Plugins%\process\DVDArt_Plugin.dll</DestinationFilename>
+              <DestinationFilename>%Base%\DVDArt_Plugin.dll</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -29,7 +29,7 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>System.Data.SQLite.dll</LocalFileName>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\System.Data.SQLite.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{1fbd08de-c668-40b0-9f4f-2979ade36654}-System.Data.SQLite.dll</ZipFileName>
               <DestinationFilename>%Base%\System.Data.SQLite.dll</DestinationFilename>
             </FileItem>
@@ -45,7 +45,7 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>Interop.Shell32.dll</LocalFileName>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\Interop.Shell32.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{44695331-cbee-4680-b0c9-ff9c925b56fa}-Interop.Shell32.dll</ZipFileName>
               <DestinationFilename>%Base%\Interop.Shell32.dll</DestinationFilename>
             </FileItem>
@@ -61,7 +61,7 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>convert.exe</LocalFileName>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\convert.exe</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{eefb8321-f981-4c12-8d70-4a6410bb231e}-convert.exe</ZipFileName>
               <DestinationFilename>%Base%\convert.exe</DestinationFilename>
             </FileItem>
@@ -88,7 +88,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
               <Description />
             </SectionParam>
             <SectionParam Name="Left part image">
-              <Value>DVDArt_Plugin.png</Value>
+              <Value>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</Value>
               <ValueType>File</ValueType>
               <Description />
             </SectionParam>
@@ -120,7 +120,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
               <Description>Description of section, shown in under section title</Description>
             </SectionParam>
             <SectionParam Name="Header image">
-              <Value>DVDArt_Plugin_logo.png</Value>
+              <Value>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</Value>
               <ValueType>File</ValueType>
               <Description>Image in upper right part</Description>
             </SectionParam>
@@ -149,7 +149,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
               <Description />
             </SectionParam>
             <SectionParam Name="Left part image">
-              <Value>..\StreamedMP-MOD\MP_Packaging.png</Value>
+              <Value>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</Value>
               <ValueType>File</ValueType>
               <Description />
             </SectionParam>
@@ -198,24 +198,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     </Items>
   </Dependencies>
   <PluginDependencies>
-    <Items>
-      <PluginDependencyItem AssemblyName="DVDArt_Plugin.dll">
-        <CompatibleVersion>
-          <Items>
-            <CompatibleVersionItem>
-              <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
-              <DesignedForVersion>1.3.100.0</DesignedForVersion>
-            </CompatibleVersionItem>
-          </Items>
-        </CompatibleVersion>
-        <SubSystemsUsed>
-          <Items>
-            <SubSystemItem Name="MP.Config" />
-            <SubSystemItem Name="MP.SkinEngine" />
-          </Items>
-        </SubSystemsUsed>
-      </PluginDependencyItem>
-    </Items>
+    <Items />
   </PluginDependencies>
   <GeneralInfo>
     <Name>DVDArt_Plugin</Name>
@@ -228,7 +211,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>1</Build>
-      <Revision>6</Revision>
+      <Revision>7</Revision>
     </Version>
     <ExtensionDescription>This plugin scans your MovingPictures, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art and Banners  from the fanart.tv website where applicable.</ExtensionDescription>
     <VersionDescription>A scraper that srapes fanart.tv for DVD cover art, Clear Art, Clear Logo, CD cover art and Banners of you movie collection in MovingPictures, series collection in TVSeries and music collection.
@@ -246,7 +229,7 @@ The plugin can be set to rescrape movies and series which originally were missin
     <Params>
       <Items>
         <SectionParam Name="Icon">
-          <Value>DVDArt_Plugin_logo.png</Value>
+          <Value>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</Value>
           <ValueType>File</ValueType>
           <Description>The icon file of the package (jpg,png,bmp)</Description>
         </SectionParam>
@@ -280,50 +263,50 @@ The plugin can be set to rescrape movies and series which originally were missin
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>DVDArt_Plugin.dll</LocalFileName>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{9d3d7efb-e025-422a-8fdd-f24ccf451cfd}-DVDArt_Plugin.dll</ZipFileName>
-        <DestinationFilename>%Plugins%\process\DVDArt_Plugin.dll</DestinationFilename>
+        <DestinationFilename>%Base%\DVDArt_Plugin.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>System.Data.SQLite.dll</LocalFileName>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\System.Data.SQLite.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{1fbd08de-c668-40b0-9f4f-2979ade36654}-System.Data.SQLite.dll</ZipFileName>
         <DestinationFilename>%Base%\System.Data.SQLite.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>Interop.Shell32.dll</LocalFileName>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\Interop.Shell32.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{44695331-cbee-4680-b0c9-ff9c925b56fa}-Interop.Shell32.dll</ZipFileName>
         <DestinationFilename>%Base%\Interop.Shell32.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>convert.exe</LocalFileName>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\convert.exe</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{eefb8321-f981-4c12-8d70-4a6410bb231e}-convert.exe</ZipFileName>
         <DestinationFilename>%Base%\convert.exe</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{83b1fe31-afc1-4b71-b6ea-a1af0823ea73}-DVDArt_Plugin.png</ZipFileName>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{84566305-e9fb-466a-b40f-9af76554d5a5}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{56f45430-f38a-43f8-bc72-5ebe01707b5e}-DVDArt_Plugin_logo.png</ZipFileName>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7de1b302-8daf-4db5-8dbe-f9bdec2cf53c}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{77ccfd94-a73f-49b0-aba6-a5e1cb572949}-MP_Packaging.png</ZipFileName>
+        <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f22ec116-fc08-4360-9aa7-ddd71acbf7d0}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -331,7 +314,7 @@ The plugin can be set to rescrape movies and series which originally were missin
   <ProjectSettings>
     <FolderGroups />
     <ProjectFilename>DVDArt_Plugin.xmp2</ProjectFilename>
-    <UpdatePath1>E:\Software\MediaPortal\DVDArt_Plugin\DVDArt_Plugin_update.xml</UpdatePath1>
+    <UpdatePath1>E:\Software\MediaPortal\Subversion\dvdart\trunk\DVDArt_Plugin_update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
   </ProjectSettings>
