@@ -15,7 +15,7 @@
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{9d3d7efb-e025-422a-8fdd-f24ccf451cfd}-DVDArt_Plugin.dll</ZipFileName>
-              <DestinationFilename>%Base%\DVDArt_Plugin.dll</DestinationFilename>
+              <DestinationFilename>%Base%\plugins\process\DVDArt_Plugin.dll</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -265,7 +265,7 @@ The plugin can be set to rescrape movies and series which originally were missin
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{9d3d7efb-e025-422a-8fdd-f24ccf451cfd}-DVDArt_Plugin.dll</ZipFileName>
-        <DestinationFilename>%Base%\DVDArt_Plugin.dll</DestinationFilename>
+        <DestinationFilename>%Base%\plugins\process\DVDArt_Plugin.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
@@ -292,21 +292,21 @@ The plugin can be set to rescrape movies and series which originally were missin
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{84566305-e9fb-466a-b40f-9af76554d5a5}-DVDArt_Plugin.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{adb4cf10-f900-4d22-acd4-39d693cebe10}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{7de1b302-8daf-4db5-8dbe-f9bdec2cf53c}-DVDArt_Plugin_logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{4b7e1b51-ff4a-484b-9604-c9509cffef66}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{f22ec116-fc08-4360-9aa7-ddd71acbf7d0}-MP_Packaging.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{b9971dc9-9968-4e1c-8adc-ce0d42b3436f}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
