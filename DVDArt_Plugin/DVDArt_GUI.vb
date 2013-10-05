@@ -1937,6 +1937,14 @@ Public Class DVDArt_GUI
                     thumbpath = thumbs & DVDArt_Common.folder(0, x, 1) & current_imdb_id & ".png"
                 Else
                     thumbpath = lv_movies.FocusedItem.SubItems.Item(2).Text
+
+                    If IO.Path.GetFileNameWithoutExtension(thumbpath) <> current_imdb_id Then
+                        If IO.File.Exists(IO.Path.GetDirectoryName(thumbpath) & "\" & current_imdb_id & ".jpg") Then
+                            thumbpath = IO.Path.GetDirectoryName(thumbpath) & "\" & current_imdb_id & ".jpg"
+                            lv_movies.FocusedItem.SubItems.Item(2).Text = thumbpath
+                        End If
+                    End If
+
                 End If
 
                 If x = 0 Then
@@ -2587,8 +2595,6 @@ Public Class DVDArt_GUI
     End Sub
 
     Private Sub lv_movie_backdrop_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_movie_backdrop.SelectedIndexChanged
-
-        lv_movies.FocusedItem.SubItems.Item(2).Text = thumbs & DVDArt_Common.folder(0, 3, 0) & lv_movies.FocusedItem.SubItems.Item(1).Text & ".jpg"
 
         For Each item In lv_movie_backdrop.SelectedItems
 
