@@ -60,6 +60,13 @@ Namespace My.Resources
             End Set
         End Property
         
+        Friend ReadOnly Property armageddon_backdrop() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("armageddon_backdrop", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
         Friend ReadOnly Property armageddon_clearart() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("armageddon_clearart", resourceCulture)

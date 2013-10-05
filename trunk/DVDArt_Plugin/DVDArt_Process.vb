@@ -415,7 +415,7 @@ Public Class DVDArt_Process
         If DVDArt_Common.Get_Paths(database, thumbs) Then
 
             'initialize common variables
-            DVDArt_Common.Initialize()
+            DVDArt_Common.Initialize(database, thumbs)
 
             getSettings()
 

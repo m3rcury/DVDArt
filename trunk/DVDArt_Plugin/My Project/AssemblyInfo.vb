@@ -13,7 +13,7 @@ Imports MediaPortal.Common.Utils
 <Assembly: AssemblyDescription("Download Movie & Series Artwork")> 
 <Assembly: AssemblyCompany("m3rcury")> 
 <Assembly: AssemblyProduct("DVDArt Downloader Plugin")> 
-<Assembly: AssemblyCopyright("Copyright ©  2012")> 
+<Assembly: AssemblyCopyright("Copyright ©  2012-2013")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)> 
@@ -26,5 +26,5 @@ Imports MediaPortal.Common.Utils
 <Assembly: UsesSubsystem("MP.SkinEngine")> 
 <Assembly: UsesSubsystem("MP.Config")> 
 
-<Assembly: AssemblyVersion("1.0.1.5")> 
-<Assembly: AssemblyFileVersion("1.0.1.5")> 
+<Assembly: AssemblyVersion("1.0.1.6")> 
+<Assembly: AssemblyFileVersion("1.0.1.6")> 
