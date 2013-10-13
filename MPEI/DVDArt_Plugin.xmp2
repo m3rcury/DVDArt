@@ -211,7 +211,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>1</Build>
-      <Revision>7</Revision>
+      <Revision>8</Revision>
     </Version>
     <ExtensionDescription>This plugin scans your MovingPictures, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art and Banners  from the fanart.tv website where applicable.</ExtensionDescription>
     <VersionDescription>A scraper that srapes fanart.tv for DVD cover art, Clear Art, Clear Logo, CD cover art and Banners of you movie collection in MovingPictures, series collection in TVSeries and music collection.
@@ -220,7 +220,9 @@ The scraper now also has a settings tab where you set its behaviour, select what
 
 You have also the possibility to upload images manually and images can be of any type.  The plugin will try to add the required transparency.
 
-The plugin can be set to rescrape movies and series which originally were missing any of the artwork just in case new ones were loaded.</VersionDescription>
+The plugin can be set to rescrape movies and series which originally were missing any of the artwork just in case new ones were loaded.
+
+Added backdrop functionality.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
     <ReleaseDate>2013-10-05T23:39:41</ReleaseDate>

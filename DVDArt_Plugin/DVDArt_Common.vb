@@ -5,7 +5,8 @@ Imports MediaPortal.GUI.Library
 
 Imports System.Data.SQLite
 Imports System.ComponentModel
-
+Imports System.IO
+Imports System.Text
 
 Public Class DVDArt_Common
 
@@ -220,21 +221,25 @@ Public Class DVDArt_Common
 
         Dim parseHD_l As String = Nothing
         Dim parseHD_c As String = Nothing
-        Dim details(7, 0), returndetails(5, 0), parsestring(3), keyword(5) As String
-        Dim starting(3), startHD_l, startHD_c, startp, endp, len, x, y, i, j As Integer
+        Dim parse_bd As String = Nothing
+        Dim details(7, 0), returndetails(5, 0), parsestring(3), keyword(6) As String
+        Dim starting(3), startHD_l, startHD_c, start_bd, startp, endp, len, x, y, i, j As Integer
 
         If type = "movie" Then
-            keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebackground"":"}
+            keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """backdrops"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebackground"":"}
         ElseIf type = "series" Then
-            keyword = {"""hdtvlogo"":", """hdclearart"":", "**n/a**", """clearart"":", """clearlogo"":", "**n/a**"}
-        ElseIf type = "artist" Or type = "music" Then
-            keyword = {"""hdmusiclogo"":", "**n/a**", """cdart"":", """musicbanner"":", """musiclogo"":", "**n/a**"}
+            keyword = {"""hdtvlogo"":", """hdclearart"":", "**n/a**", "**n/a**", """clearart"":", """clearlogo"":", "**n/a**"}
+        ElseIf type = "artist" Then
+            keyword = {"""hdmusiclogo"":", "**n/a**", "**n/a**", "**n/a**", """musicbanner"":", """musiclogo"":", "**n/a**"}
+        ElseIf type = "music" Then
+            keyword = {"**n/a**", "**n/a**", "**n/a**", """cdart"":", "**n/a**", "**n/a**", "**n/a**"}
         End If
 
         ' check if there are HD logos and if yes, store in a temporary variable to later on merge with movielogos
 
         startHD_l = InStr(jsonresponse, keyword(0))
         startHD_c = InStr(jsonresponse, keyword(1))
+        start_bd = InStr(jsonresponse, keyword(2))
 
         If startHD_l > 0 Then
             parseHD_l = Mid(jsonresponse, startHD_l, InStr(startHD_l, jsonresponse, "]") - startHD_l)
@@ -244,10 +249,14 @@ Public Class DVDArt_Common
             parseHD_c = Mid(jsonresponse, startHD_c, InStr(startHD_c, jsonresponse, "]") - startHD_c)
         End If
 
+        If start_bd > 0 Then
+            parse_bd = Mid(jsonresponse, start_bd, InStr(start_bd, jsonresponse, "]") - start_bd)
+        End If
+
         ' find the starting place of the respective sections
 
         For i = 0 To starting.Count - 1
-            starting(i) = InStr(jsonresponse, keyword(i + 2))
+            starting(i) = InStr(jsonresponse, keyword(i + 3))
         Next
 
         ' split the jsonresponse to the respective sections
@@ -261,13 +270,18 @@ Public Class DVDArt_Common
         ' if there are HD images, merge with SD images
 
         If startHD_l > 0 Then
-            parsestring(2) = Trim(parsestring(2)) & parseHD_l
+            parsestring(2) = Trim(parsestring(2)) & parseHD_l.Replace(keyword(0), keyword(5))
             If starting(2) = 0 Then starting(2) = startHD_l
         End If
 
         If startHD_c > 0 Then
-            parsestring(1) = Trim(parsestring(1)) & parseHD_c
+            parsestring(1) = Trim(parsestring(1)) & parseHD_c.Replace(keyword(1), keyword(4))
             If starting(1) = 0 Then starting(1) = startHD_c
+        End If
+
+        If start_bd > 0 Then
+            parsestring(3) = Trim(parsestring(3)) & parse_bd.Replace(keyword(2), keyword(6))
+            If starting(3) = 0 Then starting(3) = start_bd
         End If
 
         For i = 0 To starting.Count - 1
@@ -454,7 +468,31 @@ Public Class DVDArt_Common
 
         Dim url As String = "http://fanart.tv/webservice/" & type & "/" & apikey & "/" & id & "/json/all/1/" & nbrimages
 
-        Return WebClient.DownloadString(url)
+        Dim downloaded As String = WebClient.DownloadString(url)
+
+        If type = "movie" Then downloaded += theMovieDB(id)
+
+        Return downloaded
+
+    End Function
+
+    Public Shared Function theMovieDB(ByVal id As String) As String
+
+        Dim apikey As String = "cc25933c4094ca50635f94574491f320"
+
+        Dim url As String = "http://api.themoviedb.org/3/movie/" & id & "/images?api_key=" & apikey
+
+        Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
+        WebClient.Accept = "application/json"
+
+        Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
+        Dim receiveStream As Stream = response.GetResponseStream()
+        Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
+        Dim downstring As String = readStream.ReadToEnd()
+        response.Close()
+        readStream.Close()
+
+        Return downstring.Replace("/", "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1920/").Replace("file_path", "id"":,""url")
 
     End Function
 
@@ -497,9 +535,9 @@ Public Class DVDArt_Common
 
             Dim info As New IO.FileInfo(path)
 
-            If info.Extension = ".jpg" And InStr(url, "/preview") = 0 Then
+            If info.Extension = ".jpg" And (InStr(url, "/preview") = 0 Or InStr(url, "/w1920/") > 0) Then
 
-                If info.Length > 1048576 Then reduceSize(path, 100 - ((1048576 / info.Length) * 100))
+                reduceSize(path, info.Length)
 
                 Dim database As String = Nothing
                 Dim t As String = Nothing
@@ -576,7 +614,12 @@ Public Class DVDArt_Common
                 End If
 
                 If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
-                    parm = thumbpath & "|" & url(y * 2, 0) & "/preview"
+                    If InStr(url(y * 2, 0), "/w1920/") > 0 Then
+                        parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w300/")
+                    Else
+                        parm = thumbpath & "|" & url(y * 2, 0) & "/preview"
+                    End If
+
                     found(y) = True
                     Do
                         If Not bw_download0.IsBusy Then
@@ -603,7 +646,7 @@ Public Class DVDArt_Common
 
                 wait(250)
 
-                found(y) = found(y) Or FileSystem.FileExists(thumbpath)
+                found(y) = found(y) Or FileSystem.FileExists(thumbpath) Or (url(y * 2, 0) <> Nothing)
 
                 If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
                     If y = 0 Then parm = fullpath & "|" & url(y * 2, 0) & "|shrink" Else parm = fullpath & "|" & url(y * 2, 0)
@@ -652,9 +695,14 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Sub reduceSize(ByVal path As String, ByVal ratio As Integer)
-        Dim params() As String = {"-quality", ratio.ToString}
-        Convert(path, path, params)
+    Public Shared Sub reduceSize(ByVal path As String, ByVal size As Integer)
+
+        If size > 1048576 Then
+            Dim ratio As Integer = 100 - (1048576 / size) * 100
+            Dim params() As String = {"-quality", ratio.ToString}
+            Convert(path, path, params)
+        End If
+
     End Sub
 
     Public Shared Sub Resize(ByVal path As String, Optional ByVal width As Integer = 500, Optional ByVal height As Integer = 500, Optional ByVal thumb As Boolean = False)
@@ -1056,7 +1104,7 @@ Public Class DVDArt_Common
 
         ' initialize version
         _pre_version = "v1.0.1.2"
-        _version = "v1.0.1.7"
+        _version = "v1.0.1.8"
 
         ' initialize folder paths
         folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"

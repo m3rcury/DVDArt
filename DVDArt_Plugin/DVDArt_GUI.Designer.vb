@@ -48,12 +48,13 @@ Partial Class DVDArt_GUI
         Me.bw_import = New System.ComponentModel.BackgroundWorker()
         Me.tbc_main = New System.Windows.Forms.TabControl()
         Me.tp_MovingPictures = New System.Windows.Forms.TabPage()
+        Me.PictureBox13 = New System.Windows.Forms.PictureBox()
         Me.pb_movingpictures = New System.Windows.Forms.PictureBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tp_movies = New System.Windows.Forms.TabPage()
         Me.lv_movies = New System.Windows.Forms.ListView()
-        Me.Movie = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.IMDb_id = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.Movie = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.IMDb_id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tbc_movies = New System.Windows.Forms.TabControl()
         Me.tp_Movie_DVDArt = New System.Windows.Forms.TabPage()
         Me.b_movie_delete = New System.Windows.Forms.Button()
@@ -82,6 +83,7 @@ Partial Class DVDArt_GUI
         Me.m_DVDArt = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.m_ClearArt = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.m_ClearLogo = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.m_Backdrop = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.m_IMDb_id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.pbFTV_Logo = New System.Windows.Forms.PictureBox()
         Me.tp_TVSeries = New System.Windows.Forms.TabPage()
@@ -209,6 +211,7 @@ Partial Class DVDArt_GUI
         Me.cms_missing.SuspendLayout()
         Me.tbc_main.SuspendLayout()
         Me.tp_MovingPictures.SuspendLayout()
+        CType(Me.PictureBox13, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pb_movingpictures, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.tp_movies.SuspendLayout()
@@ -445,6 +448,7 @@ Partial Class DVDArt_GUI
         'tp_MovingPictures
         '
         Me.tp_MovingPictures.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_MovingPictures.Controls.Add(Me.PictureBox13)
         Me.tp_MovingPictures.Controls.Add(Me.pb_movingpictures)
         Me.tp_MovingPictures.Controls.Add(Me.TabControl1)
         Me.tp_MovingPictures.Controls.Add(Me.pbFTV_Logo)
@@ -454,6 +458,16 @@ Partial Class DVDArt_GUI
         Me.tp_MovingPictures.Size = New System.Drawing.Size(656, 650)
         Me.tp_MovingPictures.TabIndex = 0
         Me.tp_MovingPictures.Text = "Movies"
+        '
+        'PictureBox13
+        '
+        Me.PictureBox13.Image = Global.DVDArt_Plugin.My.Resources.Resources.tmdb_logo
+        Me.PictureBox13.Location = New System.Drawing.Point(522, 632)
+        Me.PictureBox13.Name = "PictureBox13"
+        Me.PictureBox13.Size = New System.Drawing.Size(96, 20)
+        Me.PictureBox13.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.PictureBox13.TabIndex = 33
+        Me.PictureBox13.TabStop = False
         '
         'pb_movingpictures
         '
@@ -774,7 +788,7 @@ Partial Class DVDArt_GUI
         'lv_movies_missing
         '
         Me.lv_movies_missing.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid
-        Me.lv_movies_missing.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.m_Movie, Me.m_DVDArt, Me.m_ClearArt, Me.m_ClearLogo, Me.m_IMDb_id})
+        Me.lv_movies_missing.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.m_Movie, Me.m_DVDArt, Me.m_ClearArt, Me.m_ClearLogo, Me.m_Backdrop, Me.m_IMDb_id})
         Me.lv_movies_missing.ContextMenuStrip = Me.cms_missing
         Me.lv_movies_missing.FullRowSelect = True
         Me.lv_movies_missing.GridLines = True
@@ -796,23 +810,25 @@ Partial Class DVDArt_GUI
         '
         Me.m_DVDArt.Text = "DVDArt"
         Me.m_DVDArt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.m_DVDArt.Width = 50
         '
         'm_ClearArt
         '
         Me.m_ClearArt.Text = "ClearArt"
         Me.m_ClearArt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.m_ClearArt.Width = 50
         '
         'm_ClearLogo
         '
         Me.m_ClearLogo.Text = "ClearLogo"
         Me.m_ClearLogo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
+        'm_Backdrop
+        '
+        Me.m_Backdrop.Text = "Backdrop"
+        '
         'm_IMDb_id
         '
         Me.m_IMDb_id.Text = "IMDb ID"
-        Me.m_IMDb_id.Width = 69
+        Me.m_IMDb_id.Width = 70
         '
         'pbFTV_Logo
         '
@@ -1248,7 +1264,7 @@ Partial Class DVDArt_GUI
         'b_artist_deletelogo
         '
         Me.b_artist_deletelogo.Image = Global.DVDArt_Plugin.My.Resources.Resources.delete
-        Me.b_artist_deletelogo.Location = New System.Drawing.Point(234, 7)
+        Me.b_artist_deletelogo.Location = New System.Drawing.Point(235, 7)
         Me.b_artist_deletelogo.Name = "b_artist_deletelogo"
         Me.b_artist_deletelogo.Size = New System.Drawing.Size(39, 40)
         Me.b_artist_deletelogo.TabIndex = 20
@@ -1933,6 +1949,7 @@ Partial Class DVDArt_GUI
         '
         Me.cb_missing.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_missing.FormattingEnabled = True
+        Me.cb_missing.Items.AddRange(New Object() {"days", "weeks", "months", "disabled"})
         Me.cb_missing.Location = New System.Drawing.Point(344, 109)
         Me.cb_missing.Name = "cb_missing"
         Me.cb_missing.Size = New System.Drawing.Size(80, 24)
@@ -1963,7 +1980,8 @@ Partial Class DVDArt_GUI
         '
         Me.cb_scraping.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_scraping.FormattingEnabled = True
-        Me.cb_scraping.Location = New System.Drawing.Point(153, 81)
+        Me.cb_scraping.Items.AddRange(New Object() {"minutes", "hours"})
+        Me.cb_scraping.Location = New System.Drawing.Point(163, 81)
         Me.cb_scraping.Name = "cb_scraping"
         Me.cb_scraping.Size = New System.Drawing.Size(80, 24)
         Me.cb_scraping.TabIndex = 23
@@ -1986,7 +2004,7 @@ Partial Class DVDArt_GUI
         Me.nud_scraping.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nud_scraping.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nud_scraping.Name = "nud_scraping"
-        Me.nud_scraping.Size = New System.Drawing.Size(36, 22)
+        Me.nud_scraping.Size = New System.Drawing.Size(46, 22)
         Me.nud_scraping.TabIndex = 22
         Me.nud_scraping.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.nud_scraping.Value = New Decimal(New Integer() {15, 0, 0, 0})
@@ -2051,98 +2069,100 @@ Partial Class DVDArt_GUI
         '
         'DVDArt_GUI
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(688, 698)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.tbc_main)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "DVDArt_GUI"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "DVDArt "
-        Me.cms_found.ResumeLayout(false)
-        Me.cms_import.ResumeLayout(false)
-        Me.cms_missing.ResumeLayout(false)
-        Me.tbc_main.ResumeLayout(false)
-        Me.tp_MovingPictures.ResumeLayout(false)
-        CType(Me.pb_movingpictures,System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabControl1.ResumeLayout(false)
-        Me.tp_movies.ResumeLayout(false)
-        Me.tbc_movies.ResumeLayout(false)
-        Me.tp_Movie_DVDArt.ResumeLayout(false)
-        Me.tp_Movie_DVDArt.PerformLayout
-        CType(Me.pb_movie_dvdart,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_Movie_ClearArt.ResumeLayout(false)
-        CType(Me.pb_movie_clearart,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_Movie_ClearLogo.ResumeLayout(false)
-        CType(Me.pb_movie_clearlogo,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_Movie_Backdrop.ResumeLayout(false)
-        CType(Me.pb_movie_backdrop,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_movies_missing.ResumeLayout(false)
-        CType(Me.pbFTV_Logo,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_TVSeries.ResumeLayout(false)
-        Me.TabControl2.ResumeLayout(false)
-        Me.tp_series.ResumeLayout(false)
-        Me.tbc_series.ResumeLayout(false)
-        Me.tp_Serie_ClearArt.ResumeLayout(false)
-        Me.tp_Serie_ClearArt.PerformLayout
-        CType(Me.pb_serie_clearart,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_Serie_ClearLogo.ResumeLayout(false)
-        CType(Me.pb_serie_clearlogo,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_series_missing.ResumeLayout(false)
-        CType(Me.PictureBox2,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_Music.ResumeLayout(false)
-        Me.tp_Music.PerformLayout
-        CType(Me.PictureBox11,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PictureBox10,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PictureBox9,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PictureBox5,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tbc_music.ResumeLayout(false)
-        Me.tp_artists.ResumeLayout(false)
-        Me.tbc_artist.ResumeLayout(false)
-        Me.tp_artist_banner.ResumeLayout(false)
-        CType(Me.pb_artist_banner,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_artist_clearlogo.ResumeLayout(false)
-        CType(Me.pb_artist_clearlogo,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_albums.ResumeLayout(false)
-        Me.tbc_album.ResumeLayout(false)
-        Me.tp_Music_CDArt.ResumeLayout(false)
-        Me.tp_Music_CDArt.PerformLayout
-        CType(Me.pb_album_cdart,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_artist_album_missing.ResumeLayout(false)
-        Me.tp_Importer.ResumeLayout(false)
-        Me.tp_Settings.ResumeLayout(false)
-        Me.gb2.ResumeLayout(false)
-        Me.gb2.PerformLayout
-        Me.tbc_scraper.ResumeLayout(false)
-        Me.tp_sMovies.ResumeLayout(false)
-        Me.TabControl3.ResumeLayout(false)
-        Me.tp_movies_settings.ResumeLayout(false)
-        Me.tp_movies_settings.PerformLayout
-        CType(Me.PictureBox12,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.pb2,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.pb1,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.pb3,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_manual_dvdart.ResumeLayout(false)
-        Me.tp_sSeries.ResumeLayout(false)
-        Me.tp_sSeries.PerformLayout
-        CType(Me.PictureBox3,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PictureBox4,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tp_sMusic.ResumeLayout(false)
-        Me.tp_sMusic.PerformLayout
-        CType(Me.PictureBox6,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PictureBox7,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PictureBox8,System.ComponentModel.ISupportInitialize).EndInit
-        Me.gb1.ResumeLayout(false)
-        Me.gb1.PerformLayout
-        Me.Panel1.ResumeLayout(false)
-        Me.Panel1.PerformLayout
-        CType(Me.nud_delay,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nud_missing,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nud_scraping,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ResumeLayout(false)
+        Me.cms_found.ResumeLayout(False)
+        Me.cms_import.ResumeLayout(False)
+        Me.cms_missing.ResumeLayout(False)
+        Me.tbc_main.ResumeLayout(False)
+        Me.tp_MovingPictures.ResumeLayout(False)
+        Me.tp_MovingPictures.PerformLayout()
+        CType(Me.PictureBox13, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pb_movingpictures, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabControl1.ResumeLayout(False)
+        Me.tp_movies.ResumeLayout(False)
+        Me.tbc_movies.ResumeLayout(False)
+        Me.tp_Movie_DVDArt.ResumeLayout(False)
+        Me.tp_Movie_DVDArt.PerformLayout()
+        CType(Me.pb_movie_dvdart, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_Movie_ClearArt.ResumeLayout(False)
+        CType(Me.pb_movie_clearart, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_Movie_ClearLogo.ResumeLayout(False)
+        CType(Me.pb_movie_clearlogo, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_Movie_Backdrop.ResumeLayout(False)
+        CType(Me.pb_movie_backdrop, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_movies_missing.ResumeLayout(False)
+        CType(Me.pbFTV_Logo, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_TVSeries.ResumeLayout(False)
+        Me.TabControl2.ResumeLayout(False)
+        Me.tp_series.ResumeLayout(False)
+        Me.tbc_series.ResumeLayout(False)
+        Me.tp_Serie_ClearArt.ResumeLayout(False)
+        Me.tp_Serie_ClearArt.PerformLayout()
+        CType(Me.pb_serie_clearart, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_Serie_ClearLogo.ResumeLayout(False)
+        CType(Me.pb_serie_clearlogo, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_series_missing.ResumeLayout(False)
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_Music.ResumeLayout(False)
+        Me.tp_Music.PerformLayout()
+        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tbc_music.ResumeLayout(False)
+        Me.tp_artists.ResumeLayout(False)
+        Me.tbc_artist.ResumeLayout(False)
+        Me.tp_artist_banner.ResumeLayout(False)
+        CType(Me.pb_artist_banner, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_artist_clearlogo.ResumeLayout(False)
+        CType(Me.pb_artist_clearlogo, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_albums.ResumeLayout(False)
+        Me.tbc_album.ResumeLayout(False)
+        Me.tp_Music_CDArt.ResumeLayout(False)
+        Me.tp_Music_CDArt.PerformLayout()
+        CType(Me.pb_album_cdart, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_artist_album_missing.ResumeLayout(False)
+        Me.tp_Importer.ResumeLayout(False)
+        Me.tp_Settings.ResumeLayout(False)
+        Me.gb2.ResumeLayout(False)
+        Me.gb2.PerformLayout()
+        Me.tbc_scraper.ResumeLayout(False)
+        Me.tp_sMovies.ResumeLayout(False)
+        Me.TabControl3.ResumeLayout(False)
+        Me.tp_movies_settings.ResumeLayout(False)
+        Me.tp_movies_settings.PerformLayout()
+        CType(Me.PictureBox12, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pb2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pb1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pb3, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_manual_dvdart.ResumeLayout(False)
+        Me.tp_sSeries.ResumeLayout(False)
+        Me.tp_sSeries.PerformLayout()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_sMusic.ResumeLayout(False)
+        Me.tp_sMusic.PerformLayout()
+        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.gb1.ResumeLayout(False)
+        Me.gb1.PerformLayout()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        CType(Me.nud_delay, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nud_missing, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nud_scraping, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ResumeLayout(False)
         Me.PerformLayout
 
 End Sub
@@ -2326,5 +2346,7 @@ End Sub
     Friend WithEvents PictureBox12 As System.Windows.Forms.PictureBox
     Friend WithEvents cb_Backdrop_movies As System.Windows.Forms.CheckBox
     Friend WithEvents il_backdrop As System.Windows.Forms.ImageList
+    Friend WithEvents PictureBox13 As System.Windows.Forms.PictureBox
+    Friend WithEvents m_Backdrop As System.Windows.Forms.ColumnHeader
 
 End Class

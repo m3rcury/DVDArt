@@ -22,19 +22,10 @@ Partial Class DVDArt_Preview
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.pb_preview = New System.Windows.Forms.PictureBox()
         Me.l_copyright = New System.Windows.Forms.Label()
+        Me.pb_preview = New System.Windows.Forms.PictureBox()
         CType(Me.pb_preview, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'pb_preview
-        '
-        Me.pb_preview.Location = New System.Drawing.Point(2, 1)
-        Me.pb_preview.Name = "pb_preview"
-        Me.pb_preview.Size = New System.Drawing.Size(500, 500)
-        Me.pb_preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.pb_preview.TabIndex = 0
-        Me.pb_preview.TabStop = False
         '
         'l_copyright
         '
@@ -46,6 +37,15 @@ Partial Class DVDArt_Preview
         Me.l_copyright.Size = New System.Drawing.Size(133, 13)
         Me.l_copyright.TabIndex = 25
         Me.l_copyright.Text = "Copyright © 2012, m3rcury"
+        '
+        'pb_preview
+        '
+        Me.pb_preview.Location = New System.Drawing.Point(2, 1)
+        Me.pb_preview.Name = "pb_preview"
+        Me.pb_preview.Size = New System.Drawing.Size(500, 500)
+        Me.pb_preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.pb_preview.TabIndex = 0
+        Me.pb_preview.TabStop = False
         '
         'DVDArt_Preview
         '
