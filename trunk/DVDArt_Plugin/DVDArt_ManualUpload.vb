@@ -7,7 +7,7 @@ Public Class DVDArt_ManualUpload
     Public this_template_type As Integer = DVDArt_GUI.template_type
 
     Private _imagename, _title, _type, thumbs As String
-    Private _process(2) As Boolean
+    Private _process(3) As Boolean
     Private invchar As String = "[^\w\(){}@'-+. ]"
 
     Private Function load_image(ByVal path As String) As System.Drawing.Image
@@ -71,6 +71,11 @@ Public Class DVDArt_ManualUpload
             b_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
             b_preview_clearlogo.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
 
+            l_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movie")
+            tb_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movie")
+            b_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movie")
+            b_preview_backdrop.Enabled = (DVDArt_GUI.checked(0, 3) And _type = "movie")
+
             'centre upload button
             If _type <> "movie" Then
                 b_upload.Left = (Me.ClientSize.Width / 2) - (b_upload.Width / 2)
@@ -124,6 +129,20 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
+    Private Sub b_backdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_backdrop.Click
+        Dim openFileDialog As New OpenFileDialog
+
+        If openFileDialog.ShowDialog = Windows.Forms.DialogResult.OK Then
+            tb_backdrop.Text = openFileDialog.FileName
+            b_process_backdrop.Visible = True
+        Else
+            b_process_backdrop.Visible = False
+        End If
+
+        _process(3) = Not b_process_backdrop.Visible
+
+    End Sub
+
     Private Function Check_Image(ByVal path As String, ByVal width As Integer, ByVal height As Integer) As Boolean
 
         Dim imagesize, size As String
@@ -160,6 +179,11 @@ Public Class DVDArt_ManualUpload
 
     Private Sub b_preview_clearlogo_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_clearlogo.Click
         Dim preview As New DVDArt_Preview(tb_clearlogo.Text.Replace(IO.Path.GetExtension(tb_clearlogo.Text), ".png"), False)
+        preview.Show()
+    End Sub
+
+    Private Sub b_preview_backdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_backdrop.Click
+        Dim preview As New DVDArt_Preview(tb_backdrop.Text.Replace(IO.Path.GetExtension(tb_backdrop.Text), ".jpg"), False)
         preview.Show()
     End Sub
 
@@ -255,6 +279,27 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
+    Private Sub b_process_backdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_process_backdrop.Click
+
+        If Check_Image(tb_backdrop.Text, 1920, 1080) Then
+            b_process_backdrop.Visible = False
+            b_preview_backdrop.Visible = True
+            _process(3) = True
+
+            If InStr(tb_backdrop.Text, " ") > 0 Then
+                FileIO.FileSystem.RenameFile(tb_backdrop.Text, IO.Path.GetFileName(tb_backdrop.Text.Replace(" ", "")))
+                tb_backdrop.Text = tb_backdrop.Text.Replace(" ", "")
+                tb_backdrop.Refresh()
+            End If
+
+            Dim info As New IO.FileInfo(tb_backdrop.Text)
+
+            DVDArt_Common.reduceSize(tb_backdrop.Text, info.Length)
+
+        End If
+
+    End Sub
+
     Private Sub b_upload_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles b_upload.Click
 
         Me.Cursor = Cursors.WaitCursor
@@ -333,44 +378,75 @@ Public Class DVDArt_ManualUpload
 
         End If
 
-            If tb_clearlogo.Text <> Nothing Then
+        If tb_clearlogo.Text <> Nothing Then
 
-                If Not _process(2) Then b_process_clearlogo_Click(sender, e)
+            If Not _process(2) Then b_process_clearlogo_Click(sender, e)
 
-                file = tb_clearlogo.Text.Replace(IO.Path.GetExtension(tb_clearlogo.Text), ".png")
+            file = tb_clearlogo.Text.Replace(IO.Path.GetExtension(tb_clearlogo.Text), ".png")
 
-                Do While Not FileSystem.FileExists(file)
-                    DVDArt_Common.wait(500)
-                Loop
+            Do While Not FileSystem.FileExists(file)
+                DVDArt_Common.wait(500)
+            Loop
 
-                For Each c As Char In Path.GetInvalidFileNameChars()
-                    _imagename = _imagename.Replace(c, "_")
-                Next
+            For Each c As Char In Path.GetInvalidFileNameChars()
+                _imagename = _imagename.Replace(c, "_")
+            Next
 
-                If _type = "artist" Then
-                    fullsize = thumbs & DVDArt_Common.folder(2, 2, 0) & _imagename & ".png"
-                    thumb = thumbs & DVDArt_Common.folder(2, 2, 1) & _imagename & ".png"
-                ElseIf _type = "series" Then
-                    fullsize = thumbs & DVDArt_Common.folder(1, 2, 0) & _imagename & ".png"
-                    thumb = thumbs & DVDArt_Common.folder(1, 2, 1) & _imagename & ".png"
-                Else
-                    fullsize = thumbs & DVDArt_Common.folder(0, 2, 0) & _imagename & ".png"
-                    thumb = thumbs & DVDArt_Common.folder(0, 2, 1) & _imagename & ".png"
-                End If
-
-                'copy to FullSize folder
-                FileIO.FileSystem.CopyFile(file, fullsize, True)
-                'resize to thumb size and copy to Thumbs folder
-                DVDArt_Common.Resize(file, 200, 77, True)
-                FileIO.FileSystem.MoveFile(file, thumb, True)
-                If FileIO.FileSystem.FileExists(tb_clearlogo.Text) Then FileIO.FileSystem.DeleteFile(tb_clearlogo.Text)
-
+            If _type = "artist" Then
+                fullsize = thumbs & DVDArt_Common.folder(2, 2, 0) & _imagename & ".png"
+                thumb = thumbs & DVDArt_Common.folder(2, 2, 1) & _imagename & ".png"
+            ElseIf _type = "series" Then
+                fullsize = thumbs & DVDArt_Common.folder(1, 2, 0) & _imagename & ".png"
+                thumb = thumbs & DVDArt_Common.folder(1, 2, 1) & _imagename & ".png"
+            Else
+                fullsize = thumbs & DVDArt_Common.folder(0, 2, 0) & _imagename & ".png"
+                thumb = thumbs & DVDArt_Common.folder(0, 2, 1) & _imagename & ".png"
             End If
 
-            Me.Cursor = Cursors.Default
-            Me.Close()
+            'copy to FullSize folder
+            FileIO.FileSystem.CopyFile(file, fullsize, True)
+            'resize to thumb size and copy to Thumbs folder
+            DVDArt_Common.Resize(file, 200, 77, True)
+            FileIO.FileSystem.MoveFile(file, thumb, True)
+            If FileIO.FileSystem.FileExists(tb_clearlogo.Text) Then FileIO.FileSystem.DeleteFile(tb_clearlogo.Text)
 
-            Return
+        End If
+
+        If tb_backdrop.Text <> Nothing Then
+
+            If Not _process(3) Then b_process_backdrop_Click(sender, e)
+
+            file = tb_backdrop.Text.Replace(IO.Path.GetExtension(tb_backdrop.Text), ".jpg")
+
+            Do While Not FileSystem.FileExists(file)
+                DVDArt_Common.wait(500)
+            Loop
+
+            For Each c As Char In Path.GetInvalidFileNameChars()
+                _imagename = _imagename.Replace(c, "_")
+            Next
+
+            
+            fullsize = thumbs & DVDArt_Common.folder(0, 3, 0) & _imagename & ".jpg"
+            thumb = thumbs & DVDArt_Common.folder(0, 3, 1) & _imagename & ".jpg"
+
+            'copy to FullSize folder
+            FileIO.FileSystem.CopyFile(file, fullsize, True)
+            'resize to thumb size and copy to Thumbs folder
+            DVDArt_Common.Resize(file, 200, 112, True)
+            FileIO.FileSystem.MoveFile(file, thumb, True)
+            If FileIO.FileSystem.FileExists(tb_backdrop.Text) Then FileIO.FileSystem.DeleteFile(tb_backdrop.Text)
+
+            Dim database As String = Nothing
+            DVDArt_Common.Get_Paths(database, thumbs)
+            DVDArt_Common.updateBackdrop(database, _imagename, fullsize)
+
+        End If
+
+        Me.Cursor = Cursors.Default
+        Me.Close()
+
+        Return
 
     End Sub
 

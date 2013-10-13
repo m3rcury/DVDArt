@@ -44,6 +44,11 @@ Partial Class DVDArt_ManualUpload
         Me.cb_title = New System.Windows.Forms.CheckBox()
         Me.b_change_layout = New System.Windows.Forms.Button()
         Me.tt_change = New System.Windows.Forms.ToolTip(Me.components)
+        Me.b_process_backdrop = New System.Windows.Forms.Button()
+        Me.b_preview_backdrop = New System.Windows.Forms.Button()
+        Me.b_backdrop = New System.Windows.Forms.Button()
+        Me.tb_backdrop = New System.Windows.Forms.TextBox()
+        Me.l_backdrop = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'b_dvdart
@@ -123,7 +128,7 @@ Partial Class DVDArt_ManualUpload
         '
         'b_upload
         '
-        Me.b_upload.Location = New System.Drawing.Point(288, 189)
+        Me.b_upload.Location = New System.Drawing.Point(288, 237)
         Me.b_upload.Name = "b_upload"
         Me.b_upload.Size = New System.Drawing.Size(75, 23)
         Me.b_upload.TabIndex = 21
@@ -135,7 +140,7 @@ Partial Class DVDArt_ManualUpload
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.ForeColor = System.Drawing.SystemColors.ActiveCaption
-        Me.Label4.Location = New System.Drawing.Point(2, 213)
+        Me.Label4.Location = New System.Drawing.Point(2, 261)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(133, 13)
         Me.Label4.TabIndex = 25
@@ -205,7 +210,7 @@ Partial Class DVDArt_ManualUpload
         '
         Me.cb_logos.AutoSize = True
         Me.cb_logos.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_logos.Location = New System.Drawing.Point(416, 189)
+        Me.cb_logos.Location = New System.Drawing.Point(416, 237)
         Me.cb_logos.Name = "cb_logos"
         Me.cb_logos.Size = New System.Drawing.Size(102, 20)
         Me.cb_logos.TabIndex = 33
@@ -216,7 +221,7 @@ Partial Class DVDArt_ManualUpload
         '
         Me.cb_title.AutoSize = True
         Me.cb_title.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_title.Location = New System.Drawing.Point(416, 163)
+        Me.cb_title.Location = New System.Drawing.Point(416, 211)
         Me.cb_title.Name = "cb_title"
         Me.cb_title.Size = New System.Drawing.Size(136, 20)
         Me.cb_title.TabIndex = 32
@@ -225,7 +230,7 @@ Partial Class DVDArt_ManualUpload
         '
         'b_change_layout
         '
-        Me.b_change_layout.Location = New System.Drawing.Point(207, 189)
+        Me.b_change_layout.Location = New System.Drawing.Point(207, 237)
         Me.b_change_layout.Name = "b_change_layout"
         Me.b_change_layout.Size = New System.Drawing.Size(75, 23)
         Me.b_change_layout.TabIndex = 34
@@ -233,11 +238,61 @@ Partial Class DVDArt_ManualUpload
         Me.tt_change.SetToolTip(Me.b_change_layout, "Change DVDArt layout options")
         Me.b_change_layout.UseVisualStyleBackColor = True
         '
+        'b_process_backdrop
+        '
+        Me.b_process_backdrop.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
+        Me.b_process_backdrop.Location = New System.Drawing.Point(512, 154)
+        Me.b_process_backdrop.Name = "b_process_backdrop"
+        Me.b_process_backdrop.Size = New System.Drawing.Size(40, 40)
+        Me.b_process_backdrop.TabIndex = 39
+        Me.b_process_backdrop.UseVisualStyleBackColor = True
+        Me.b_process_backdrop.Visible = False
+        '
+        'b_preview_backdrop
+        '
+        Me.b_preview_backdrop.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
+        Me.b_preview_backdrop.Location = New System.Drawing.Point(512, 154)
+        Me.b_preview_backdrop.Name = "b_preview_backdrop"
+        Me.b_preview_backdrop.Size = New System.Drawing.Size(40, 40)
+        Me.b_preview_backdrop.TabIndex = 38
+        Me.b_preview_backdrop.UseVisualStyleBackColor = True
+        Me.b_preview_backdrop.Visible = False
+        '
+        'b_backdrop
+        '
+        Me.b_backdrop.Location = New System.Drawing.Point(416, 163)
+        Me.b_backdrop.Name = "b_backdrop"
+        Me.b_backdrop.Size = New System.Drawing.Size(75, 23)
+        Me.b_backdrop.TabIndex = 37
+        Me.b_backdrop.Text = "Browse"
+        Me.b_backdrop.UseVisualStyleBackColor = True
+        '
+        'tb_backdrop
+        '
+        Me.tb_backdrop.Location = New System.Drawing.Point(80, 165)
+        Me.tb_backdrop.Name = "tb_backdrop"
+        Me.tb_backdrop.Size = New System.Drawing.Size(320, 20)
+        Me.tb_backdrop.TabIndex = 36
+        '
+        'l_backdrop
+        '
+        Me.l_backdrop.AutoSize = True
+        Me.l_backdrop.Location = New System.Drawing.Point(13, 168)
+        Me.l_backdrop.Name = "l_backdrop"
+        Me.l_backdrop.Size = New System.Drawing.Size(53, 13)
+        Me.l_backdrop.TabIndex = 35
+        Me.l_backdrop.Text = "Backdrop"
+        '
         'DVDArt_ManualUpload
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(570, 228)
+        Me.ClientSize = New System.Drawing.Size(570, 277)
+        Me.Controls.Add(Me.b_process_backdrop)
+        Me.Controls.Add(Me.b_preview_backdrop)
+        Me.Controls.Add(Me.b_backdrop)
+        Me.Controls.Add(Me.tb_backdrop)
+        Me.Controls.Add(Me.l_backdrop)
         Me.Controls.Add(Me.b_change_layout)
         Me.Controls.Add(Me.cb_logos)
         Me.Controls.Add(Me.cb_title)
@@ -289,4 +344,9 @@ Partial Class DVDArt_ManualUpload
     Friend WithEvents cb_title As System.Windows.Forms.CheckBox
     Friend WithEvents b_change_layout As System.Windows.Forms.Button
     Friend WithEvents tt_change As System.Windows.Forms.ToolTip
+    Friend WithEvents b_process_backdrop As System.Windows.Forms.Button
+    Friend WithEvents b_preview_backdrop As System.Windows.Forms.Button
+    Friend WithEvents b_backdrop As System.Windows.Forms.Button
+    Friend WithEvents tb_backdrop As System.Windows.Forms.TextBox
+    Friend WithEvents l_backdrop As System.Windows.Forms.Label
 End Class

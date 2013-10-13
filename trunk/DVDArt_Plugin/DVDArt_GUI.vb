@@ -7,6 +7,7 @@ Imports System.Threading
 Imports System.Text.RegularExpressions
 
 Imports MediaPortal.Configuration
+Imports MediaPortal.Util
 
 'this is for myfilms.  you need to add myfilms.dll in the resources
 'Imports MyFilmsPlugin.MyFilms
@@ -24,7 +25,6 @@ Public Class DVDArt_GUI
     Private lvwColumnSorter = New ListViewColumnSorter()
     Private lv_url_dvdart, lv_url_clearart, lv_url_clearlogo, lv_url_backdrop As New ListView
     Private li_movies, li_series, li_artist, li_album, li_import, li_missing As New ListViewItem
-    Private invchar As String = "[^\w\(){}@'-+. ]"
 
     <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Auto)> _
     Friend Structure LVITEM
@@ -77,9 +77,29 @@ Public Class DVDArt_GUI
         Return CBool(SendMessage(hwnd, LVM_SETITEM, IntPtr.Zero, lvi))
     End Function
 
+    Private Function getBackdrop(ByVal imdb_id As String) As String
+
+        Dim SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand
+        Dim SQLreader As SQLiteDataReader
+
+        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT backdropfullpath FROM movie_info WHERE imdb_id = '" & imdb_id & "'"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        Dim backdroppath As String = SQLreader(0)
+
+        SQLconnect.Close()
+
+        Return backdroppath
+
+    End Function
+
     Private Sub wait(ByVal milliseconds As Long)
 
-        Dim oStopWatch As Stopwatch = New Stopwatch()
+        Dim oStopWatch As Diagnostics.Stopwatch = New Diagnostics.Stopwatch()
 
         oStopWatch.Start()
 
@@ -115,7 +135,7 @@ Public Class DVDArt_GUI
 
         For x = 0 To (lv_movies_missing.SelectedItems.Count - 1)
 
-            imdb_id = lv_movies_missing.SelectedItems(x).SubItems.Item(4).Text
+            imdb_id = lv_movies_missing.SelectedItems(x).SubItems.Item(5).Text
 
             If Not FileSystem.FileExists(DVDArt_Common.folder(0, 0, 1)) Then
 
@@ -178,8 +198,9 @@ Public Class DVDArt_GUI
 
         Dim parm As String = e.Argument
         Dim x, y As Integer
-        Dim added, addedmissing, filenotexist(2), downloaded(2) As Boolean
+        Dim added, addedmissing, filenotexist(3), downloaded(3) As Boolean
         Dim MBID As String = Nothing
+        Dim backdrop As String = Nothing
         Dim lvi As LVITEM
 
         On Error Resume Next
@@ -209,13 +230,27 @@ Public Class DVDArt_GUI
 
                     If lv_import.Items.Item(x).SubItems.Item(2).Text = "Movie" Then
 
-                        For y = 0 To 2
-                            filenotexist(y) = checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
+                        backdrop = getBackdrop(lv_import.Items.Item(x).SubItems.Item(1).Text)
+
+                        For y = 0 To 3
+                            If y < 3 Then
+                                filenotexist(y) = checked(0, y) And Not IO.File.Exists(thumbs & DVDArt_Common.folder(0, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
+                            Else
+                                filenotexist(y) = checked(0, y) And Not IO.File.Exists(backdrop)
+                            End If
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, "movie", _lang)
 
-                        For y = 0 To 2
+                        For y = 0 To 3
+                            If y < 3 Then
+                                downloaded(y) = downloaded(y) Or IO.File.Exists(thumbs & DVDArt_Common.folder(0, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
+                            Else
+                                downloaded(y) = downloaded(y) Or IO.File.Exists(backdrop)
+                            End If
+                        Next
+
+                        For y = 0 To 3
 
                             If downloaded(y) Then
                                 lv_import.Items(x).StateImageIndex = 1
@@ -225,6 +260,7 @@ Public Class DVDArt_GUI
                                 If Not added Then
                                     li_movies = lv_movies.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
                                     li_movies.SubItems.Add(lv_import.Items.Item(x).SubItems.Item(1).Text)
+                                    li_movies.SubItems.Add(backdrop)
                                     added = True
                                 End If
                             Else
@@ -256,10 +292,14 @@ Public Class DVDArt_GUI
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
 
-                            If downloaded(y) Then
-                                lvi.iImage = 1
+                            If checked(0, y) Then
+                                If downloaded(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
                             Else
-                                lvi.iImage = 2
+                                lvi.iImage = 3
                             End If
 
                             lvi.mask = LVIF_IMAGE
@@ -270,6 +310,7 @@ Public Class DVDArt_GUI
                         Next
 
                         If addedmissing Then
+                            li_missing.SubItems.Add(" ")
                             li_missing.SubItems.Add(lv_import.Items.Item(x).SubItems.Item(1).Text)
                         Else
                             li_missing.SubItems.RemoveAt(li_missing.Index)
@@ -281,10 +322,14 @@ Public Class DVDArt_GUI
                     ElseIf lv_import.Items.Item(x).SubItems.Item(2).Text = "Series" Then
 
                         For y = 1 To 2
-                            filenotexist(y) = checked(1, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
+                            filenotexist(y) = checked(1, y) And Not IO.File.Exists(thumbs & DVDArt_Common.folder(1, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, "series", _lang)
+
+                        For y = 1 To 2
+                            downloaded(y) = downloaded(y) Or IO.File.Exists(thumbs & DVDArt_Common.folder(1, y, 1) & lv_import.Items.Item(x).SubItems.Item(1).Text & ".png")
+                        Next
 
                         For y = 1 To 2
 
@@ -324,14 +369,17 @@ Public Class DVDArt_GUI
                                 li_missing.SubItems.Add("")
                             End If
 
-
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
 
-                            If downloaded(y) Then
-                                lvi.iImage = 1
+                            If checked(1, y) Then
+                                If downloaded(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
                             Else
-                                lvi.iImage = 2
+                                lvi.iImage = 3
                             End If
 
                             lvi.mask = LVIF_IMAGE
@@ -359,10 +407,14 @@ Public Class DVDArt_GUI
                             lv_import.Items.Item(x).SubItems.Item(1).Text = MBID
 
                             For y = 0 To 2
-                                filenotexist(y) = checked(0, y) And y <> 0 And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(0).Text & ".png")
+                                filenotexist(y) = checked(0, y) And y <> 0 And Not IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(0).Text & ".png")
                             Next
 
                             downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, "artist|" & lv_import.Items.Item(x).SubItems.Item(0).Text)
+
+                            For y = 0 To 2
+                                downloaded(y) = downloaded(y) Or IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(0).Text & ".png")
+                            Next
 
                         Else
                             downloaded = {False, False, False}
@@ -412,10 +464,14 @@ Public Class DVDArt_GUI
                             lvi.subItem = li_missing.SubItems.Count - 1
 
                             If y > 0 Then
-                                If downloaded(y) Then
-                                    lvi.iImage = 1
+                                If checked(2, y) Then
+                                    If downloaded(y) Then
+                                        lvi.iImage = 1
+                                    Else
+                                        lvi.iImage = 2
+                                    End If
                                 Else
-                                    lvi.iImage = 2
+                                    lvi.iImage = 3
                                 End If
                             Else
                                 lvi.iImage = 3
@@ -446,10 +502,14 @@ Public Class DVDArt_GUI
                             lv_import.Items.Item(x).SubItems.Item(1).Text = MBID
 
                             For y = 0 To 2
-                                filenotexist(y) = checked(0, y) And y = 0 And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(0).Text & ".png")
+                                filenotexist(y) = checked(0, y) And y = 0 And Not IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(0).Text & ".png")
                             Next
 
                             downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, lv_import.Items.Item(x).SubItems.Item(1).Text, False, filenotexist, "music|" & lv_import.Items.Item(x).SubItems.Item(0).Text)
+
+                            For y = 0 To 2
+                                downloaded(y) = downloaded(y) Or IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & lv_import.Items.Item(x).SubItems.Item(0).Text & ".png")
+                            Next
                         Else
                             downloaded = {False, False, False}
                             lv_import.Items.Item(x).SubItems.Item(1).Text = Nothing
@@ -498,10 +558,14 @@ Public Class DVDArt_GUI
                             lvi.subItem = li_missing.SubItems.Count - 1
 
                             If y = 0 Then
-                                If downloaded(y) Then
-                                    lvi.iImage = 1
+                                If checked(2, y) Then
+                                    If downloaded(y) Then
+                                        lvi.iImage = 1
+                                    Else
+                                        lvi.iImage = 2
+                                    End If
                                 Else
-                                    lvi.iImage = 2
+                                    lvi.iImage = 3
                                 End If
                             Else
                                 lvi.iImage = 3
@@ -559,13 +623,28 @@ Public Class DVDArt_GUI
                     lvi = Nothing
 
                     If type = "movie" Then
-                        For y = 0 To 2
-                            filenotexist(y) = checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & id & ".png")
+
+                        backdrop = getBackdrop(id)
+
+                        For y = 0 To 3
+                            If y < 3 Then
+                                filenotexist(y) = checked(0, y) And Not IO.File.Exists(thumbs & DVDArt_Common.folder(0, y, 1) & id & ".png")
+                            Else
+                                filenotexist(y) = checked(0, y) And Not IO.File.Exists(backdrop)
+                            End If
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, id, False, filenotexist, type, _lang)
 
-                        For y = 0 To 2
+                        For y = 0 To 3
+                            If y < 3 Then
+                                downloaded(y) = downloaded(y) Or IO.File.Exists(thumbs & DVDArt_Common.folder(0, y, 1) & id & ".png")
+                            Else
+                                downloaded(y) = downloaded(y) Or IO.File.Exists(backdrop)
+                            End If
+                        Next
+
+                        For y = 0 To 3
 
                             If downloaded(y) Then
                                 lv_import.Items(l_import_index(x)).StateImageIndex = 1
@@ -575,6 +654,7 @@ Public Class DVDArt_GUI
                                 If Not added Then
                                     li_movies = lv_movies.Items.Add(title)
                                     li_movies.SubItems.Add(id)
+                                    li_movies.SubItems.Add(backdrop)
                                     added = True
                                 End If
                             Else
@@ -606,10 +686,14 @@ Public Class DVDArt_GUI
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
 
-                            If downloaded(y) Then
-                                lvi.iImage = 1
+                            If checked(0, y) Then
+                                If downloaded(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
                             Else
-                                lvi.iImage = 2
+                                lvi.iImage = 3
                             End If
 
                             lvi.mask = LVIF_IMAGE
@@ -620,10 +704,14 @@ Public Class DVDArt_GUI
                         Next
                     ElseIf type = "series" Then
                         For y = 1 To 2
-                            filenotexist(y) = checked(1, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & id & ".png")
+                            filenotexist(y) = checked(1, y) And Not IO.File.Exists(thumbs & DVDArt_Common.folder(1, y, 1) & id & ".png")
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, id, False, filenotexist, type, _lang)
+
+                        For y = 1 To 2
+                            downloaded(y) = downloaded(y) Or IO.File.Exists(thumbs & DVDArt_Common.folder(1, y, 1) & id & ".png")
+                        Next
 
                         For y = 1 To 2
 
@@ -666,10 +754,14 @@ Public Class DVDArt_GUI
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
 
-                            If downloaded(y) Then
-                                lvi.iImage = 1
+                            If checked(1, y) Then
+                                If downloaded(y) Then
+                                    lvi.iImage = 1
+                                Else
+                                    lvi.iImage = 2
+                                End If
                             Else
-                                lvi.iImage = 2
+                                lvi.iImage = 3
                             End If
 
                             lvi.mask = LVIF_IMAGE
@@ -689,6 +781,10 @@ Public Class DVDArt_GUI
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, id, False, filenotexist, type & "|" & title)
+
+                        For y = 0 To 2
+                            downloaded(y) = downloaded(y) Or IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & title & ".png")
+                        Next
 
                         For y = 0 To 2
 
@@ -733,10 +829,14 @@ Public Class DVDArt_GUI
                             lvi.subItem = li_missing.SubItems.Count - 1
 
                             If y <> 0 Then
-                                If downloaded(y) Then
-                                    lvi.iImage = 1
+                                If checked(2, y) Then
+                                    If downloaded(y) Then
+                                        lvi.iImage = 1
+                                    Else
+                                        lvi.iImage = 2
+                                    End If
                                 Else
-                                    lvi.iImage = 2
+                                    lvi.iImage = 3
                                 End If
                             Else
                                 lvi.iImage = 3
@@ -762,6 +862,10 @@ Public Class DVDArt_GUI
                         Next
 
                         downloaded = DVDArt_Common.download(thumbs, DVDArt_Common.folder, id, False, filenotexist, type & "|" & title)
+
+                        For y = 0 To 2
+                            downloaded(y) = downloaded(y) Or IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & title & ".png")
+                        Next
 
                         For y = 0 To 2
 
@@ -806,10 +910,14 @@ Public Class DVDArt_GUI
                             lvi.subItem = li_missing.SubItems.Count - 1
 
                             If y = 0 Then
-                                If downloaded(y) Then
-                                    lvi.iImage = 1
+                                If checked(2, y) Then
+                                    If downloaded(y) Then
+                                        lvi.iImage = 1
+                                    Else
+                                        lvi.iImage = 2
+                                    End If
                                 Else
-                                    lvi.iImage = 2
+                                    lvi.iImage = 3
                                 End If
                             Else
                                 lvi.iImage = 3
@@ -868,7 +976,7 @@ Public Class DVDArt_GUI
                 imdb_id = lv_movies.SelectedItems(x).SubItems.Item(1).Text
             Else
                 movie_name = lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text
-                imdb_id = lv_movies_missing.SelectedItems(x).SubItems.Item(4).Text
+                imdb_id = lv_movies_missing.SelectedItems(x).SubItems.Item(5).Text
             End If
 
             If Not FileSystem.FileExists(DVDArt_Common.folder(0, 0, 1)) Then
@@ -962,7 +1070,7 @@ Public Class DVDArt_GUI
                 li_import.SubItems.Add("Music")
 
                 If lv_music_missing.Items.Item(x).SubItems.Item(1).Text <> "" Then
-                    l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|music|" & lv_music_missing.Items.Item(x).SubItems.Item(5).Text)
+                    l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|music|" & lv_music_missing.Items.Item(x).SubItems.Item(4).Text)
                 Else
                     l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|artist")
                 End If
@@ -1070,7 +1178,13 @@ Public Class DVDArt_GUI
 
                     If cb_Backdrop_movies.Checked And type = "movie" And details(6, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
-                        ImageInBytes = WebClient.DownloadData(details(6, x) & "/preview")
+
+                        If InStr(details(6, x), "/w1920/") > 0 Then
+                            ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/w1920/", "/w300/"))
+                        Else
+                            ImageInBytes = WebClient.DownloadData(details(6, x) & "/preview")
+                        End If
+
                         stream = New System.IO.MemoryStream(ImageInBytes)
                         il_backdrop.Images.Add(imagekey, Image.FromStream(stream))
                         lv_movie_backdrop.Items.Add(details(7, x), imagekey)
@@ -1108,47 +1222,51 @@ Public Class DVDArt_GUI
                         thumbpath = thumbs & DVDArt_Common.folder(2, x, 1) & id & ".png"
                     End If
 
+                    If InStr(url(x), "/w1920/") > 0 Then
+                        parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w300/")
+                    Else
                         parm = thumbpath & "|" & url(x) & "/preview"
-
-                        Do
-                            If Not DVDArt_Common.bw_download0.IsBusy Then
-                                DVDArt_Common.bw_download0.WorkerSupportsCancellation = True
-                                DVDArt_Common.bw_download0.RunWorkerAsync(parm)
-                                Exit Do
-                            ElseIf Not DVDArt_Common.bw_download2.IsBusy Then
-                                DVDArt_Common.bw_download2.WorkerSupportsCancellation = True
-                                DVDArt_Common.bw_download2.RunWorkerAsync(parm)
-                                Exit Do
-                            ElseIf Not DVDArt_Common.bw_download4.IsBusy Then
-                                DVDArt_Common.bw_download4.WorkerSupportsCancellation = True
-                                DVDArt_Common.bw_download4.RunWorkerAsync(parm)
-                                Exit Do
-                            Else
-                                wait(250)
-                            End If
-                        Loop
-
-                        If x = 0 Then parm = fullpath & "|" & url(x) & "|shrink" Else parm = fullpath & "|" & url(x)
-
-                        Do
-                            If Not DVDArt_Common.bw_download1.IsBusy Then
-                                DVDArt_Common.bw_download1.WorkerSupportsCancellation = True
-                                DVDArt_Common.bw_download1.RunWorkerAsync(parm)
-                                Exit Do
-                            ElseIf Not DVDArt_Common.bw_download3.IsBusy Then
-                                DVDArt_Common.bw_download3.WorkerSupportsCancellation = True
-                                DVDArt_Common.bw_download3.RunWorkerAsync(parm)
-                                Exit Do
-                            ElseIf Not DVDArt_Common.bw_download5.IsBusy Then
-                                DVDArt_Common.bw_download5.WorkerSupportsCancellation = True
-                                DVDArt_Common.bw_download5.RunWorkerAsync(parm)
-                                Exit Do
-                            Else
-                                wait(250)
-                            End If
-                        Loop
-
                     End If
+
+                    Do
+                        If Not DVDArt_Common.bw_download0.IsBusy Then
+                            DVDArt_Common.bw_download0.WorkerSupportsCancellation = True
+                            DVDArt_Common.bw_download0.RunWorkerAsync(parm)
+                            Exit Do
+                        ElseIf Not DVDArt_Common.bw_download2.IsBusy Then
+                            DVDArt_Common.bw_download2.WorkerSupportsCancellation = True
+                            DVDArt_Common.bw_download2.RunWorkerAsync(parm)
+                            Exit Do
+                        ElseIf Not DVDArt_Common.bw_download4.IsBusy Then
+                            DVDArt_Common.bw_download4.WorkerSupportsCancellation = True
+                            DVDArt_Common.bw_download4.RunWorkerAsync(parm)
+                            Exit Do
+                        Else
+                            wait(250)
+                        End If
+                    Loop
+
+                    If x = 0 Then parm = fullpath & "|" & url(x) & "|shrink" Else parm = fullpath & "|" & url(x)
+
+                    Do
+                        If Not DVDArt_Common.bw_download1.IsBusy Then
+                            DVDArt_Common.bw_download1.WorkerSupportsCancellation = True
+                            DVDArt_Common.bw_download1.RunWorkerAsync(parm)
+                            Exit Do
+                        ElseIf Not DVDArt_Common.bw_download3.IsBusy Then
+                            DVDArt_Common.bw_download3.WorkerSupportsCancellation = True
+                            DVDArt_Common.bw_download3.RunWorkerAsync(parm)
+                            Exit Do
+                        ElseIf Not DVDArt_Common.bw_download5.IsBusy Then
+                            DVDArt_Common.bw_download5.WorkerSupportsCancellation = True
+                            DVDArt_Common.bw_download5.RunWorkerAsync(parm)
+                            Exit Do
+                        Else
+                            wait(250)
+                        End If
+                    Loop
+
+                End If
 
             Next
 
@@ -1169,6 +1287,16 @@ Public Class DVDArt_GUI
 
         If Not FileSystem.FileExists(database & "\movingpictures.db3") Then Exit Sub
 
+        ' check if movie scraping is enabled
+        Dim x As Integer
+        Dim enabled As Boolean = False
+
+        For x = 0 To 3
+            enabled = enabled Or checked(0, x)
+        Next
+
+        If Not enabled Then Exit Sub
+
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
@@ -1176,7 +1304,6 @@ Public Class DVDArt_GUI
         Dim SQLreader As SQLiteDataReader
         Dim processed_movies() As String = Nothing
         Dim imdb_id_in_mp() As String = Nothing
-        Dim x As Integer = 0
         Dim found, missing As Boolean
 
         If Not FileSystem.FileExists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
@@ -1191,6 +1318,8 @@ Public Class DVDArt_GUI
 
         SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies WHERE imdb_id is not Null ORDER BY imdb_id"
         SQLreader = SQLcommand.ExecuteReader()
+
+        x = 0
 
         While SQLreader.Read()
 
@@ -1215,7 +1344,7 @@ Public Class DVDArt_GUI
         SQLcommand.CommandText = "SELECT imdb_id, title, backdropfullpath FROM movie_info WHERE imdb_id is not Null and title is not Null ORDER BY sortby"
         SQLreader = SQLcommand.ExecuteReader()
 
-        Dim fileexist(2) As Boolean
+        Dim fileexist(3) As Boolean
         Dim lvi As LVITEM
 
         x = 0
@@ -1234,8 +1363,12 @@ Public Class DVDArt_GUI
                     found = False
                     missing = False
 
-                    For y = 0 To 2
-                        fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & SQLreader(0) & ".png")
+                    For y = 0 To 3
+                        If y < 3 Then
+                            fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & SQLreader(0) & ".png")
+                        Else
+                            fileexist(y) = SQLreader(2) <> " "
+                        End If
                         If Not found Then found = checked(0, y) And fileexist(y)
                         If Not missing Then missing = checked(0, y) And Not fileexist(y)
                     Next
@@ -1252,7 +1385,7 @@ Public Class DVDArt_GUI
 
                         lvi = Nothing
 
-                        For y = 0 To 2
+                        For y = 0 To 3
 
                             If checked(0, y) Then
                                 If fileexist(y) Then
@@ -1263,7 +1396,6 @@ Public Class DVDArt_GUI
                             Else
                                 li_missing.SubItems.Add("")
                             End If
-
 
                             lvi.iItem = li_missing.Index
                             lvi.subItem = li_missing.SubItems.Count - 1
@@ -1340,14 +1472,23 @@ Public Class DVDArt_GUI
 
         If Not FileSystem.FileExists(database & "\TVSeriesDatabase4.db3") Then Exit Sub
 
+        ' check if movie scraping is enabled
+        Dim x As Integer
+        Dim enabled As Boolean = False
+
+        For x = 1 To 2
+            enabled = enabled Or checked(1, x)
+        Next
+
+        If Not enabled Then Exit Sub
+
+        ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
+
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
         Dim processed_series() As String = Nothing
         Dim thetvdb_id_in_tv() As String = Nothing
-        Dim x As Integer = 0
-
-        ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
         If Not FileSystem.FileExists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
 
@@ -1361,6 +1502,8 @@ Public Class DVDArt_GUI
 
         SQLcommand.CommandText = "SELECT thetvdb_id FROM processed_series WHERE thetvdb_id is not Null ORDER BY thetvdb_id"
         SQLreader = SQLcommand.ExecuteReader()
+
+        x = 0
 
         While SQLreader.Read()
 
@@ -1498,6 +1641,16 @@ Public Class DVDArt_GUI
 
         If Not FileSystem.FileExists(database & "\MusicDatabaseV12.db3") Then Exit Sub
 
+        ' check if movie scraping is enabled
+        Dim x As Integer
+        Dim enabled As Boolean = False
+
+        For x = 1 To 2
+            enabled = enabled Or checked(2, x)
+        Next
+
+        If Not enabled Then Exit Sub
+
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
@@ -1507,7 +1660,6 @@ Public Class DVDArt_GUI
         Dim processed_MBID() As String = Nothing
         Dim artist() As String = Nothing
         Dim t_artist As String = Nothing
-        Dim x As Integer = 0
         Dim found, missing As Boolean
 
         If Not FileSystem.FileExists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
@@ -1523,11 +1675,13 @@ Public Class DVDArt_GUI
         SQLcommand.CommandText = "SELECT artist, MBID FROM processed_artist WHERE artist is not Null ORDER BY artist"
         SQLreader = SQLcommand.ExecuteReader()
 
+        x = 0
+
         While SQLreader.Read()
 
             ReDim Preserve processed_artist(x)
             ReDim Preserve processed_MBID(x)
-            processed_artist(x) = "@" & Regex.Replace(LCase(SQLreader(0)), invchar, "_") & "@"
+            processed_artist(x) = "@" & LCase(Utils.MakeFileName(SQLreader(0))) & "@"
             processed_MBID(x) = SQLreader(1)
             x += 1
 
@@ -1558,7 +1712,7 @@ Public Class DVDArt_GUI
             If Trim(SQLreader(0)) <> "" Then
 
                 ReDim Preserve artist(x)
-                artist(x) = Regex.Replace(LCase(SQLreader(0)), invchar, "_")
+                artist(x) = LCase(Utils.MakeFileName(SQLreader(0)))
                 x += 1
 
                 t_artist = "@" & artist(x - 1) & "@"
@@ -1569,7 +1723,7 @@ Public Class DVDArt_GUI
                     missing = False
 
                     For y = 1 To 2
-                        fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & artist(x - 1) & ".png") Or FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & artist(x - 1) & ".jpg")
+                        fileexist(y) = IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & artist(x - 1) & ".png")
                         If Not found Then found = checked(2, y) And fileexist(y)
                         If Not missing Then missing = checked(2, y) And Not fileexist(y)
                     Next
@@ -1652,7 +1806,7 @@ Public Class DVDArt_GUI
 
         While SQLreader.Read()
 
-            If Not artist.Contains(Regex.Replace(LCase(SQLreader(0)), invchar, "_")) Then
+            If Not artist.Contains(LCase(Utils.MakeFileName(SQLreader(0)))) Then
 
                 SQLdelete.CommandText = "DELETE FROM processed_artist WHERE artist = """ & SQLreader(0) & """"
                 SQLdelete.ExecuteNonQuery()
@@ -1669,6 +1823,16 @@ Public Class DVDArt_GUI
 
         If Not FileSystem.FileExists(database & "\MusicDatabaseV12.db3") Then Exit Sub
 
+        ' check if movie scraping is enabled
+        Dim x As Integer
+        Dim enabled As Boolean = False
+
+        For x = 0 To 0
+            enabled = enabled Or checked(2, x)
+        Next
+
+        If Not enabled Then Exit Sub
+
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
@@ -1678,7 +1842,6 @@ Public Class DVDArt_GUI
         Dim processed_MBID() As String = Nothing
         Dim album() As String = Nothing
         Dim t_album As String = Nothing
-        Dim x As Integer = 0
         Dim y As Integer = 0
         Dim found, missing As Boolean
 
@@ -1695,11 +1858,13 @@ Public Class DVDArt_GUI
         SQLcommand.CommandText = "SELECT album, MBID FROM processed_music WHERE album is not Null ORDER BY album"
         SQLreader = SQLcommand.ExecuteReader()
 
+        x = 0
+
         While SQLreader.Read()
 
             ReDim Preserve processed_music(x)
             ReDim Preserve processed_MBID(x)
-            processed_music(x) = "@" & Regex.Replace(LCase(SQLreader(0)), invchar, "_") & "@"
+            processed_music(x) = "@" & LCase(Utils.MakeFileName(SQLreader(0))) & "@"
             processed_MBID(x) = SQLreader(1)
             x += 1
 
@@ -1729,7 +1894,7 @@ Public Class DVDArt_GUI
 
             If Trim(SQLreader(0)) <> "" Then
 
-                t_album = Regex.Replace(LCase(SQLreader(0)), invchar, "_")
+                t_album = LCase(Utils.MakeFileName(SQLreader(0)))
 
                 If x = -1 Then
                     add = True
@@ -1843,7 +2008,7 @@ Public Class DVDArt_GUI
 
         While SQLreader.Read()
 
-            If Not album.Contains(Regex.Replace(LCase(SQLreader(0)), invchar, "_")) Then
+            If Not album.Contains(LCase(Utils.MakeFileName(SQLreader(0)))) Then
 
                 SQLdelete.CommandText = "DELETE FROM processed_music WHERE album = """ & SQLreader(0) & """"
                 SQLdelete.ExecuteNonQuery()
@@ -1939,8 +2104,15 @@ Public Class DVDArt_GUI
                     thumbpath = lv_movies.FocusedItem.SubItems.Item(2).Text
 
                     If IO.Path.GetFileNameWithoutExtension(thumbpath) <> current_imdb_id Then
-                        If IO.File.Exists(IO.Path.GetDirectoryName(thumbpath) & "\" & current_imdb_id & ".jpg") Then
-                            thumbpath = IO.Path.GetDirectoryName(thumbpath) & "\" & current_imdb_id & ".jpg"
+                        Dim path As String = Nothing
+                        Try
+                            path = IO.Path.GetDirectoryName(thumbpath) & "\"
+                        Catch ex As Exception
+                            path = thumbs & DVDArt_Common.folder(0, 3, 1)
+                        End Try
+
+                        If IO.File.Exists(path & current_imdb_id & ".jpg") Then
+                            thumbpath = path & current_imdb_id & ".jpg"
                             lv_movies.FocusedItem.SubItems.Item(2).Text = thumbpath
                         End If
                     End If
@@ -2034,7 +2206,7 @@ Public Class DVDArt_GUI
         If current_artist = lv_artist.FocusedItem.SubItems.Item(0).Text Then Exit Sub
 
         Dim thumbpath, url(2) As String
-        Dim current_image As String = Regex.Replace(lv_artist.FocusedItem.SubItems.Item(0).Text, invchar, "_")
+        Dim current_image As String = Utils.MakeFileName(lv_artist.FocusedItem.SubItems.Item(0).Text)
 
         clearLists()
 
@@ -2069,7 +2241,7 @@ Public Class DVDArt_GUI
         If current_album = lv_album.FocusedItem.SubItems.Item(0).Text Then Exit Sub
 
         Dim thumbpath, url(2) As String
-        Dim current_image As String = Regex.Replace(lv_album.FocusedItem.SubItems.Item(0).Text, invchar, "_")
+        Dim current_image As String = Utils.MakeFileName(lv_album.FocusedItem.SubItems.Item(0).Text)
 
         clearLists()
 
@@ -2278,9 +2450,9 @@ Public Class DVDArt_GUI
                 If lv_movies_missing.SelectedItems.Count > 0 Then
                     For x As Integer = 0 To (lv_movies_missing.SelectedItems.Count - 1)
                         li_import = lv_import.Items.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text)
-                        li_import.SubItems.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(4).Text)
+                        li_import.SubItems.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(5).Text)
                         li_import.SubItems.Add("Movie")
-                        l_import_queue.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(4).Text & "|" & lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text & "|movie")
+                        l_import_queue.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(5).Text & "|" & lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text & "|movie")
                         l_import_index.Add(lv_import.Items.Count - 1)
                     Next
 
@@ -2298,9 +2470,9 @@ Public Class DVDArt_GUI
                 For x = 0 To (lv_movies_missing.Items.Count - 1)
                     If lv_movies_missing.Items.Count > 0 Then
                         li_import = lv_import.Items.Add(lv_movies_missing.Items.Item(x).SubItems(0).Text)
-                        li_import.SubItems.Add(lv_movies_missing.Items.Item(x).SubItems(4).Text)
+                        li_import.SubItems.Add(lv_movies_missing.Items.Item(x).SubItems(5).Text)
                         li_import.SubItems.Add("Movie")
-                        l_import_queue.Add(lv_movies_missing.Items.Item(x).SubItems(4).Text & "|" & lv_movies_missing.Items.Item(x).SubItems(0).Text & "|movie")
+                        l_import_queue.Add(lv_movies_missing.Items.Item(x).SubItems(5).Text & "|" & lv_movies_missing.Items.Item(x).SubItems(0).Text & "|movie")
                         l_import_index.Add(lv_import.Items.Count - 1)
                         lv_movies_missing.Items.RemoveAt(x)
                         x -= 1
@@ -2315,7 +2487,7 @@ Public Class DVDArt_GUI
 
                     If lv_movies_missing.SelectedItems.Count > 0 Then
                         Dim title As String = lv_movies_missing.SelectedItems(x).SubItems(0).Text
-                        Dim imdb_id As String = lv_movies_missing.SelectedItems(x).SubItems.Item(4).Text
+                        Dim imdb_id As String = lv_movies_missing.SelectedItems(x).SubItems.Item(5).Text
                         Dim upload As New DVDArt_ManualUpload(imdb_id, title, "movie")
                         upload.ShowDialog()
 
@@ -2464,7 +2636,7 @@ Public Class DVDArt_GUI
                         li_import.SubItems.Add("Music")
 
                         If lv_music_missing.Items.Item(x).SubItems.Item(1).Text <> "" Then
-                            l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|music|" & lv_music_missing.Items.Item(x).SubItems.Item(5).Text)
+                            l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|music|" & lv_music_missing.Items.Item(x).SubItems.Item(4).Text)
                         Else
                             l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|artist")
                         End If
@@ -3019,7 +3191,7 @@ Public Class DVDArt_GUI
 
     Private Sub b_album_compress_Click(sender As System.Object, e As System.EventArgs) Handles b_album_compress.Click
 
-        Dim album As String = Regex.Replace(current_album, invchar, "_")
+        Dim album As String = Utils.MakeFileName(current_album)
 
         DVDArt_Common.Resize(thumbs & DVDArt_Common.folder(2, 0, 0) & album & ".png")
 
@@ -3032,7 +3204,7 @@ Public Class DVDArt_GUI
     End Sub
 
     Private Sub b_album_preview_Click(sender As System.Object, e As System.EventArgs) Handles b_album_preview.Click
-        Dim preview As New DVDArt_Preview(thumbs & DVDArt_Common.folder(2, 0, 0) & Regex.Replace(current_album, invchar, "_") & ".png")
+        Dim preview As New DVDArt_Preview(thumbs & DVDArt_Common.folder(2, 0, 0) & Utils.MakeFileName(current_album) & ".png")
         preview.Show()
     End Sub
 
