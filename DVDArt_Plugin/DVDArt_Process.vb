@@ -10,7 +10,7 @@ Public Class DVDArt_Process
 
     Private _delay, _scraping, _maxcpu, _missing As Integer
     Private _checked(2, 2), backgroundscraper As Boolean
-    Private _lastrun, _language As String
+    Private _lastrun, _language, _movies, _series, _music As String
 
     Private database, thumbs As String
     Private lv_import As New ListView
@@ -359,11 +359,14 @@ Public Class DVDArt_Process
                 _checked(0, 0) = XMLreader.GetValueAsBool("Scraper Movies", "dvdart", False)
                 _checked(0, 1) = XMLreader.GetValueAsBool("Scraper Movies", "clearart", False)
                 _checked(0, 2) = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
+                _movies = XMLreader.GetValueAsString("Scraper Movie", "path", thumbs & "\MovingPictures")
                 _checked(1, 1) = XMLreader.GetValueAsBool("Scraper Series", "clearart", False)
                 _checked(1, 2) = XMLreader.GetValueAsBool("Scraper Series", "clearlogo", False)
+                _series = XMLreader.GetValueAsString("Scraper Series", "path", thumbs & "\TVSeries")
                 _checked(2, 0) = XMLreader.GetValueAsBool("Scraper Music", "cdart", False)
                 _checked(2, 1) = XMLreader.GetValueAsBool("Scraper Music", "banner", False)
                 _checked(2, 2) = XMLreader.GetValueAsBool("Scraper Music", "clearlogo", False)
+                _music = XMLreader.GetValueAsString("Scraper Music", "path", thumbs & "\Music")
             Else
                 _checked(0, 0) = XMLreader.GetValueAsBool("Scraper", "dvdart", False)
                 _checked(0, 1) = XMLreader.GetValueAsBool("Scraper", "clearart", False)
@@ -414,10 +417,15 @@ Public Class DVDArt_Process
 
         If DVDArt_Common.Get_Paths(database, thumbs) Then
 
-            'initialize common variables
-            DVDArt_Common.Initialize(database, thumbs)
-
+            'get plugin settings
             getSettings()
+
+            Log.Info("DVDArt: Movies artwork - " & _movies)
+            Log.Info("DVDArt: Series artwork - " & _series)
+            Log.Info("DVDArt: Music artwork  - " & _music)
+
+            'initialize common variables
+            DVDArt_Common.Initialize(database, thumbs, _movies, _series, _music)
 
             Log.Info("DVDArt: process plugin setting property tags.")
 

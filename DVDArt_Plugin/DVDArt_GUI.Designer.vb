@@ -77,6 +77,11 @@ Partial Class DVDArt_GUI
         Me.pb_movie_backdrop = New System.Windows.Forms.PictureBox()
         Me.lv_movie_backdrop = New System.Windows.Forms.ListView()
         Me.il_backdrop = New System.Windows.Forms.ImageList(Me.components)
+        Me.tp_Movie_Cover = New System.Windows.Forms.TabPage()
+        Me.b_movie_deletecover = New System.Windows.Forms.Button()
+        Me.lv_movie_cover = New System.Windows.Forms.ListView()
+        Me.il_cover = New System.Windows.Forms.ImageList(Me.components)
+        Me.pb_movie_cover = New System.Windows.Forms.PictureBox()
         Me.tp_movies_missing = New System.Windows.Forms.TabPage()
         Me.lv_movies_missing = New System.Windows.Forms.ListView()
         Me.m_Movie = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -84,8 +89,10 @@ Partial Class DVDArt_GUI
         Me.m_ClearArt = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.m_ClearLogo = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.m_Backdrop = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.m_Cover = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.m_IMDb_id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.pbFTV_Logo = New System.Windows.Forms.PictureBox()
+        Me.PictureBox14 = New System.Windows.Forms.PictureBox()
         Me.tp_TVSeries = New System.Windows.Forms.TabPage()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.tp_series = New System.Windows.Forms.TabPage()
@@ -155,12 +162,18 @@ Partial Class DVDArt_GUI
         Me.i_Name = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.i_ID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.i_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.b_import = New System.Windows.Forms.Button()
         Me.tp_Settings = New System.Windows.Forms.TabPage()
+        Me.gb3 = New System.Windows.Forms.GroupBox()
+        Me.pnl_online = New System.Windows.Forms.Panel()
+        Me.cb_autoimport = New System.Windows.Forms.CheckBox()
         Me.gb2 = New System.Windows.Forms.GroupBox()
         Me.tbc_scraper = New System.Windows.Forms.TabControl()
         Me.tp_sMovies = New System.Windows.Forms.TabPage()
-        Me.TabControl3 = New System.Windows.Forms.TabControl()
-        Me.tp_movies_settings = New System.Windows.Forms.TabPage()
+        Me.tbc_movie_settings = New System.Windows.Forms.TabControl()
+        Me.tp_movies_scraper = New System.Windows.Forms.TabPage()
+        Me.cb_Cover_movies = New System.Windows.Forms.CheckBox()
+        Me.PictureBox15 = New System.Windows.Forms.PictureBox()
         Me.PictureBox12 = New System.Windows.Forms.PictureBox()
         Me.cb_Backdrop_movies = New System.Windows.Forms.CheckBox()
         Me.pb2 = New System.Windows.Forms.PictureBox()
@@ -172,24 +185,40 @@ Partial Class DVDArt_GUI
         Me.tp_manual_dvdart = New System.Windows.Forms.TabPage()
         Me.rb_t2 = New System.Windows.Forms.RadioButton()
         Me.rb_t1 = New System.Windows.Forms.RadioButton()
+        Me.tp_movies_path = New System.Windows.Forms.TabPage()
+        Me.tb_movie_path = New System.Windows.Forms.TextBox()
+        Me.b_movie_path = New System.Windows.Forms.Button()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.tp_sSeries = New System.Windows.Forms.TabPage()
+        Me.tbc_series_settings = New System.Windows.Forms.TabControl()
+        Me.tp_series_scraper = New System.Windows.Forms.TabPage()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         Me.PictureBox4 = New System.Windows.Forms.PictureBox()
-        Me.cb_ClearLogo_series = New System.Windows.Forms.CheckBox()
         Me.cb_ClearArt_series = New System.Windows.Forms.CheckBox()
+        Me.cb_ClearLogo_series = New System.Windows.Forms.CheckBox()
+        Me.tp_series_path = New System.Windows.Forms.TabPage()
+        Me.tb_series_path = New System.Windows.Forms.TextBox()
+        Me.b_series_path = New System.Windows.Forms.Button()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.tp_sMusic = New System.Windows.Forms.TabPage()
+        Me.tbc_music_settings = New System.Windows.Forms.TabControl()
+        Me.tp_music_scraper = New System.Windows.Forms.TabPage()
         Me.PictureBox6 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.PictureBox8 = New System.Windows.Forms.PictureBox()
         Me.cb_ClearLogo_artist = New System.Windows.Forms.CheckBox()
+        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.cb_Banner_artist = New System.Windows.Forms.CheckBox()
         Me.cb_CDArt_music = New System.Windows.Forms.CheckBox()
+        Me.tp_music_path = New System.Windows.Forms.TabPage()
+        Me.tb_music_path = New System.Windows.Forms.TextBox()
+        Me.b_music_path = New System.Windows.Forms.Button()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.cb_language = New System.Windows.Forms.ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.gb1 = New System.Windows.Forms.GroupBox()
         Me.cb_backgroundscraper = New System.Windows.Forms.CheckBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.pnl_background = New System.Windows.Forms.Panel()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.cb_delay = New System.Windows.Forms.ComboBox()
         Me.nud_delay = New System.Windows.Forms.NumericUpDown()
@@ -206,6 +235,9 @@ Partial Class DVDArt_GUI
         Me.MUploadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SendToImporterToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RescanAllToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.cb_downloads = New System.Windows.Forms.CheckBox()
+        Me.l_downloads = New System.Windows.Forms.Label()
+        Me.nud_downloads = New System.Windows.Forms.NumericUpDown()
         Me.cms_found.SuspendLayout()
         Me.cms_import.SuspendLayout()
         Me.cms_missing.SuspendLayout()
@@ -224,8 +256,11 @@ Partial Class DVDArt_GUI
         CType(Me.pb_movie_clearlogo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tp_Movie_Backdrop.SuspendLayout()
         CType(Me.pb_movie_backdrop, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tp_Movie_Cover.SuspendLayout()
+        CType(Me.pb_movie_cover, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tp_movies_missing.SuspendLayout()
         CType(Me.pbFTV_Logo, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox14, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tp_TVSeries.SuspendLayout()
         Me.TabControl2.SuspendLayout()
         Me.tp_series.SuspendLayout()
@@ -256,28 +291,39 @@ Partial Class DVDArt_GUI
         Me.tp_artist_album_missing.SuspendLayout()
         Me.tp_Importer.SuspendLayout()
         Me.tp_Settings.SuspendLayout()
+        Me.gb3.SuspendLayout()
+        Me.pnl_online.SuspendLayout()
         Me.gb2.SuspendLayout()
         Me.tbc_scraper.SuspendLayout()
         Me.tp_sMovies.SuspendLayout()
-        Me.TabControl3.SuspendLayout()
-        Me.tp_movies_settings.SuspendLayout()
+        Me.tbc_movie_settings.SuspendLayout()
+        Me.tp_movies_scraper.SuspendLayout()
+        CType(Me.PictureBox15, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox12, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pb2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pb1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pb3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tp_manual_dvdart.SuspendLayout()
+        Me.tp_movies_path.SuspendLayout()
         Me.tp_sSeries.SuspendLayout()
+        Me.tbc_series_settings.SuspendLayout()
+        Me.tp_series_scraper.SuspendLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tp_series_path.SuspendLayout()
         Me.tp_sMusic.SuspendLayout()
+        Me.tbc_music_settings.SuspendLayout()
+        Me.tp_music_scraper.SuspendLayout()
         CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tp_music_path.SuspendLayout()
         Me.gb1.SuspendLayout()
-        Me.Panel1.SuspendLayout()
+        Me.pnl_background.SuspendLayout()
         CType(Me.nud_delay, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nud_missing, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nud_scraping, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nud_downloads, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'il_dvdart
@@ -333,11 +379,11 @@ Partial Class DVDArt_GUI
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.SystemColors.ActiveCaption
-        Me.Label1.Location = New System.Drawing.Point(1, 683)
+        Me.Label1.Location = New System.Drawing.Point(1, 884)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(133, 13)
+        Me.Label1.Size = New System.Drawing.Size(160, 13)
         Me.Label1.TabIndex = 24
-        Me.Label1.Text = "Copyright © 2012, m3rcury"
+        Me.Label1.Text = "Copyright © 2012-2013, m3rcury"
         '
         'il_clearart
         '
@@ -442,7 +488,7 @@ Partial Class DVDArt_GUI
         Me.tbc_main.Location = New System.Drawing.Point(12, 4)
         Me.tbc_main.Name = "tbc_main"
         Me.tbc_main.SelectedIndex = 0
-        Me.tbc_main.Size = New System.Drawing.Size(664, 676)
+        Me.tbc_main.Size = New System.Drawing.Size(664, 865)
         Me.tbc_main.TabIndex = 29
         '
         'tp_MovingPictures
@@ -452,17 +498,18 @@ Partial Class DVDArt_GUI
         Me.tp_MovingPictures.Controls.Add(Me.pb_movingpictures)
         Me.tp_MovingPictures.Controls.Add(Me.TabControl1)
         Me.tp_MovingPictures.Controls.Add(Me.pbFTV_Logo)
+        Me.tp_MovingPictures.Controls.Add(Me.PictureBox14)
         Me.tp_MovingPictures.Location = New System.Drawing.Point(4, 22)
         Me.tp_MovingPictures.Name = "tp_MovingPictures"
         Me.tp_MovingPictures.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_MovingPictures.Size = New System.Drawing.Size(656, 650)
+        Me.tp_MovingPictures.Size = New System.Drawing.Size(656, 839)
         Me.tp_MovingPictures.TabIndex = 0
         Me.tp_MovingPictures.Text = "Movies"
         '
         'PictureBox13
         '
         Me.PictureBox13.Image = Global.DVDArt_Plugin.My.Resources.Resources.tmdb_logo
-        Me.PictureBox13.Location = New System.Drawing.Point(522, 632)
+        Me.PictureBox13.Location = New System.Drawing.Point(522, 816)
         Me.PictureBox13.Name = "PictureBox13"
         Me.PictureBox13.Size = New System.Drawing.Size(96, 20)
         Me.PictureBox13.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -473,7 +520,7 @@ Partial Class DVDArt_GUI
         '
         Me.pb_movingpictures.BackColor = System.Drawing.Color.Transparent
         Me.pb_movingpictures.Image = Global.DVDArt_Plugin.My.Resources.Resources.movingpictures
-        Me.pb_movingpictures.Location = New System.Drawing.Point(259, 596)
+        Me.pb_movingpictures.Location = New System.Drawing.Point(259, 780)
         Me.pb_movingpictures.Name = "pb_movingpictures"
         Me.pb_movingpictures.Size = New System.Drawing.Size(208, 59)
         Me.pb_movingpictures.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -487,7 +534,7 @@ Partial Class DVDArt_GUI
         Me.TabControl1.Location = New System.Drawing.Point(4, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(650, 593)
+        Me.TabControl1.Size = New System.Drawing.Size(650, 775)
         Me.TabControl1.TabIndex = 30
         '
         'tp_movies
@@ -498,7 +545,7 @@ Partial Class DVDArt_GUI
         Me.tp_movies.Location = New System.Drawing.Point(4, 22)
         Me.tp_movies.Name = "tp_movies"
         Me.tp_movies.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_movies.Size = New System.Drawing.Size(642, 567)
+        Me.tp_movies.Size = New System.Drawing.Size(642, 749)
         Me.tp_movies.TabIndex = 0
         Me.tp_movies.Text = "Movies with Artwork"
         Me.tp_movies.ToolTipText = "This tab contails all movies that already have a DVD artwork."
@@ -513,7 +560,7 @@ Partial Class DVDArt_GUI
         Me.lv_movies.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_movies.Location = New System.Drawing.Point(8, 8)
         Me.lv_movies.Name = "lv_movies"
-        Me.lv_movies.Size = New System.Drawing.Size(340, 553)
+        Me.lv_movies.Size = New System.Drawing.Size(340, 735)
         Me.lv_movies.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_movies.TabIndex = 11
         Me.lv_movies.UseCompatibleStateImageBehavior = False
@@ -535,10 +582,11 @@ Partial Class DVDArt_GUI
         Me.tbc_movies.Controls.Add(Me.tp_Movie_ClearArt)
         Me.tbc_movies.Controls.Add(Me.tp_Movie_ClearLogo)
         Me.tbc_movies.Controls.Add(Me.tp_Movie_Backdrop)
+        Me.tbc_movies.Controls.Add(Me.tp_Movie_Cover)
         Me.tbc_movies.Location = New System.Drawing.Point(352, 8)
         Me.tbc_movies.Name = "tbc_movies"
         Me.tbc_movies.SelectedIndex = 0
-        Me.tbc_movies.Size = New System.Drawing.Size(284, 553)
+        Me.tbc_movies.Size = New System.Drawing.Size(284, 735)
         Me.tbc_movies.TabIndex = 12
         '
         'tp_Movie_DVDArt
@@ -554,7 +602,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_DVDArt.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_DVDArt.Name = "tp_Movie_DVDArt"
         Me.tp_Movie_DVDArt.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Movie_DVDArt.Size = New System.Drawing.Size(276, 527)
+        Me.tp_Movie_DVDArt.Size = New System.Drawing.Size(276, 709)
         Me.tp_Movie_DVDArt.TabIndex = 0
         Me.tp_Movie_DVDArt.Text = "DVDArt"
         '
@@ -607,7 +655,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_dvdart.Location = New System.Drawing.Point(12, 215)
         Me.lv_movie_dvdart.MultiSelect = False
         Me.lv_movie_dvdart.Name = "lv_movie_dvdart"
-        Me.lv_movie_dvdart.Size = New System.Drawing.Size(252, 306)
+        Me.lv_movie_dvdart.Size = New System.Drawing.Size(252, 488)
         Me.lv_movie_dvdart.TabIndex = 13
         Me.lv_movie_dvdart.UseCompatibleStateImageBehavior = False
         '
@@ -640,7 +688,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_ClearArt.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_ClearArt.Name = "tp_Movie_ClearArt"
         Me.tp_Movie_ClearArt.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Movie_ClearArt.Size = New System.Drawing.Size(276, 527)
+        Me.tp_Movie_ClearArt.Size = New System.Drawing.Size(276, 709)
         Me.tp_Movie_ClearArt.TabIndex = 1
         Me.tp_Movie_ClearArt.Text = "ClearArt"
         '
@@ -673,7 +721,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_clearart.Location = New System.Drawing.Point(12, 125)
         Me.lv_movie_clearart.MultiSelect = False
         Me.lv_movie_clearart.Name = "lv_movie_clearart"
-        Me.lv_movie_clearart.Size = New System.Drawing.Size(252, 395)
+        Me.lv_movie_clearart.Size = New System.Drawing.Size(252, 578)
         Me.lv_movie_clearart.TabIndex = 16
         Me.lv_movie_clearart.UseCompatibleStateImageBehavior = False
         '
@@ -685,7 +733,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_ClearLogo.Controls.Add(Me.lv_movie_clearlogo)
         Me.tp_Movie_ClearLogo.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_ClearLogo.Name = "tp_Movie_ClearLogo"
-        Me.tp_Movie_ClearLogo.Size = New System.Drawing.Size(276, 527)
+        Me.tp_Movie_ClearLogo.Size = New System.Drawing.Size(276, 709)
         Me.tp_Movie_ClearLogo.TabIndex = 2
         Me.tp_Movie_ClearLogo.Text = "ClearLogo"
         '
@@ -718,7 +766,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_clearlogo.Location = New System.Drawing.Point(12, 90)
         Me.lv_movie_clearlogo.MultiSelect = False
         Me.lv_movie_clearlogo.Name = "lv_movie_clearlogo"
-        Me.lv_movie_clearlogo.Size = New System.Drawing.Size(252, 430)
+        Me.lv_movie_clearlogo.Size = New System.Drawing.Size(252, 612)
         Me.lv_movie_clearlogo.TabIndex = 19
         Me.lv_movie_clearlogo.UseCompatibleStateImageBehavior = False
         '
@@ -731,7 +779,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_Backdrop.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_Backdrop.Name = "tp_Movie_Backdrop"
         Me.tp_Movie_Backdrop.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Movie_Backdrop.Size = New System.Drawing.Size(276, 527)
+        Me.tp_Movie_Backdrop.Size = New System.Drawing.Size(276, 709)
         Me.tp_Movie_Backdrop.TabIndex = 3
         Me.tp_Movie_Backdrop.Text = "Backdrop"
         '
@@ -764,7 +812,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_backdrop.Location = New System.Drawing.Point(12, 125)
         Me.lv_movie_backdrop.MultiSelect = False
         Me.lv_movie_backdrop.Name = "lv_movie_backdrop"
-        Me.lv_movie_backdrop.Size = New System.Drawing.Size(252, 395)
+        Me.lv_movie_backdrop.Size = New System.Drawing.Size(252, 578)
         Me.lv_movie_backdrop.TabIndex = 19
         Me.lv_movie_backdrop.UseCompatibleStateImageBehavior = False
         '
@@ -774,6 +822,58 @@ Partial Class DVDArt_GUI
         Me.il_backdrop.ImageSize = New System.Drawing.Size(200, 112)
         Me.il_backdrop.TransparentColor = System.Drawing.Color.Transparent
         '
+        'tp_Movie_Cover
+        '
+        Me.tp_Movie_Cover.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_Movie_Cover.Controls.Add(Me.b_movie_deletecover)
+        Me.tp_Movie_Cover.Controls.Add(Me.lv_movie_cover)
+        Me.tp_Movie_Cover.Controls.Add(Me.pb_movie_cover)
+        Me.tp_Movie_Cover.Location = New System.Drawing.Point(4, 22)
+        Me.tp_Movie_Cover.Name = "tp_Movie_Cover"
+        Me.tp_Movie_Cover.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_Movie_Cover.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Movie_Cover.TabIndex = 4
+        Me.tp_Movie_Cover.Text = "Covers"
+        '
+        'b_movie_deletecover
+        '
+        Me.b_movie_deletecover.Image = Global.DVDArt_Plugin.My.Resources.Resources.delete
+        Me.b_movie_deletecover.Location = New System.Drawing.Point(234, 7)
+        Me.b_movie_deletecover.Name = "b_movie_deletecover"
+        Me.b_movie_deletecover.Size = New System.Drawing.Size(40, 40)
+        Me.b_movie_deletecover.TabIndex = 18
+        Me.b_movie_deletecover.UseVisualStyleBackColor = True
+        Me.b_movie_deletecover.Visible = False
+        '
+        'lv_movie_cover
+        '
+        Me.lv_movie_cover.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid
+        Me.lv_movie_cover.BackColor = System.Drawing.SystemColors.Control
+        Me.lv_movie_cover.ForeColor = System.Drawing.Color.Black
+        Me.lv_movie_cover.LargeImageList = Me.il_cover
+        Me.lv_movie_cover.Location = New System.Drawing.Point(42, 215)
+        Me.lv_movie_cover.MultiSelect = False
+        Me.lv_movie_cover.Name = "lv_movie_cover"
+        Me.lv_movie_cover.Size = New System.Drawing.Size(222, 488)
+        Me.lv_movie_cover.TabIndex = 15
+        Me.lv_movie_cover.UseCompatibleStateImageBehavior = False
+        '
+        'il_cover
+        '
+        Me.il_cover.ColorDepth = System.Windows.Forms.ColorDepth.Depth16Bit
+        Me.il_cover.ImageSize = New System.Drawing.Size(146, 200)
+        Me.il_cover.TransparentColor = System.Drawing.Color.Transparent
+        '
+        'pb_movie_cover
+        '
+        Me.pb_movie_cover.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.pb_movie_cover.Location = New System.Drawing.Point(65, 8)
+        Me.pb_movie_cover.Name = "pb_movie_cover"
+        Me.pb_movie_cover.Size = New System.Drawing.Size(146, 200)
+        Me.pb_movie_cover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.pb_movie_cover.TabIndex = 14
+        Me.pb_movie_cover.TabStop = False
+        '
         'tp_movies_missing
         '
         Me.tp_movies_missing.BackColor = System.Drawing.SystemColors.Control
@@ -781,20 +881,20 @@ Partial Class DVDArt_GUI
         Me.tp_movies_missing.Location = New System.Drawing.Point(4, 22)
         Me.tp_movies_missing.Name = "tp_movies_missing"
         Me.tp_movies_missing.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_movies_missing.Size = New System.Drawing.Size(642, 567)
+        Me.tp_movies_missing.Size = New System.Drawing.Size(642, 749)
         Me.tp_movies_missing.TabIndex = 2
         Me.tp_movies_missing.Text = "Movies missing Artwork"
         '
         'lv_movies_missing
         '
         Me.lv_movies_missing.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid
-        Me.lv_movies_missing.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.m_Movie, Me.m_DVDArt, Me.m_ClearArt, Me.m_ClearLogo, Me.m_Backdrop, Me.m_IMDb_id})
+        Me.lv_movies_missing.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.m_Movie, Me.m_DVDArt, Me.m_ClearArt, Me.m_ClearLogo, Me.m_Backdrop, Me.m_Cover, Me.m_IMDb_id})
         Me.lv_movies_missing.ContextMenuStrip = Me.cms_missing
         Me.lv_movies_missing.FullRowSelect = True
         Me.lv_movies_missing.GridLines = True
         Me.lv_movies_missing.Location = New System.Drawing.Point(8, 8)
         Me.lv_movies_missing.Name = "lv_movies_missing"
-        Me.lv_movies_missing.Size = New System.Drawing.Size(628, 550)
+        Me.lv_movies_missing.Size = New System.Drawing.Size(628, 735)
         Me.lv_movies_missing.SmallImageList = Me.il_state
         Me.lv_movies_missing.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_movies_missing.TabIndex = 10
@@ -804,7 +904,7 @@ Partial Class DVDArt_GUI
         'm_Movie
         '
         Me.m_Movie.Text = "Movie"
-        Me.m_Movie.Width = 377
+        Me.m_Movie.Width = 317
         '
         'm_DVDArt
         '
@@ -825,6 +925,10 @@ Partial Class DVDArt_GUI
         '
         Me.m_Backdrop.Text = "Backdrop"
         '
+        'm_Cover
+        '
+        Me.m_Cover.Text = "Cover"
+        '
         'm_IMDb_id
         '
         Me.m_IMDb_id.Text = "IMDb ID"
@@ -833,12 +937,22 @@ Partial Class DVDArt_GUI
         'pbFTV_Logo
         '
         Me.pbFTV_Logo.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
-        Me.pbFTV_Logo.Location = New System.Drawing.Point(469, 601)
+        Me.pbFTV_Logo.Location = New System.Drawing.Point(469, 785)
         Me.pbFTV_Logo.Name = "pbFTV_Logo"
         Me.pbFTV_Logo.Size = New System.Drawing.Size(258, 48)
         Me.pbFTV_Logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.pbFTV_Logo.TabIndex = 29
         Me.pbFTV_Logo.TabStop = False
+        '
+        'PictureBox14
+        '
+        Me.PictureBox14.Image = Global.DVDArt_Plugin.My.Resources.Resources.myfilms
+        Me.PictureBox14.Location = New System.Drawing.Point(77, 780)
+        Me.PictureBox14.Name = "PictureBox14"
+        Me.PictureBox14.Size = New System.Drawing.Size(180, 60)
+        Me.PictureBox14.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.PictureBox14.TabIndex = 34
+        Me.PictureBox14.TabStop = False
         '
         'tp_TVSeries
         '
@@ -849,7 +963,7 @@ Partial Class DVDArt_GUI
         Me.tp_TVSeries.Location = New System.Drawing.Point(4, 22)
         Me.tp_TVSeries.Name = "tp_TVSeries"
         Me.tp_TVSeries.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_TVSeries.Size = New System.Drawing.Size(656, 650)
+        Me.tp_TVSeries.Size = New System.Drawing.Size(656, 839)
         Me.tp_TVSeries.TabIndex = 1
         Me.tp_TVSeries.Text = "Series"
         '
@@ -860,7 +974,7 @@ Partial Class DVDArt_GUI
         Me.TabControl2.Location = New System.Drawing.Point(4, 3)
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(650, 593)
+        Me.TabControl2.Size = New System.Drawing.Size(650, 775)
         Me.TabControl2.TabIndex = 32
         '
         'tp_series
@@ -871,7 +985,7 @@ Partial Class DVDArt_GUI
         Me.tp_series.Location = New System.Drawing.Point(4, 22)
         Me.tp_series.Name = "tp_series"
         Me.tp_series.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_series.Size = New System.Drawing.Size(642, 567)
+        Me.tp_series.Size = New System.Drawing.Size(642, 749)
         Me.tp_series.TabIndex = 0
         Me.tp_series.Text = "Series with Artwork"
         Me.tp_series.ToolTipText = "This tab contails all movies that already have a DVD artwork."
@@ -886,7 +1000,7 @@ Partial Class DVDArt_GUI
         Me.lv_series.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_series.Location = New System.Drawing.Point(8, 8)
         Me.lv_series.Name = "lv_series"
-        Me.lv_series.Size = New System.Drawing.Size(340, 553)
+        Me.lv_series.Size = New System.Drawing.Size(340, 735)
         Me.lv_series.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_series.TabIndex = 11
         Me.lv_series.UseCompatibleStateImageBehavior = False
@@ -909,7 +1023,7 @@ Partial Class DVDArt_GUI
         Me.tbc_series.Location = New System.Drawing.Point(352, 8)
         Me.tbc_series.Name = "tbc_series"
         Me.tbc_series.SelectedIndex = 0
-        Me.tbc_series.Size = New System.Drawing.Size(284, 553)
+        Me.tbc_series.Size = New System.Drawing.Size(284, 735)
         Me.tbc_series.TabIndex = 12
         '
         'tp_Serie_ClearArt
@@ -922,7 +1036,7 @@ Partial Class DVDArt_GUI
         Me.tp_Serie_ClearArt.Location = New System.Drawing.Point(4, 22)
         Me.tp_Serie_ClearArt.Name = "tp_Serie_ClearArt"
         Me.tp_Serie_ClearArt.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Serie_ClearArt.Size = New System.Drawing.Size(276, 527)
+        Me.tp_Serie_ClearArt.Size = New System.Drawing.Size(276, 709)
         Me.tp_Serie_ClearArt.TabIndex = 1
         Me.tp_Serie_ClearArt.Text = "ClearArt"
         '
@@ -965,7 +1079,7 @@ Partial Class DVDArt_GUI
         Me.lv_serie_clearart.Location = New System.Drawing.Point(12, 125)
         Me.lv_serie_clearart.MultiSelect = False
         Me.lv_serie_clearart.Name = "lv_serie_clearart"
-        Me.lv_serie_clearart.Size = New System.Drawing.Size(252, 395)
+        Me.lv_serie_clearart.Size = New System.Drawing.Size(252, 578)
         Me.lv_serie_clearart.TabIndex = 16
         Me.lv_serie_clearart.UseCompatibleStateImageBehavior = False
         '
@@ -977,7 +1091,7 @@ Partial Class DVDArt_GUI
         Me.tp_Serie_ClearLogo.Controls.Add(Me.lv_serie_clearlogo)
         Me.tp_Serie_ClearLogo.Location = New System.Drawing.Point(4, 22)
         Me.tp_Serie_ClearLogo.Name = "tp_Serie_ClearLogo"
-        Me.tp_Serie_ClearLogo.Size = New System.Drawing.Size(276, 527)
+        Me.tp_Serie_ClearLogo.Size = New System.Drawing.Size(276, 709)
         Me.tp_Serie_ClearLogo.TabIndex = 2
         Me.tp_Serie_ClearLogo.Text = "ClearLogo"
         '
@@ -1010,7 +1124,7 @@ Partial Class DVDArt_GUI
         Me.lv_serie_clearlogo.Location = New System.Drawing.Point(12, 90)
         Me.lv_serie_clearlogo.MultiSelect = False
         Me.lv_serie_clearlogo.Name = "lv_serie_clearlogo"
-        Me.lv_serie_clearlogo.Size = New System.Drawing.Size(252, 430)
+        Me.lv_serie_clearlogo.Size = New System.Drawing.Size(252, 612)
         Me.lv_serie_clearlogo.TabIndex = 19
         Me.lv_serie_clearlogo.UseCompatibleStateImageBehavior = False
         '
@@ -1021,7 +1135,7 @@ Partial Class DVDArt_GUI
         Me.tp_series_missing.Location = New System.Drawing.Point(4, 22)
         Me.tp_series_missing.Name = "tp_series_missing"
         Me.tp_series_missing.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_series_missing.Size = New System.Drawing.Size(642, 567)
+        Me.tp_series_missing.Size = New System.Drawing.Size(642, 749)
         Me.tp_series_missing.TabIndex = 2
         Me.tp_series_missing.Text = "Series missing Artwork"
         '
@@ -1034,7 +1148,7 @@ Partial Class DVDArt_GUI
         Me.lv_series_missing.GridLines = True
         Me.lv_series_missing.Location = New System.Drawing.Point(8, 8)
         Me.lv_series_missing.Name = "lv_series_missing"
-        Me.lv_series_missing.Size = New System.Drawing.Size(628, 550)
+        Me.lv_series_missing.Size = New System.Drawing.Size(628, 735)
         Me.lv_series_missing.SmallImageList = Me.il_state
         Me.lv_series_missing.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_series_missing.TabIndex = 10
@@ -1065,7 +1179,7 @@ Partial Class DVDArt_GUI
         'PictureBox2
         '
         Me.PictureBox2.Image = Global.DVDArt_Plugin.My.Resources.Resources.tvseries
-        Me.PictureBox2.Location = New System.Drawing.Point(259, 593)
+        Me.PictureBox2.Location = New System.Drawing.Point(259, 780)
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(208, 59)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1075,7 +1189,7 @@ Partial Class DVDArt_GUI
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
-        Me.PictureBox1.Location = New System.Drawing.Point(469, 601)
+        Me.PictureBox1.Location = New System.Drawing.Point(469, 785)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(258, 48)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1093,14 +1207,14 @@ Partial Class DVDArt_GUI
         Me.tp_Music.Location = New System.Drawing.Point(4, 22)
         Me.tp_Music.Name = "tp_Music"
         Me.tp_Music.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Music.Size = New System.Drawing.Size(656, 650)
+        Me.tp_Music.Size = New System.Drawing.Size(656, 839)
         Me.tp_Music.TabIndex = 4
         Me.tp_Music.Text = "Music"
         '
         'PictureBox11
         '
         Me.PictureBox11.Image = Global.DVDArt_Plugin.My.Resources.Resources.theAudioDB
-        Me.PictureBox11.Location = New System.Drawing.Point(519, 633)
+        Me.PictureBox11.Location = New System.Drawing.Point(519, 817)
         Me.PictureBox11.Name = "PictureBox11"
         Me.PictureBox11.Size = New System.Drawing.Size(80, 17)
         Me.PictureBox11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -1110,7 +1224,7 @@ Partial Class DVDArt_GUI
         'PictureBox10
         '
         Me.PictureBox10.Image = Global.DVDArt_Plugin.My.Resources.Resources.lastfm
-        Me.PictureBox10.Location = New System.Drawing.Point(600, 635)
+        Me.PictureBox10.Location = New System.Drawing.Point(600, 819)
         Me.PictureBox10.Name = "PictureBox10"
         Me.PictureBox10.Size = New System.Drawing.Size(55, 14)
         Me.PictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1121,7 +1235,7 @@ Partial Class DVDArt_GUI
         '
         Me.PictureBox9.BackColor = System.Drawing.Color.Transparent
         Me.PictureBox9.Image = Global.DVDArt_Plugin.My.Resources.Resources.music
-        Me.PictureBox9.Location = New System.Drawing.Point(259, 596)
+        Me.PictureBox9.Location = New System.Drawing.Point(259, 780)
         Me.PictureBox9.Name = "PictureBox9"
         Me.PictureBox9.Size = New System.Drawing.Size(208, 59)
         Me.PictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1131,7 +1245,7 @@ Partial Class DVDArt_GUI
         'PictureBox5
         '
         Me.PictureBox5.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
-        Me.PictureBox5.Location = New System.Drawing.Point(469, 601)
+        Me.PictureBox5.Location = New System.Drawing.Point(469, 785)
         Me.PictureBox5.Name = "PictureBox5"
         Me.PictureBox5.Size = New System.Drawing.Size(258, 48)
         Me.PictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1146,7 +1260,7 @@ Partial Class DVDArt_GUI
         Me.tbc_music.Location = New System.Drawing.Point(4, 3)
         Me.tbc_music.Name = "tbc_music"
         Me.tbc_music.SelectedIndex = 0
-        Me.tbc_music.Size = New System.Drawing.Size(650, 593)
+        Me.tbc_music.Size = New System.Drawing.Size(650, 775)
         Me.tbc_music.TabIndex = 31
         '
         'tp_artists
@@ -1157,7 +1271,7 @@ Partial Class DVDArt_GUI
         Me.tp_artists.Location = New System.Drawing.Point(4, 22)
         Me.tp_artists.Name = "tp_artists"
         Me.tp_artists.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_artists.Size = New System.Drawing.Size(642, 567)
+        Me.tp_artists.Size = New System.Drawing.Size(642, 749)
         Me.tp_artists.TabIndex = 3
         Me.tp_artists.Text = "Artists with Artwork"
         '
@@ -1171,7 +1285,7 @@ Partial Class DVDArt_GUI
         Me.lv_artist.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_artist.Location = New System.Drawing.Point(8, 8)
         Me.lv_artist.Name = "lv_artist"
-        Me.lv_artist.Size = New System.Drawing.Size(340, 553)
+        Me.lv_artist.Size = New System.Drawing.Size(340, 735)
         Me.lv_artist.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_artist.TabIndex = 13
         Me.lv_artist.UseCompatibleStateImageBehavior = False
@@ -1194,7 +1308,7 @@ Partial Class DVDArt_GUI
         Me.tbc_artist.Location = New System.Drawing.Point(352, 8)
         Me.tbc_artist.Name = "tbc_artist"
         Me.tbc_artist.SelectedIndex = 0
-        Me.tbc_artist.Size = New System.Drawing.Size(284, 553)
+        Me.tbc_artist.Size = New System.Drawing.Size(284, 735)
         Me.tbc_artist.TabIndex = 14
         '
         'tp_artist_banner
@@ -1206,7 +1320,7 @@ Partial Class DVDArt_GUI
         Me.tp_artist_banner.Location = New System.Drawing.Point(4, 22)
         Me.tp_artist_banner.Name = "tp_artist_banner"
         Me.tp_artist_banner.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_artist_banner.Size = New System.Drawing.Size(276, 527)
+        Me.tp_artist_banner.Size = New System.Drawing.Size(276, 709)
         Me.tp_artist_banner.TabIndex = 4
         Me.tp_artist_banner.Text = "Banner"
         '
@@ -1239,7 +1353,7 @@ Partial Class DVDArt_GUI
         Me.lv_artist_banner.Location = New System.Drawing.Point(12, 54)
         Me.lv_artist_banner.MultiSelect = False
         Me.lv_artist_banner.Name = "lv_artist_banner"
-        Me.lv_artist_banner.Size = New System.Drawing.Size(252, 466)
+        Me.lv_artist_banner.Size = New System.Drawing.Size(252, 649)
         Me.lv_artist_banner.TabIndex = 16
         Me.lv_artist_banner.UseCompatibleStateImageBehavior = False
         '
@@ -1257,7 +1371,7 @@ Partial Class DVDArt_GUI
         Me.tp_artist_clearlogo.Controls.Add(Me.lv_artist_clearlogo)
         Me.tp_artist_clearlogo.Location = New System.Drawing.Point(4, 22)
         Me.tp_artist_clearlogo.Name = "tp_artist_clearlogo"
-        Me.tp_artist_clearlogo.Size = New System.Drawing.Size(276, 527)
+        Me.tp_artist_clearlogo.Size = New System.Drawing.Size(276, 709)
         Me.tp_artist_clearlogo.TabIndex = 2
         Me.tp_artist_clearlogo.Text = "ClearLogo"
         '
@@ -1290,7 +1404,7 @@ Partial Class DVDArt_GUI
         Me.lv_artist_clearlogo.Location = New System.Drawing.Point(12, 90)
         Me.lv_artist_clearlogo.MultiSelect = False
         Me.lv_artist_clearlogo.Name = "lv_artist_clearlogo"
-        Me.lv_artist_clearlogo.Size = New System.Drawing.Size(252, 430)
+        Me.lv_artist_clearlogo.Size = New System.Drawing.Size(252, 612)
         Me.lv_artist_clearlogo.TabIndex = 19
         Me.lv_artist_clearlogo.UseCompatibleStateImageBehavior = False
         '
@@ -1302,7 +1416,7 @@ Partial Class DVDArt_GUI
         Me.tp_albums.Location = New System.Drawing.Point(4, 22)
         Me.tp_albums.Name = "tp_albums"
         Me.tp_albums.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_albums.Size = New System.Drawing.Size(642, 567)
+        Me.tp_albums.Size = New System.Drawing.Size(642, 749)
         Me.tp_albums.TabIndex = 0
         Me.tp_albums.Text = "Albums with Artwork"
         Me.tp_albums.ToolTipText = "This tab contails all movies that already have a DVD artwork."
@@ -1317,7 +1431,7 @@ Partial Class DVDArt_GUI
         Me.lv_album.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_album.Location = New System.Drawing.Point(8, 8)
         Me.lv_album.Name = "lv_album"
-        Me.lv_album.Size = New System.Drawing.Size(340, 553)
+        Me.lv_album.Size = New System.Drawing.Size(340, 735)
         Me.lv_album.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_album.TabIndex = 11
         Me.lv_album.UseCompatibleStateImageBehavior = False
@@ -1339,7 +1453,7 @@ Partial Class DVDArt_GUI
         Me.tbc_album.Location = New System.Drawing.Point(352, 8)
         Me.tbc_album.Name = "tbc_album"
         Me.tbc_album.SelectedIndex = 0
-        Me.tbc_album.Size = New System.Drawing.Size(284, 553)
+        Me.tbc_album.Size = New System.Drawing.Size(284, 735)
         Me.tbc_album.TabIndex = 12
         '
         'tp_Music_CDArt
@@ -1354,7 +1468,7 @@ Partial Class DVDArt_GUI
         Me.tp_Music_CDArt.Location = New System.Drawing.Point(4, 22)
         Me.tp_Music_CDArt.Name = "tp_Music_CDArt"
         Me.tp_Music_CDArt.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Music_CDArt.Size = New System.Drawing.Size(276, 527)
+        Me.tp_Music_CDArt.Size = New System.Drawing.Size(276, 709)
         Me.tp_Music_CDArt.TabIndex = 0
         Me.tp_Music_CDArt.Text = "CDArt"
         '
@@ -1407,7 +1521,7 @@ Partial Class DVDArt_GUI
         Me.lv_album_cdart.Location = New System.Drawing.Point(12, 215)
         Me.lv_album_cdart.MultiSelect = False
         Me.lv_album_cdart.Name = "lv_album_cdart"
-        Me.lv_album_cdart.Size = New System.Drawing.Size(252, 306)
+        Me.lv_album_cdart.Size = New System.Drawing.Size(252, 488)
         Me.lv_album_cdart.TabIndex = 13
         Me.lv_album_cdart.UseCompatibleStateImageBehavior = False
         '
@@ -1428,7 +1542,7 @@ Partial Class DVDArt_GUI
         Me.tp_artist_album_missing.Location = New System.Drawing.Point(4, 22)
         Me.tp_artist_album_missing.Name = "tp_artist_album_missing"
         Me.tp_artist_album_missing.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_artist_album_missing.Size = New System.Drawing.Size(642, 567)
+        Me.tp_artist_album_missing.Size = New System.Drawing.Size(642, 749)
         Me.tp_artist_album_missing.TabIndex = 2
         Me.tp_artist_album_missing.Text = "Artists/Albums missing Artwork"
         '
@@ -1441,7 +1555,7 @@ Partial Class DVDArt_GUI
         Me.lv_music_missing.GridLines = True
         Me.lv_music_missing.Location = New System.Drawing.Point(8, 8)
         Me.lv_music_missing.Name = "lv_music_missing"
-        Me.lv_music_missing.Size = New System.Drawing.Size(628, 550)
+        Me.lv_music_missing.Size = New System.Drawing.Size(628, 735)
         Me.lv_music_missing.SmallImageList = Me.il_state
         Me.lv_music_missing.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_music_missing.TabIndex = 10
@@ -1484,10 +1598,11 @@ Partial Class DVDArt_GUI
         '
         Me.tp_Importer.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.tp_Importer.Controls.Add(Me.lv_import)
+        Me.tp_Importer.Controls.Add(Me.b_import)
         Me.tp_Importer.Location = New System.Drawing.Point(4, 22)
         Me.tp_Importer.Name = "tp_Importer"
         Me.tp_Importer.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Importer.Size = New System.Drawing.Size(656, 650)
+        Me.tp_Importer.Size = New System.Drawing.Size(656, 839)
         Me.tp_Importer.TabIndex = 3
         Me.tp_Importer.Text = "Importer"
         '
@@ -1500,7 +1615,7 @@ Partial Class DVDArt_GUI
         Me.lv_import.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_import.Location = New System.Drawing.Point(14, 16)
         Me.lv_import.Name = "lv_import"
-        Me.lv_import.Size = New System.Drawing.Size(628, 619)
+        Me.lv_import.Size = New System.Drawing.Size(628, 792)
         Me.lv_import.StateImageList = Me.il_state
         Me.lv_import.TabIndex = 10
         Me.lv_import.UseCompatibleStateImageBehavior = False
@@ -1521,17 +1636,64 @@ Partial Class DVDArt_GUI
         Me.i_Type.Text = "Type"
         Me.i_Type.Width = 54
         '
+        'b_import
+        '
+        Me.b_import.Location = New System.Drawing.Point(521, 813)
+        Me.b_import.Name = "b_import"
+        Me.b_import.Size = New System.Drawing.Size(121, 23)
+        Me.b_import.TabIndex = 30
+        Me.b_import.Text = "Start Importer Now"
+        Me.b_import.UseVisualStyleBackColor = True
+        Me.b_import.Visible = False
+        '
         'tp_Settings
         '
         Me.tp_Settings.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_Settings.Controls.Add(Me.gb3)
         Me.tp_Settings.Controls.Add(Me.gb2)
         Me.tp_Settings.Controls.Add(Me.gb1)
         Me.tp_Settings.Location = New System.Drawing.Point(4, 22)
         Me.tp_Settings.Name = "tp_Settings"
         Me.tp_Settings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Settings.Size = New System.Drawing.Size(656, 650)
+        Me.tp_Settings.Size = New System.Drawing.Size(656, 839)
         Me.tp_Settings.TabIndex = 2
         Me.tp_Settings.Text = "Settings"
+        '
+        'gb3
+        '
+        Me.gb3.Controls.Add(Me.pnl_online)
+        Me.gb3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.gb3.Location = New System.Drawing.Point(36, 21)
+        Me.gb3.Name = "gb3"
+        Me.gb3.Size = New System.Drawing.Size(584, 97)
+        Me.gb3.TabIndex = 22
+        Me.gb3.TabStop = False
+        Me.gb3.Text = " On-Line Importer settings "
+        '
+        'pnl_online
+        '
+        Me.pnl_online.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.pnl_online.Controls.Add(Me.nud_downloads)
+        Me.pnl_online.Controls.Add(Me.l_downloads)
+        Me.pnl_online.Controls.Add(Me.cb_downloads)
+        Me.pnl_online.Controls.Add(Me.cb_autoimport)
+        Me.pnl_online.Location = New System.Drawing.Point(17, 26)
+        Me.pnl_online.Name = "pnl_online"
+        Me.pnl_online.Size = New System.Drawing.Size(550, 59)
+        Me.pnl_online.TabIndex = 20
+        '
+        'cb_autoimport
+        '
+        Me.cb_autoimport.AutoSize = True
+        Me.cb_autoimport.CheckAlign = System.Drawing.ContentAlignment.TopRight
+        Me.cb_autoimport.Location = New System.Drawing.Point(23, 9)
+        Me.cb_autoimport.Name = "cb_autoimport"
+        Me.cb_autoimport.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.cb_autoimport.Size = New System.Drawing.Size(294, 20)
+        Me.cb_autoimport.TabIndex = 30
+        Me.cb_autoimport.Text = "Automatically start Importing on Plugin startup"
+        Me.cb_autoimport.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.cb_autoimport.UseVisualStyleBackColor = True
         '
         'gb2
         '
@@ -1540,9 +1702,9 @@ Partial Class DVDArt_GUI
         Me.gb2.Controls.Add(Me.cb_language)
         Me.gb2.Controls.Add(Me.Label6)
         Me.gb2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gb2.Location = New System.Drawing.Point(36, 227)
+        Me.gb2.Location = New System.Drawing.Point(36, 324)
         Me.gb2.Name = "gb2"
-        Me.gb2.Size = New System.Drawing.Size(584, 405)
+        Me.gb2.Size = New System.Drawing.Size(584, 505)
         Me.gb2.TabIndex = 21
         Me.gb2.TabStop = False
         Me.gb2.Text = " Scrape for "
@@ -1555,53 +1717,77 @@ Partial Class DVDArt_GUI
         Me.tbc_scraper.Location = New System.Drawing.Point(14, 22)
         Me.tbc_scraper.Name = "tbc_scraper"
         Me.tbc_scraper.SelectedIndex = 0
-        Me.tbc_scraper.Size = New System.Drawing.Size(554, 342)
+        Me.tbc_scraper.Size = New System.Drawing.Size(554, 442)
         Me.tbc_scraper.TabIndex = 9
         '
         'tp_sMovies
         '
         Me.tp_sMovies.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.tp_sMovies.Controls.Add(Me.TabControl3)
+        Me.tp_sMovies.Controls.Add(Me.tbc_movie_settings)
         Me.tp_sMovies.Location = New System.Drawing.Point(4, 25)
         Me.tp_sMovies.Name = "tp_sMovies"
         Me.tp_sMovies.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_sMovies.Size = New System.Drawing.Size(546, 313)
+        Me.tp_sMovies.Size = New System.Drawing.Size(546, 413)
         Me.tp_sMovies.TabIndex = 0
         Me.tp_sMovies.Text = "Movies"
         '
-        'TabControl3
+        'tbc_movie_settings
         '
-        Me.TabControl3.Controls.Add(Me.tp_movies_settings)
-        Me.TabControl3.Controls.Add(Me.tp_manual_dvdart)
-        Me.TabControl3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabControl3.Location = New System.Drawing.Point(6, 6)
-        Me.TabControl3.Name = "TabControl3"
-        Me.TabControl3.SelectedIndex = 0
-        Me.TabControl3.Size = New System.Drawing.Size(533, 301)
-        Me.TabControl3.TabIndex = 18
+        Me.tbc_movie_settings.Controls.Add(Me.tp_movies_scraper)
+        Me.tbc_movie_settings.Controls.Add(Me.tp_manual_dvdart)
+        Me.tbc_movie_settings.Controls.Add(Me.tp_movies_path)
+        Me.tbc_movie_settings.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbc_movie_settings.Location = New System.Drawing.Point(6, 6)
+        Me.tbc_movie_settings.Name = "tbc_movie_settings"
+        Me.tbc_movie_settings.SelectedIndex = 0
+        Me.tbc_movie_settings.Size = New System.Drawing.Size(533, 401)
+        Me.tbc_movie_settings.TabIndex = 18
         '
-        'tp_movies_settings
+        'tp_movies_scraper
         '
-        Me.tp_movies_settings.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.tp_movies_settings.Controls.Add(Me.PictureBox12)
-        Me.tp_movies_settings.Controls.Add(Me.cb_Backdrop_movies)
-        Me.tp_movies_settings.Controls.Add(Me.pb2)
-        Me.tp_movies_settings.Controls.Add(Me.pb1)
-        Me.tp_movies_settings.Controls.Add(Me.pb3)
-        Me.tp_movies_settings.Controls.Add(Me.cb_DVDArt_movies)
-        Me.tp_movies_settings.Controls.Add(Me.cb_ClearArt_movies)
-        Me.tp_movies_settings.Controls.Add(Me.cb_ClearLogo_movies)
-        Me.tp_movies_settings.Location = New System.Drawing.Point(4, 22)
-        Me.tp_movies_settings.Name = "tp_movies_settings"
-        Me.tp_movies_settings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_movies_settings.Size = New System.Drawing.Size(525, 275)
-        Me.tp_movies_settings.TabIndex = 0
-        Me.tp_movies_settings.Text = "Scraper options"
+        Me.tp_movies_scraper.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_movies_scraper.Controls.Add(Me.cb_Cover_movies)
+        Me.tp_movies_scraper.Controls.Add(Me.PictureBox15)
+        Me.tp_movies_scraper.Controls.Add(Me.PictureBox12)
+        Me.tp_movies_scraper.Controls.Add(Me.cb_Backdrop_movies)
+        Me.tp_movies_scraper.Controls.Add(Me.pb2)
+        Me.tp_movies_scraper.Controls.Add(Me.pb1)
+        Me.tp_movies_scraper.Controls.Add(Me.pb3)
+        Me.tp_movies_scraper.Controls.Add(Me.cb_DVDArt_movies)
+        Me.tp_movies_scraper.Controls.Add(Me.cb_ClearArt_movies)
+        Me.tp_movies_scraper.Controls.Add(Me.cb_ClearLogo_movies)
+        Me.tp_movies_scraper.Location = New System.Drawing.Point(4, 22)
+        Me.tp_movies_scraper.Name = "tp_movies_scraper"
+        Me.tp_movies_scraper.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_movies_scraper.Size = New System.Drawing.Size(525, 375)
+        Me.tp_movies_scraper.TabIndex = 0
+        Me.tp_movies_scraper.Text = "Scraper options"
+        '
+        'cb_Cover_movies
+        '
+        Me.cb_Cover_movies.AutoSize = True
+        Me.cb_Cover_movies.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_Cover_movies.Location = New System.Drawing.Point(89, 309)
+        Me.cb_Cover_movies.Name = "cb_Cover_movies"
+        Me.cb_Cover_movies.Size = New System.Drawing.Size(63, 20)
+        Me.cb_Cover_movies.TabIndex = 21
+        Me.cb_Cover_movies.Text = "Cover"
+        Me.cb_Cover_movies.UseVisualStyleBackColor = True
+        '
+        'PictureBox15
+        '
+        Me.PictureBox15.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_cover
+        Me.PictureBox15.Location = New System.Drawing.Point(350, 270)
+        Me.PictureBox15.Name = "PictureBox15"
+        Me.PictureBox15.Size = New System.Drawing.Size(73, 100)
+        Me.PictureBox15.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.PictureBox15.TabIndex = 20
+        Me.PictureBox15.TabStop = False
         '
         'PictureBox12
         '
         Me.PictureBox12.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_backdrop
-        Me.PictureBox12.Location = New System.Drawing.Point(336, 212)
+        Me.PictureBox12.Location = New System.Drawing.Point(336, 210)
         Me.PictureBox12.Name = "PictureBox12"
         Me.PictureBox12.Size = New System.Drawing.Size(100, 56)
         Me.PictureBox12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1622,7 +1808,7 @@ Partial Class DVDArt_GUI
         'pb2
         '
         Me.pb2.Image = Global.DVDArt_Plugin.My.Resources.Resources.armageddon_clearart
-        Me.pb2.Location = New System.Drawing.Point(336, 109)
+        Me.pb2.Location = New System.Drawing.Point(336, 108)
         Me.pb2.Name = "pb2"
         Me.pb2.Size = New System.Drawing.Size(100, 56)
         Me.pb2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1653,7 +1839,7 @@ Partial Class DVDArt_GUI
         '
         Me.cb_DVDArt_movies.AutoSize = True
         Me.cb_DVDArt_movies.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_DVDArt_movies.Location = New System.Drawing.Point(89, 45)
+        Me.cb_DVDArt_movies.Location = New System.Drawing.Point(89, 46)
         Me.cb_DVDArt_movies.Name = "cb_DVDArt_movies"
         Me.cb_DVDArt_movies.Size = New System.Drawing.Size(75, 20)
         Me.cb_DVDArt_movies.TabIndex = 12
@@ -1690,14 +1876,14 @@ Partial Class DVDArt_GUI
         Me.tp_manual_dvdart.Location = New System.Drawing.Point(4, 22)
         Me.tp_manual_dvdart.Name = "tp_manual_dvdart"
         Me.tp_manual_dvdart.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_manual_dvdart.Size = New System.Drawing.Size(525, 275)
+        Me.tp_manual_dvdart.Size = New System.Drawing.Size(525, 375)
         Me.tp_manual_dvdart.TabIndex = 1
         Me.tp_manual_dvdart.Text = "Manual DVDArt layout options"
         '
         'rb_t2
         '
         Me.rb_t2.Image = Global.DVDArt_Plugin.My.Resources.Resources.template_2
-        Me.rb_t2.Location = New System.Drawing.Point(279, 33)
+        Me.rb_t2.Location = New System.Drawing.Point(279, 83)
         Me.rb_t2.Name = "rb_t2"
         Me.rb_t2.Size = New System.Drawing.Size(222, 208)
         Me.rb_t2.TabIndex = 3
@@ -1707,31 +1893,91 @@ Partial Class DVDArt_GUI
         'rb_t1
         '
         Me.rb_t1.Image = Global.DVDArt_Plugin.My.Resources.Resources.template_1
-        Me.rb_t1.Location = New System.Drawing.Point(24, 33)
+        Me.rb_t1.Location = New System.Drawing.Point(24, 83)
         Me.rb_t1.Name = "rb_t1"
         Me.rb_t1.Size = New System.Drawing.Size(222, 208)
         Me.rb_t1.TabIndex = 2
         Me.rb_t1.TabStop = True
         Me.rb_t1.UseVisualStyleBackColor = True
         '
+        'tp_movies_path
+        '
+        Me.tp_movies_path.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_movies_path.Controls.Add(Me.tb_movie_path)
+        Me.tp_movies_path.Controls.Add(Me.b_movie_path)
+        Me.tp_movies_path.Controls.Add(Me.Label8)
+        Me.tp_movies_path.Location = New System.Drawing.Point(4, 22)
+        Me.tp_movies_path.Name = "tp_movies_path"
+        Me.tp_movies_path.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_movies_path.Size = New System.Drawing.Size(525, 375)
+        Me.tp_movies_path.TabIndex = 2
+        Me.tp_movies_path.Text = "Path"
+        '
+        'tb_movie_path
+        '
+        Me.tb_movie_path.Location = New System.Drawing.Point(22, 55)
+        Me.tb_movie_path.Name = "tb_movie_path"
+        Me.tb_movie_path.Size = New System.Drawing.Size(393, 20)
+        Me.tb_movie_path.TabIndex = 3
+        '
+        'b_movie_path
+        '
+        Me.b_movie_path.Location = New System.Drawing.Point(431, 53)
+        Me.b_movie_path.Name = "b_movie_path"
+        Me.b_movie_path.Size = New System.Drawing.Size(75, 23)
+        Me.b_movie_path.TabIndex = 2
+        Me.b_movie_path.Text = "Browse"
+        Me.b_movie_path.UseVisualStyleBackColor = True
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(19, 32)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(68, 13)
+        Me.Label8.TabIndex = 0
+        Me.Label8.Text = "Artwork Path"
+        '
         'tp_sSeries
         '
         Me.tp_sSeries.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.tp_sSeries.Controls.Add(Me.PictureBox3)
-        Me.tp_sSeries.Controls.Add(Me.PictureBox4)
-        Me.tp_sSeries.Controls.Add(Me.cb_ClearLogo_series)
-        Me.tp_sSeries.Controls.Add(Me.cb_ClearArt_series)
+        Me.tp_sSeries.Controls.Add(Me.tbc_series_settings)
         Me.tp_sSeries.Location = New System.Drawing.Point(4, 25)
         Me.tp_sSeries.Name = "tp_sSeries"
         Me.tp_sSeries.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_sSeries.Size = New System.Drawing.Size(546, 313)
+        Me.tp_sSeries.Size = New System.Drawing.Size(546, 413)
         Me.tp_sSeries.TabIndex = 1
         Me.tp_sSeries.Text = "Series"
+        '
+        'tbc_series_settings
+        '
+        Me.tbc_series_settings.Controls.Add(Me.tp_series_scraper)
+        Me.tbc_series_settings.Controls.Add(Me.tp_series_path)
+        Me.tbc_series_settings.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbc_series_settings.Location = New System.Drawing.Point(6, 6)
+        Me.tbc_series_settings.Name = "tbc_series_settings"
+        Me.tbc_series_settings.SelectedIndex = 0
+        Me.tbc_series_settings.Size = New System.Drawing.Size(533, 401)
+        Me.tbc_series_settings.TabIndex = 19
+        '
+        'tp_series_scraper
+        '
+        Me.tp_series_scraper.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_series_scraper.Controls.Add(Me.PictureBox3)
+        Me.tp_series_scraper.Controls.Add(Me.PictureBox4)
+        Me.tp_series_scraper.Controls.Add(Me.cb_ClearArt_series)
+        Me.tp_series_scraper.Controls.Add(Me.cb_ClearLogo_series)
+        Me.tp_series_scraper.Location = New System.Drawing.Point(4, 22)
+        Me.tp_series_scraper.Name = "tp_series_scraper"
+        Me.tp_series_scraper.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_series_scraper.Size = New System.Drawing.Size(525, 375)
+        Me.tp_series_scraper.TabIndex = 0
+        Me.tp_series_scraper.Text = "Scraper options"
         '
         'PictureBox3
         '
         Me.PictureBox3.Image = Global.DVDArt_Plugin.My.Resources.Resources.grimm_clearart
-        Me.PictureBox3.Location = New System.Drawing.Point(346, 100)
+        Me.PictureBox3.Location = New System.Drawing.Point(335, 131)
         Me.PictureBox3.Name = "PictureBox3"
         Me.PictureBox3.Size = New System.Drawing.Size(100, 56)
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -1741,72 +1987,122 @@ Partial Class DVDArt_GUI
         'PictureBox4
         '
         Me.PictureBox4.Image = Global.DVDArt_Plugin.My.Resources.Resources.grimm_clearlogo
-        Me.PictureBox4.Location = New System.Drawing.Point(346, 174)
+        Me.PictureBox4.Location = New System.Drawing.Point(335, 205)
         Me.PictureBox4.Name = "PictureBox4"
         Me.PictureBox4.Size = New System.Drawing.Size(100, 39)
         Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
         Me.PictureBox4.TabIndex = 16
         Me.PictureBox4.TabStop = False
         '
-        'cb_ClearLogo_series
-        '
-        Me.cb_ClearLogo_series.AutoSize = True
-        Me.cb_ClearLogo_series.Location = New System.Drawing.Point(101, 180)
-        Me.cb_ClearLogo_series.Name = "cb_ClearLogo_series"
-        Me.cb_ClearLogo_series.Size = New System.Drawing.Size(90, 20)
-        Me.cb_ClearLogo_series.TabIndex = 14
-        Me.cb_ClearLogo_series.Text = "ClearLogo"
-        Me.cb_ClearLogo_series.UseVisualStyleBackColor = True
-        '
         'cb_ClearArt_series
         '
         Me.cb_ClearArt_series.AutoSize = True
-        Me.cb_ClearArt_series.Location = New System.Drawing.Point(101, 116)
+        Me.cb_ClearArt_series.Location = New System.Drawing.Point(90, 147)
         Me.cb_ClearArt_series.Name = "cb_ClearArt_series"
-        Me.cb_ClearArt_series.Size = New System.Drawing.Size(178, 20)
+        Me.cb_ClearArt_series.Size = New System.Drawing.Size(146, 17)
         Me.cb_ClearArt_series.TabIndex = 13
         Me.cb_ClearArt_series.Text = "ClearArt and HD Clear Art"
         Me.cb_ClearArt_series.UseVisualStyleBackColor = True
         '
+        'cb_ClearLogo_series
+        '
+        Me.cb_ClearLogo_series.AutoSize = True
+        Me.cb_ClearLogo_series.Location = New System.Drawing.Point(90, 211)
+        Me.cb_ClearLogo_series.Name = "cb_ClearLogo_series"
+        Me.cb_ClearLogo_series.Size = New System.Drawing.Size(74, 17)
+        Me.cb_ClearLogo_series.TabIndex = 14
+        Me.cb_ClearLogo_series.Text = "ClearLogo"
+        Me.cb_ClearLogo_series.UseVisualStyleBackColor = True
+        '
+        'tp_series_path
+        '
+        Me.tp_series_path.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_series_path.Controls.Add(Me.tb_series_path)
+        Me.tp_series_path.Controls.Add(Me.b_series_path)
+        Me.tp_series_path.Controls.Add(Me.Label9)
+        Me.tp_series_path.Location = New System.Drawing.Point(4, 22)
+        Me.tp_series_path.Name = "tp_series_path"
+        Me.tp_series_path.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_series_path.Size = New System.Drawing.Size(525, 375)
+        Me.tp_series_path.TabIndex = 2
+        Me.tp_series_path.Text = "Path"
+        '
+        'tb_series_path
+        '
+        Me.tb_series_path.Location = New System.Drawing.Point(22, 55)
+        Me.tb_series_path.Name = "tb_series_path"
+        Me.tb_series_path.Size = New System.Drawing.Size(393, 20)
+        Me.tb_series_path.TabIndex = 3
+        '
+        'b_series_path
+        '
+        Me.b_series_path.Location = New System.Drawing.Point(431, 55)
+        Me.b_series_path.Name = "b_series_path"
+        Me.b_series_path.Size = New System.Drawing.Size(75, 23)
+        Me.b_series_path.TabIndex = 2
+        Me.b_series_path.Text = "Browse"
+        Me.b_series_path.UseVisualStyleBackColor = True
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(19, 32)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(68, 13)
+        Me.Label9.TabIndex = 0
+        Me.Label9.Text = "Artwork Path"
+        '
         'tp_sMusic
         '
         Me.tp_sMusic.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.tp_sMusic.Controls.Add(Me.PictureBox6)
-        Me.tp_sMusic.Controls.Add(Me.PictureBox7)
-        Me.tp_sMusic.Controls.Add(Me.PictureBox8)
-        Me.tp_sMusic.Controls.Add(Me.cb_ClearLogo_artist)
-        Me.tp_sMusic.Controls.Add(Me.cb_Banner_artist)
-        Me.tp_sMusic.Controls.Add(Me.cb_CDArt_music)
+        Me.tp_sMusic.Controls.Add(Me.tbc_music_settings)
         Me.tp_sMusic.Location = New System.Drawing.Point(4, 25)
         Me.tp_sMusic.Name = "tp_sMusic"
-        Me.tp_sMusic.Size = New System.Drawing.Size(546, 313)
+        Me.tp_sMusic.Size = New System.Drawing.Size(546, 413)
         Me.tp_sMusic.TabIndex = 2
         Me.tp_sMusic.Text = "Music"
+        '
+        'tbc_music_settings
+        '
+        Me.tbc_music_settings.Controls.Add(Me.tp_music_scraper)
+        Me.tbc_music_settings.Controls.Add(Me.tp_music_path)
+        Me.tbc_music_settings.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbc_music_settings.Location = New System.Drawing.Point(6, 6)
+        Me.tbc_music_settings.Name = "tbc_music_settings"
+        Me.tbc_music_settings.SelectedIndex = 0
+        Me.tbc_music_settings.Size = New System.Drawing.Size(533, 401)
+        Me.tbc_music_settings.TabIndex = 20
+        '
+        'tp_music_scraper
+        '
+        Me.tp_music_scraper.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_music_scraper.Controls.Add(Me.PictureBox6)
+        Me.tp_music_scraper.Controls.Add(Me.PictureBox8)
+        Me.tp_music_scraper.Controls.Add(Me.cb_ClearLogo_artist)
+        Me.tp_music_scraper.Controls.Add(Me.PictureBox7)
+        Me.tp_music_scraper.Controls.Add(Me.cb_Banner_artist)
+        Me.tp_music_scraper.Controls.Add(Me.cb_CDArt_music)
+        Me.tp_music_scraper.Location = New System.Drawing.Point(4, 22)
+        Me.tp_music_scraper.Name = "tp_music_scraper"
+        Me.tp_music_scraper.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_music_scraper.Size = New System.Drawing.Size(525, 375)
+        Me.tp_music_scraper.TabIndex = 0
+        Me.tp_music_scraper.Text = "Scraper options"
         '
         'PictureBox6
         '
         Me.PictureBox6.Image = Global.DVDArt_Plugin.My.Resources.Resources.queen_banner
-        Me.PictureBox6.Location = New System.Drawing.Point(297, 163)
+        Me.PictureBox6.Location = New System.Drawing.Point(286, 194)
         Me.PictureBox6.Name = "PictureBox6"
         Me.PictureBox6.Size = New System.Drawing.Size(200, 37)
         Me.PictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
         Me.PictureBox6.TabIndex = 17
         Me.PictureBox6.TabStop = False
         '
-        'PictureBox7
-        '
-        Me.PictureBox7.Image = Global.DVDArt_Plugin.My.Resources.Resources.queen_clearlogo
-        Me.PictureBox7.Location = New System.Drawing.Point(297, 216)
-        Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(100, 39)
-        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
-        Me.PictureBox7.TabIndex = 16
-        Me.PictureBox7.TabStop = False
-        '
         'PictureBox8
         '
         Me.PictureBox8.Image = Global.DVDArt_Plugin.My.Resources.Resources.queen_cdart
-        Me.PictureBox8.Location = New System.Drawing.Point(297, 57)
+        Me.PictureBox8.Location = New System.Drawing.Point(286, 88)
         Me.PictureBox8.Name = "PictureBox8"
         Me.PictureBox8.Size = New System.Drawing.Size(100, 100)
         Me.PictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -1816,19 +2112,29 @@ Partial Class DVDArt_GUI
         'cb_ClearLogo_artist
         '
         Me.cb_ClearLogo_artist.AutoSize = True
-        Me.cb_ClearLogo_artist.Location = New System.Drawing.Point(50, 222)
+        Me.cb_ClearLogo_artist.Location = New System.Drawing.Point(39, 253)
         Me.cb_ClearLogo_artist.Name = "cb_ClearLogo_artist"
-        Me.cb_ClearLogo_artist.Size = New System.Drawing.Size(173, 20)
+        Me.cb_ClearLogo_artist.Size = New System.Drawing.Size(141, 17)
         Me.cb_ClearLogo_artist.TabIndex = 14
         Me.cb_ClearLogo_artist.Text = "ClearLogo and HD Logo"
         Me.cb_ClearLogo_artist.UseVisualStyleBackColor = True
         '
+        'PictureBox7
+        '
+        Me.PictureBox7.Image = Global.DVDArt_Plugin.My.Resources.Resources.queen_clearlogo
+        Me.PictureBox7.Location = New System.Drawing.Point(286, 247)
+        Me.PictureBox7.Name = "PictureBox7"
+        Me.PictureBox7.Size = New System.Drawing.Size(100, 39)
+        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.PictureBox7.TabIndex = 16
+        Me.PictureBox7.TabStop = False
+        '
         'cb_Banner_artist
         '
         Me.cb_Banner_artist.AutoSize = True
-        Me.cb_Banner_artist.Location = New System.Drawing.Point(50, 167)
+        Me.cb_Banner_artist.Location = New System.Drawing.Point(39, 198)
         Me.cb_Banner_artist.Name = "cb_Banner_artist"
-        Me.cb_Banner_artist.Size = New System.Drawing.Size(70, 20)
+        Me.cb_Banner_artist.Size = New System.Drawing.Size(60, 17)
         Me.cb_Banner_artist.TabIndex = 13
         Me.cb_Banner_artist.Text = "Banner"
         Me.cb_Banner_artist.UseVisualStyleBackColor = True
@@ -1836,18 +2142,56 @@ Partial Class DVDArt_GUI
         'cb_CDArt_music
         '
         Me.cb_CDArt_music.AutoSize = True
-        Me.cb_CDArt_music.Location = New System.Drawing.Point(50, 92)
+        Me.cb_CDArt_music.Location = New System.Drawing.Point(39, 123)
         Me.cb_CDArt_music.Name = "cb_CDArt_music"
-        Me.cb_CDArt_music.Size = New System.Drawing.Size(65, 20)
+        Me.cb_CDArt_music.Size = New System.Drawing.Size(57, 17)
         Me.cb_CDArt_music.TabIndex = 12
         Me.cb_CDArt_music.Text = "CD Art"
         Me.cb_CDArt_music.UseVisualStyleBackColor = True
+        '
+        'tp_music_path
+        '
+        Me.tp_music_path.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_music_path.Controls.Add(Me.tb_music_path)
+        Me.tp_music_path.Controls.Add(Me.b_music_path)
+        Me.tp_music_path.Controls.Add(Me.Label10)
+        Me.tp_music_path.Location = New System.Drawing.Point(4, 22)
+        Me.tp_music_path.Name = "tp_music_path"
+        Me.tp_music_path.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_music_path.Size = New System.Drawing.Size(525, 375)
+        Me.tp_music_path.TabIndex = 2
+        Me.tp_music_path.Text = "Path"
+        '
+        'tb_music_path
+        '
+        Me.tb_music_path.Location = New System.Drawing.Point(22, 55)
+        Me.tb_music_path.Name = "tb_music_path"
+        Me.tb_music_path.Size = New System.Drawing.Size(393, 20)
+        Me.tb_music_path.TabIndex = 3
+        '
+        'b_music_path
+        '
+        Me.b_music_path.Location = New System.Drawing.Point(431, 55)
+        Me.b_music_path.Name = "b_music_path"
+        Me.b_music_path.Size = New System.Drawing.Size(75, 23)
+        Me.b_music_path.TabIndex = 2
+        Me.b_music_path.Text = "Browse"
+        Me.b_music_path.UseVisualStyleBackColor = True
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(19, 32)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(68, 13)
+        Me.Label10.TabIndex = 0
+        Me.Label10.Text = "Artwork Path"
         '
         'Label7
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.0!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(421, 379)
+        Me.Label7.Location = New System.Drawing.Point(421, 479)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(147, 9)
         Me.Label7.TabIndex = 8
@@ -1856,7 +2200,7 @@ Partial Class DVDArt_GUI
         'cb_language
         '
         Me.cb_language.FormattingEnabled = True
-        Me.cb_language.Location = New System.Drawing.Point(273, 370)
+        Me.cb_language.Location = New System.Drawing.Point(273, 470)
         Me.cb_language.Name = "cb_language"
         Me.cb_language.Size = New System.Drawing.Size(142, 24)
         Me.cb_language.TabIndex = 7
@@ -1865,7 +2209,7 @@ Partial Class DVDArt_GUI
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(13, 373)
+        Me.Label6.Location = New System.Drawing.Point(13, 473)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(194, 16)
         Me.Label6.TabIndex = 6
@@ -1874,9 +2218,9 @@ Partial Class DVDArt_GUI
         'gb1
         '
         Me.gb1.Controls.Add(Me.cb_backgroundscraper)
-        Me.gb1.Controls.Add(Me.Panel1)
+        Me.gb1.Controls.Add(Me.pnl_background)
         Me.gb1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gb1.Location = New System.Drawing.Point(36, 19)
+        Me.gb1.Location = New System.Drawing.Point(36, 128)
         Me.gb1.Name = "gb1"
         Me.gb1.Size = New System.Drawing.Size(584, 190)
         Me.gb1.TabIndex = 20
@@ -1894,24 +2238,24 @@ Partial Class DVDArt_GUI
         Me.cb_backgroundscraper.Text = "Background Scraper Enabled"
         Me.cb_backgroundscraper.UseVisualStyleBackColor = True
         '
-        'Panel1
+        'pnl_background
         '
-        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel1.Controls.Add(Me.Label3)
-        Me.Panel1.Controls.Add(Me.cb_delay)
-        Me.Panel1.Controls.Add(Me.nud_delay)
-        Me.Panel1.Controls.Add(Me.cb_missing)
-        Me.Panel1.Controls.Add(Me.nud_missing)
-        Me.Panel1.Controls.Add(Me.Label5)
-        Me.Panel1.Controls.Add(Me.cb_scraping)
-        Me.Panel1.Controls.Add(Me.Label4)
-        Me.Panel1.Controls.Add(Me.nud_scraping)
-        Me.Panel1.Controls.Add(Me.Label2)
-        Me.Panel1.Controls.Add(Me.mtb_cpu)
-        Me.Panel1.Location = New System.Drawing.Point(17, 32)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(550, 145)
-        Me.Panel1.TabIndex = 20
+        Me.pnl_background.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.pnl_background.Controls.Add(Me.Label3)
+        Me.pnl_background.Controls.Add(Me.cb_delay)
+        Me.pnl_background.Controls.Add(Me.nud_delay)
+        Me.pnl_background.Controls.Add(Me.cb_missing)
+        Me.pnl_background.Controls.Add(Me.nud_missing)
+        Me.pnl_background.Controls.Add(Me.Label5)
+        Me.pnl_background.Controls.Add(Me.cb_scraping)
+        Me.pnl_background.Controls.Add(Me.Label4)
+        Me.pnl_background.Controls.Add(Me.nud_scraping)
+        Me.pnl_background.Controls.Add(Me.Label2)
+        Me.pnl_background.Controls.Add(Me.mtb_cpu)
+        Me.pnl_background.Location = New System.Drawing.Point(17, 32)
+        Me.pnl_background.Name = "pnl_background"
+        Me.pnl_background.Size = New System.Drawing.Size(550, 145)
+        Me.pnl_background.TabIndex = 21
         '
         'Label3
         '
@@ -2067,11 +2411,46 @@ Partial Class DVDArt_GUI
         Me.RescanAllToolStripMenuItem1.Size = New System.Drawing.Size(232, 22)
         Me.RescanAllToolStripMenuItem1.Text = "Rescan all"
         '
+        'cb_downloads
+        '
+        Me.cb_downloads.AutoSize = True
+        Me.cb_downloads.CheckAlign = System.Drawing.ContentAlignment.TopRight
+        Me.cb_downloads.Location = New System.Drawing.Point(23, 29)
+        Me.cb_downloads.Name = "cb_downloads"
+        Me.cb_downloads.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.cb_downloads.Size = New System.Drawing.Size(169, 20)
+        Me.cb_downloads.TabIndex = 31
+        Me.cb_downloads.Text = "Limit artwork downloads"
+        Me.cb_downloads.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.cb_downloads.UseVisualStyleBackColor = True
+        '
+        'l_downloads
+        '
+        Me.l_downloads.AutoSize = True
+        Me.l_downloads.Location = New System.Drawing.Point(357, 30)
+        Me.l_downloads.Name = "l_downloads"
+        Me.l_downloads.Size = New System.Drawing.Size(118, 16)
+        Me.l_downloads.TabIndex = 32
+        Me.l_downloads.Text = "Limit downloads to"
+        Me.l_downloads.Visible = False
+        '
+        'nud_downloads
+        '
+        Me.nud_downloads.Location = New System.Drawing.Point(481, 28)
+        Me.nud_downloads.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.nud_downloads.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.nud_downloads.Name = "nud_downloads"
+        Me.nud_downloads.Size = New System.Drawing.Size(44, 22)
+        Me.nud_downloads.TabIndex = 33
+        Me.nud_downloads.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.nud_downloads.Value = New Decimal(New Integer() {3, 0, 0, 0})
+        Me.nud_downloads.Visible = False
+        '
         'DVDArt_GUI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(688, 698)
+        Me.ClientSize = New System.Drawing.Size(688, 898)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.tbc_main)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -2099,8 +2478,11 @@ Partial Class DVDArt_GUI
         CType(Me.pb_movie_clearlogo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tp_Movie_Backdrop.ResumeLayout(False)
         CType(Me.pb_movie_backdrop, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_Movie_Cover.ResumeLayout(False)
+        CType(Me.pb_movie_cover, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tp_movies_missing.ResumeLayout(False)
         CType(Me.pbFTV_Logo, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox14, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tp_TVSeries.ResumeLayout(False)
         Me.TabControl2.ResumeLayout(False)
         Me.tp_series.ResumeLayout(False)
@@ -2134,38 +2516,53 @@ Partial Class DVDArt_GUI
         Me.tp_artist_album_missing.ResumeLayout(False)
         Me.tp_Importer.ResumeLayout(False)
         Me.tp_Settings.ResumeLayout(False)
+        Me.gb3.ResumeLayout(False)
+        Me.pnl_online.ResumeLayout(False)
+        Me.pnl_online.PerformLayout()
         Me.gb2.ResumeLayout(False)
         Me.gb2.PerformLayout()
         Me.tbc_scraper.ResumeLayout(False)
         Me.tp_sMovies.ResumeLayout(False)
-        Me.TabControl3.ResumeLayout(False)
-        Me.tp_movies_settings.ResumeLayout(False)
-        Me.tp_movies_settings.PerformLayout()
+        Me.tbc_movie_settings.ResumeLayout(False)
+        Me.tp_movies_scraper.ResumeLayout(False)
+        Me.tp_movies_scraper.PerformLayout()
+        CType(Me.PictureBox15, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox12, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pb2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pb1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pb3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tp_manual_dvdart.ResumeLayout(False)
+        Me.tp_movies_path.ResumeLayout(False)
+        Me.tp_movies_path.PerformLayout()
         Me.tp_sSeries.ResumeLayout(False)
-        Me.tp_sSeries.PerformLayout()
+        Me.tbc_series_settings.ResumeLayout(False)
+        Me.tp_series_scraper.ResumeLayout(False)
+        Me.tp_series_scraper.PerformLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_series_path.ResumeLayout(False)
+        Me.tp_series_path.PerformLayout()
         Me.tp_sMusic.ResumeLayout(False)
-        Me.tp_sMusic.PerformLayout()
+        Me.tbc_music_settings.ResumeLayout(False)
+        Me.tp_music_scraper.ResumeLayout(False)
+        Me.tp_music_scraper.PerformLayout()
         CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_music_path.ResumeLayout(False)
+        Me.tp_music_path.PerformLayout()
         Me.gb1.ResumeLayout(False)
         Me.gb1.PerformLayout()
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
+        Me.pnl_background.ResumeLayout(False)
+        Me.pnl_background.PerformLayout()
         CType(Me.nud_delay, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nud_missing, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nud_scraping, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nud_downloads, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
-        Me.PerformLayout
+        Me.PerformLayout()
 
-End Sub
+    End Sub
     Friend WithEvents il_dvdart As System.Windows.Forms.ImageList
     Friend WithEvents cms_found As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents RefreshToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -2293,18 +2690,6 @@ End Sub
     Friend WithEvents MBID As System.Windows.Forms.ColumnHeader
     Friend WithEvents u_MBID As System.Windows.Forms.ColumnHeader
     Friend WithEvents cb_backgroundscraper As System.Windows.Forms.CheckBox
-    Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents cb_missing As System.Windows.Forms.ComboBox
-    Friend WithEvents nud_missing As System.Windows.Forms.NumericUpDown
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents cb_scraping As System.Windows.Forms.ComboBox
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents nud_scraping As System.Windows.Forms.NumericUpDown
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents mtb_cpu As System.Windows.Forms.MaskedTextBox
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents cb_delay As System.Windows.Forms.ComboBox
-    Friend WithEvents nud_delay As System.Windows.Forms.NumericUpDown
     Friend WithEvents b_movie_delete As System.Windows.Forms.Button
     Public WithEvents lv_movies_missing As System.Windows.Forms.ListView
     Friend WithEvents tp_artists As System.Windows.Forms.TabPage
@@ -2329,8 +2714,8 @@ End Sub
     Friend WithEvents lv_artist_banner As System.Windows.Forms.ListView
     Friend WithEvents PictureBox10 As System.Windows.Forms.PictureBox
     Friend WithEvents b_album_delete As System.Windows.Forms.Button
-    Friend WithEvents TabControl3 As System.Windows.Forms.TabControl
-    Friend WithEvents tp_movies_settings As System.Windows.Forms.TabPage
+    Friend WithEvents tbc_movie_settings As System.Windows.Forms.TabControl
+    Friend WithEvents tp_movies_scraper As System.Windows.Forms.TabPage
     Friend WithEvents tp_manual_dvdart As System.Windows.Forms.TabPage
     Friend WithEvents rb_t2 As System.Windows.Forms.RadioButton
     Friend WithEvents rb_t1 As System.Windows.Forms.RadioButton
@@ -2348,5 +2733,49 @@ End Sub
     Friend WithEvents il_backdrop As System.Windows.Forms.ImageList
     Friend WithEvents PictureBox13 As System.Windows.Forms.PictureBox
     Friend WithEvents m_Backdrop As System.Windows.Forms.ColumnHeader
+    Friend WithEvents gb3 As System.Windows.Forms.GroupBox
+    Friend WithEvents pnl_online As System.Windows.Forms.Panel
+    Friend WithEvents b_import As System.Windows.Forms.Button
+    Friend WithEvents cb_autoimport As System.Windows.Forms.CheckBox
+    Friend WithEvents PictureBox14 As System.Windows.Forms.PictureBox
+    Friend WithEvents tp_movies_path As System.Windows.Forms.TabPage
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents tb_movie_path As System.Windows.Forms.TextBox
+    Friend WithEvents b_movie_path As System.Windows.Forms.Button
+    Friend WithEvents tbc_series_settings As System.Windows.Forms.TabControl
+    Friend WithEvents tp_series_scraper As System.Windows.Forms.TabPage
+    Friend WithEvents tp_series_path As System.Windows.Forms.TabPage
+    Friend WithEvents tb_series_path As System.Windows.Forms.TextBox
+    Friend WithEvents b_series_path As System.Windows.Forms.Button
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents tbc_music_settings As System.Windows.Forms.TabControl
+    Friend WithEvents tp_music_scraper As System.Windows.Forms.TabPage
+    Friend WithEvents tp_music_path As System.Windows.Forms.TabPage
+    Friend WithEvents tb_music_path As System.Windows.Forms.TextBox
+    Friend WithEvents b_music_path As System.Windows.Forms.Button
+    Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents pnl_background As System.Windows.Forms.Panel
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents cb_delay As System.Windows.Forms.ComboBox
+    Friend WithEvents nud_delay As System.Windows.Forms.NumericUpDown
+    Friend WithEvents cb_missing As System.Windows.Forms.ComboBox
+    Friend WithEvents nud_missing As System.Windows.Forms.NumericUpDown
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents cb_scraping As System.Windows.Forms.ComboBox
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents nud_scraping As System.Windows.Forms.NumericUpDown
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents mtb_cpu As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents PictureBox15 As System.Windows.Forms.PictureBox
+    Friend WithEvents cb_Cover_movies As System.Windows.Forms.CheckBox
+    Friend WithEvents il_cover As System.Windows.Forms.ImageList
+    Friend WithEvents tp_Movie_Cover As System.Windows.Forms.TabPage
+    Friend WithEvents b_movie_deletecover As System.Windows.Forms.Button
+    Friend WithEvents lv_movie_cover As System.Windows.Forms.ListView
+    Friend WithEvents pb_movie_cover As System.Windows.Forms.PictureBox
+    Friend WithEvents m_Cover As System.Windows.Forms.ColumnHeader
+    Friend WithEvents nud_downloads As System.Windows.Forms.NumericUpDown
+    Friend WithEvents l_downloads As System.Windows.Forms.Label
+    Friend WithEvents cb_downloads As System.Windows.Forms.CheckBox
 
 End Class

@@ -81,6 +81,13 @@ Namespace My.Resources
             End Get
         End Property
         
+        Friend ReadOnly Property armageddon_cover() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("armageddon_cover", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
         Friend ReadOnly Property armageddon_dvdart() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("armageddon_dvdart", resourceCulture)
@@ -231,6 +238,13 @@ Namespace My.Resources
         Friend ReadOnly Property musicbrainz_picard() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("musicbrainz_picard", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        Friend ReadOnly Property myfilms() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("myfilms", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

@@ -34,21 +34,21 @@ Partial Class DVDArt_ManualUpload
         Me.b_clearart = New System.Windows.Forms.Button()
         Me.b_upload = New System.Windows.Forms.Button()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.b_preview_clearlogo = New System.Windows.Forms.Button()
-        Me.b_preview_clearart = New System.Windows.Forms.Button()
-        Me.b_preview_dvdart = New System.Windows.Forms.Button()
-        Me.b_process_dvdart = New System.Windows.Forms.Button()
-        Me.b_process_clearlogo = New System.Windows.Forms.Button()
-        Me.b_process_clearart = New System.Windows.Forms.Button()
         Me.cb_logos = New System.Windows.Forms.CheckBox()
         Me.cb_title = New System.Windows.Forms.CheckBox()
         Me.b_change_layout = New System.Windows.Forms.Button()
         Me.tt_change = New System.Windows.Forms.ToolTip(Me.components)
-        Me.b_process_backdrop = New System.Windows.Forms.Button()
-        Me.b_preview_backdrop = New System.Windows.Forms.Button()
         Me.b_backdrop = New System.Windows.Forms.Button()
         Me.tb_backdrop = New System.Windows.Forms.TextBox()
         Me.l_backdrop = New System.Windows.Forms.Label()
+        Me.b_process_backdrop = New System.Windows.Forms.Button()
+        Me.b_preview_backdrop = New System.Windows.Forms.Button()
+        Me.b_process_clearart = New System.Windows.Forms.Button()
+        Me.b_process_clearlogo = New System.Windows.Forms.Button()
+        Me.b_process_dvdart = New System.Windows.Forms.Button()
+        Me.b_preview_clearlogo = New System.Windows.Forms.Button()
+        Me.b_preview_clearart = New System.Windows.Forms.Button()
+        Me.b_preview_dvdart = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'b_dvdart
@@ -146,66 +146,6 @@ Partial Class DVDArt_ManualUpload
         Me.Label4.TabIndex = 25
         Me.Label4.Text = "Copyright © 2012, m3rcury"
         '
-        'b_preview_clearlogo
-        '
-        Me.b_preview_clearlogo.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
-        Me.b_preview_clearlogo.Location = New System.Drawing.Point(512, 108)
-        Me.b_preview_clearlogo.Name = "b_preview_clearlogo"
-        Me.b_preview_clearlogo.Size = New System.Drawing.Size(40, 40)
-        Me.b_preview_clearlogo.TabIndex = 20
-        Me.b_preview_clearlogo.UseVisualStyleBackColor = True
-        Me.b_preview_clearlogo.Visible = False
-        '
-        'b_preview_clearart
-        '
-        Me.b_preview_clearart.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
-        Me.b_preview_clearart.Location = New System.Drawing.Point(512, 62)
-        Me.b_preview_clearart.Name = "b_preview_clearart"
-        Me.b_preview_clearart.Size = New System.Drawing.Size(40, 40)
-        Me.b_preview_clearart.TabIndex = 19
-        Me.b_preview_clearart.UseVisualStyleBackColor = True
-        Me.b_preview_clearart.Visible = False
-        '
-        'b_preview_dvdart
-        '
-        Me.b_preview_dvdart.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
-        Me.b_preview_dvdart.Location = New System.Drawing.Point(512, 17)
-        Me.b_preview_dvdart.Name = "b_preview_dvdart"
-        Me.b_preview_dvdart.Size = New System.Drawing.Size(40, 40)
-        Me.b_preview_dvdart.TabIndex = 18
-        Me.b_preview_dvdart.UseVisualStyleBackColor = True
-        Me.b_preview_dvdart.Visible = False
-        '
-        'b_process_dvdart
-        '
-        Me.b_process_dvdart.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
-        Me.b_process_dvdart.Location = New System.Drawing.Point(512, 17)
-        Me.b_process_dvdart.Name = "b_process_dvdart"
-        Me.b_process_dvdart.Size = New System.Drawing.Size(40, 40)
-        Me.b_process_dvdart.TabIndex = 26
-        Me.b_process_dvdart.UseVisualStyleBackColor = True
-        Me.b_process_dvdart.Visible = False
-        '
-        'b_process_clearlogo
-        '
-        Me.b_process_clearlogo.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
-        Me.b_process_clearlogo.Location = New System.Drawing.Point(512, 108)
-        Me.b_process_clearlogo.Name = "b_process_clearlogo"
-        Me.b_process_clearlogo.Size = New System.Drawing.Size(40, 40)
-        Me.b_process_clearlogo.TabIndex = 27
-        Me.b_process_clearlogo.UseVisualStyleBackColor = True
-        Me.b_process_clearlogo.Visible = False
-        '
-        'b_process_clearart
-        '
-        Me.b_process_clearart.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
-        Me.b_process_clearart.Location = New System.Drawing.Point(512, 62)
-        Me.b_process_clearart.Name = "b_process_clearart"
-        Me.b_process_clearart.Size = New System.Drawing.Size(40, 40)
-        Me.b_process_clearart.TabIndex = 28
-        Me.b_process_clearart.UseVisualStyleBackColor = True
-        Me.b_process_clearart.Visible = False
-        '
         'cb_logos
         '
         Me.cb_logos.AutoSize = True
@@ -238,26 +178,6 @@ Partial Class DVDArt_ManualUpload
         Me.tt_change.SetToolTip(Me.b_change_layout, "Change DVDArt layout options")
         Me.b_change_layout.UseVisualStyleBackColor = True
         '
-        'b_process_backdrop
-        '
-        Me.b_process_backdrop.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
-        Me.b_process_backdrop.Location = New System.Drawing.Point(512, 154)
-        Me.b_process_backdrop.Name = "b_process_backdrop"
-        Me.b_process_backdrop.Size = New System.Drawing.Size(40, 40)
-        Me.b_process_backdrop.TabIndex = 39
-        Me.b_process_backdrop.UseVisualStyleBackColor = True
-        Me.b_process_backdrop.Visible = False
-        '
-        'b_preview_backdrop
-        '
-        Me.b_preview_backdrop.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
-        Me.b_preview_backdrop.Location = New System.Drawing.Point(512, 154)
-        Me.b_preview_backdrop.Name = "b_preview_backdrop"
-        Me.b_preview_backdrop.Size = New System.Drawing.Size(40, 40)
-        Me.b_preview_backdrop.TabIndex = 38
-        Me.b_preview_backdrop.UseVisualStyleBackColor = True
-        Me.b_preview_backdrop.Visible = False
-        '
         'b_backdrop
         '
         Me.b_backdrop.Location = New System.Drawing.Point(416, 163)
@@ -282,6 +202,86 @@ Partial Class DVDArt_ManualUpload
         Me.l_backdrop.Size = New System.Drawing.Size(53, 13)
         Me.l_backdrop.TabIndex = 35
         Me.l_backdrop.Text = "Backdrop"
+        '
+        'b_process_backdrop
+        '
+        Me.b_process_backdrop.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
+        Me.b_process_backdrop.Location = New System.Drawing.Point(512, 154)
+        Me.b_process_backdrop.Name = "b_process_backdrop"
+        Me.b_process_backdrop.Size = New System.Drawing.Size(40, 40)
+        Me.b_process_backdrop.TabIndex = 39
+        Me.b_process_backdrop.UseVisualStyleBackColor = True
+        Me.b_process_backdrop.Visible = False
+        '
+        'b_preview_backdrop
+        '
+        Me.b_preview_backdrop.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
+        Me.b_preview_backdrop.Location = New System.Drawing.Point(512, 154)
+        Me.b_preview_backdrop.Name = "b_preview_backdrop"
+        Me.b_preview_backdrop.Size = New System.Drawing.Size(40, 40)
+        Me.b_preview_backdrop.TabIndex = 38
+        Me.b_preview_backdrop.UseVisualStyleBackColor = True
+        Me.b_preview_backdrop.Visible = False
+        '
+        'b_process_clearart
+        '
+        Me.b_process_clearart.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
+        Me.b_process_clearart.Location = New System.Drawing.Point(512, 62)
+        Me.b_process_clearart.Name = "b_process_clearart"
+        Me.b_process_clearart.Size = New System.Drawing.Size(40, 40)
+        Me.b_process_clearart.TabIndex = 28
+        Me.b_process_clearart.UseVisualStyleBackColor = True
+        Me.b_process_clearart.Visible = False
+        '
+        'b_process_clearlogo
+        '
+        Me.b_process_clearlogo.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
+        Me.b_process_clearlogo.Location = New System.Drawing.Point(512, 108)
+        Me.b_process_clearlogo.Name = "b_process_clearlogo"
+        Me.b_process_clearlogo.Size = New System.Drawing.Size(40, 40)
+        Me.b_process_clearlogo.TabIndex = 27
+        Me.b_process_clearlogo.UseVisualStyleBackColor = True
+        Me.b_process_clearlogo.Visible = False
+        '
+        'b_process_dvdart
+        '
+        Me.b_process_dvdart.Image = Global.DVDArt_Plugin.My.Resources.Resources.process
+        Me.b_process_dvdart.Location = New System.Drawing.Point(512, 17)
+        Me.b_process_dvdart.Name = "b_process_dvdart"
+        Me.b_process_dvdart.Size = New System.Drawing.Size(40, 40)
+        Me.b_process_dvdart.TabIndex = 26
+        Me.b_process_dvdart.UseVisualStyleBackColor = True
+        Me.b_process_dvdart.Visible = False
+        '
+        'b_preview_clearlogo
+        '
+        Me.b_preview_clearlogo.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
+        Me.b_preview_clearlogo.Location = New System.Drawing.Point(512, 108)
+        Me.b_preview_clearlogo.Name = "b_preview_clearlogo"
+        Me.b_preview_clearlogo.Size = New System.Drawing.Size(40, 40)
+        Me.b_preview_clearlogo.TabIndex = 20
+        Me.b_preview_clearlogo.UseVisualStyleBackColor = True
+        Me.b_preview_clearlogo.Visible = False
+        '
+        'b_preview_clearart
+        '
+        Me.b_preview_clearart.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
+        Me.b_preview_clearart.Location = New System.Drawing.Point(512, 62)
+        Me.b_preview_clearart.Name = "b_preview_clearart"
+        Me.b_preview_clearart.Size = New System.Drawing.Size(40, 40)
+        Me.b_preview_clearart.TabIndex = 19
+        Me.b_preview_clearart.UseVisualStyleBackColor = True
+        Me.b_preview_clearart.Visible = False
+        '
+        'b_preview_dvdart
+        '
+        Me.b_preview_dvdart.Image = Global.DVDArt_Plugin.My.Resources.Resources.preview
+        Me.b_preview_dvdart.Location = New System.Drawing.Point(512, 17)
+        Me.b_preview_dvdart.Name = "b_preview_dvdart"
+        Me.b_preview_dvdart.Size = New System.Drawing.Size(40, 40)
+        Me.b_preview_dvdart.TabIndex = 18
+        Me.b_preview_dvdart.UseVisualStyleBackColor = True
+        Me.b_preview_dvdart.Visible = False
         '
         'DVDArt_ManualUpload
         '

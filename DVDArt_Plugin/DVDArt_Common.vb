@@ -7,11 +7,12 @@ Imports System.Data.SQLite
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
+Imports System.Reflection
 
 Public Class DVDArt_Common
 
-    Public Shared _version, _pre_version, folder(2, 3, 1), lang(4), langcode(4) As String
-    Public Shared WithEvents bw_download0, bw_download1, bw_download2, bw_download3, bw_download4, bw_download5, bw_download6, bw_download7 As New BackgroundWorker
+    Public Shared _version, _pre_version, folder(2, 4, 1), lang(4), langcode(4), _coversize As String
+    Public Shared WithEvents bw_download0, bw_download1, bw_download2, bw_download3, bw_download4, bw_download5, bw_download6, bw_download7, bw_download8, bw_download9 As New BackgroundWorker
     Public Shared _temp As String = Environ("temp")
 
     Public Shared Sub wait(ByVal milliseconds As Long)
@@ -222,17 +223,18 @@ Public Class DVDArt_Common
         Dim parseHD_l As String = Nothing
         Dim parseHD_c As String = Nothing
         Dim parse_bd As String = Nothing
-        Dim details(7, 0), returndetails(5, 0), parsestring(3), keyword(6) As String
-        Dim starting(3), startHD_l, startHD_c, start_bd, startp, endp, len, x, y, i, j As Integer
+        Dim parse_ps As String = Nothing
+        Dim details(9, 0), returndetails(9, 0), parsestring(4), keyword(8) As String
+        Dim starting(4), startHD_l, startHD_c, start_bd, start_ps, startp, endp, len, x, y, i, j As Integer
 
         If type = "movie" Then
-            keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """backdrops"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebackground"":"}
+            keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """backdrops"":", "posters"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebackground"":", "movieposter"":"}
         ElseIf type = "series" Then
-            keyword = {"""hdtvlogo"":", """hdclearart"":", "**n/a**", "**n/a**", """clearart"":", """clearlogo"":", "**n/a**"}
+            keyword = {"""hdtvlogo"":", """hdclearart"":", "**n/a**", "**n/a**", "**n/a**", """clearart"":", """clearlogo"":", "**n/a**", "**n/a**"}
         ElseIf type = "artist" Then
-            keyword = {"""hdmusiclogo"":", "**n/a**", "**n/a**", "**n/a**", """musicbanner"":", """musiclogo"":", "**n/a**"}
+            keyword = {"""hdmusiclogo"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**", """musicbanner"":", """musiclogo"":", "**n/a**", "**n/a**"}
         ElseIf type = "music" Then
-            keyword = {"**n/a**", "**n/a**", "**n/a**", """cdart"":", "**n/a**", "**n/a**", "**n/a**"}
+            keyword = {"**n/a**", "**n/a**", "**n/a**", "**n/a**", """cdart"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**"}
         End If
 
         ' check if there are HD logos and if yes, store in a temporary variable to later on merge with movielogos
@@ -240,6 +242,7 @@ Public Class DVDArt_Common
         startHD_l = InStr(jsonresponse, keyword(0))
         startHD_c = InStr(jsonresponse, keyword(1))
         start_bd = InStr(jsonresponse, keyword(2))
+        start_ps = InStr(jsonresponse, keyword(3))
 
         If startHD_l > 0 Then
             parseHD_l = Mid(jsonresponse, startHD_l, InStr(startHD_l, jsonresponse, "]") - startHD_l)
@@ -253,10 +256,14 @@ Public Class DVDArt_Common
             parse_bd = Mid(jsonresponse, start_bd, InStr(start_bd, jsonresponse, "]") - start_bd)
         End If
 
+        If start_ps > 0 Then
+            parse_ps = Mid(jsonresponse, start_ps, InStr(start_ps, jsonresponse, "]") - start_ps)
+        End If
+
         ' find the starting place of the respective sections
 
         For i = 0 To starting.Count - 1
-            starting(i) = InStr(jsonresponse, keyword(i + 3))
+            starting(i) = InStr(jsonresponse, keyword(i + 4))
         Next
 
         ' split the jsonresponse to the respective sections
@@ -284,6 +291,11 @@ Public Class DVDArt_Common
             If starting(3) = 0 Then starting(3) = start_bd
         End If
 
+        If start_ps > 0 Then
+            parsestring(4) = Trim(parsestring(4)) & parse_ps.Replace(keyword(3), keyword(8))
+            If starting(4) = 0 Then starting(4) = start_ps
+        End If
+
         For i = 0 To starting.Count - 1
 
             If starting(i) > 0 Then
@@ -304,7 +316,7 @@ Public Class DVDArt_Common
 
                         If startp > 0 Then
 
-                            If x >= y Then ReDim Preserve details(7, x)
+                            If x >= y Then ReDim Preserve details(9, x)
 
                             startp += 6
                             endp = InStr(startp, parsestring(i), """,")
@@ -361,7 +373,7 @@ Public Class DVDArt_Common
 
         If language <> "##" Then
 
-            For x = 0 To (details.Length / 6) - 1
+            For x = 0 To (details.Length / 8) - 1
                 For y = 1 To 5 Step 2
                     If InStr(details(y, x), "LANG:" & language) > 0 Then
 
@@ -377,7 +389,7 @@ Public Class DVDArt_Common
 
             ' if no artwork found for preferred language, check if there is anything in english
             If language <> "EN" Then
-                For x = 0 To (details.Length / 6) - 1
+                For x = 0 To (details.Length / 8) - 1
                     For y = 1 To 5 Step 2
                         If InStr(details(y, x), "LANG:EN") > 0 Then
 
@@ -496,7 +508,7 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Sub bw_download_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork
+    Public Shared Sub bw_download_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork, bw_download6.DoWork, bw_download7.DoWork, bw_download8.DoWork, bw_download9.DoWork
 
         Dim parm As String = e.Argument
         Dim url, path As String
@@ -542,13 +554,21 @@ Public Class DVDArt_Common
                 Dim database As String = Nothing
                 Dim t As String = Nothing
                 Get_Paths(database, t)
-                updateBackdrop(database, IO.Path.GetFileNameWithoutExtension(path), path)
+
+                If InStr(url, "/w" & _coversize & "/") > 0 Or InStr(url, "movieposter") > 0 Or InStr(LCase(path), "\covers\") > 0 Then
+                    If InStr(LCase(path), "\fullsize\") > 0 Then
+                        updateMovingPicturesDB(database, "cover", IO.Path.GetFileNameWithoutExtension(path), path)
+                    ElseIf InStr(LCase(path), "covers\thumbs\") > 0 Then
+                        updateMovingPicturesDB(database, "coverthumb", IO.Path.GetFileNameWithoutExtension(path), path)
+                    End If
+                Else
+                    If InStr(LCase(path), "\backdrops\thumbs\") = 0 Then updateMovingPicturesDB(database, "backdrop", IO.Path.GetFileNameWithoutExtension(path), path)
+                End If
+            End If
 
             End If
 
-        End If
-
-        e.Result = "DONE"
+            e.Result = "DONE"
 
     End Sub
 
@@ -590,7 +610,7 @@ Public Class DVDArt_Common
                 url = parse_music(jsonresponse, LCase(title.Replace(" ", "-")))
             End If
 
-            For y = 0 To 3
+            For y = 0 To 4
 
                 If type = "movie" Then
                     If y < 3 Then
@@ -615,7 +635,11 @@ Public Class DVDArt_Common
 
                 If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
                     If InStr(url(y * 2, 0), "/w1920/") > 0 Then
-                        parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w300/")
+                        If y = 3 Then
+                            parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w300/")
+                        ElseIf y = 4 Then
+                            parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w" & _coversize & "/")
+                        End If
                     Else
                         parm = thumbpath & "|" & url(y * 2, 0) & "/preview"
                     End If
@@ -637,6 +661,10 @@ Public Class DVDArt_Common
                         ElseIf Not bw_download6.IsBusy Then
                             bw_download6.WorkerSupportsCancellation = True
                             bw_download6.RunWorkerAsync(parm)
+                            Exit Do
+                        ElseIf Not bw_download8.IsBusy Then
+                            bw_download8.WorkerSupportsCancellation = True
+                            bw_download8.RunWorkerAsync(parm)
                             Exit Do
                         Else
                             wait(250)
@@ -666,6 +694,10 @@ Public Class DVDArt_Common
                         ElseIf Not bw_download7.IsBusy Then
                             bw_download7.WorkerSupportsCancellation = True
                             bw_download7.RunWorkerAsync(parm)
+                            Exit Do
+                        ElseIf Not bw_download9.IsBusy Then
+                            bw_download9.WorkerSupportsCancellation = True
+                            bw_download9.RunWorkerAsync(parm)
                             Exit Do
                         Else
                             wait(250)
@@ -1060,9 +1092,9 @@ Public Class DVDArt_Common
 
     End Function
 
-    Private Shared Function getBackdropPath(ByVal database As String, ByVal thumbs As String, ByVal key As String) As String
+    Private Shared Function readMovingPicturesDB(ByVal database As String, ByVal thumbs As String, ByVal key As String) As String
 
-        Dim backdroppath As String = Nothing
+        Dim value As String = Nothing
 
         If FileSystem.FileExists(database & "\movingpictures.db3") Then
 
@@ -1076,17 +1108,21 @@ Public Class DVDArt_Common
             SQLcommand.CommandText = "SELECT value FROM settings WHERE key = '" & key & "'"
             SQLreader = SQLcommand.ExecuteReader()
 
-            backdroppath = Right(SQLreader(0), Len(SQLreader(0)) - Len(thumbs)) & "\"
+            If InStr(key, "_folder") > 0 Then
+                value = Right(SQLreader(0), Len(SQLreader(0)) - Len(thumbs)) & "\"
+            Else
+                value = SQLreader(0)
+            End If
 
             SQLconnect.Close()
 
         End If
 
-        Return backdroppath
+            Return value
 
     End Function
 
-    Public Shared Sub updateBackdrop(ByVal database As String, ByVal key As String, ByVal value As String)
+    Public Shared Sub updateMovingPicturesDB(ByVal database As String, ByVal field As String, ByVal key As String, ByVal value As String)
 
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
@@ -1094,45 +1130,64 @@ Public Class DVDArt_Common
         SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "UPDATE movie_info SET backdropfullpath = '" & value & "' WHERE imdb_id = '" & key & "'"
+        SQLcommand.CommandText = "UPDATE movie_info SET " & field & "fullpath = '" & value & "' WHERE imdb_id = '" & key & "'"
         SQLcommand.ExecuteNonQuery()
+
+        If field = "cover" Then
+            SQLcommand.CommandText = "UPDATE movie_info SET alternatecovers = alternatecovers||'" & value & "|' WHERE imdb_id = '" & key & "'"
+            SQLcommand.ExecuteNonQuery()
+        End If
+
         SQLconnect.Close()
 
     End Sub
 
-    Public Shared Sub Initialize(ByVal database As String, ByVal thumbs As String)
+    Public Shared Sub Initialize(ByVal database As String, ByVal thumbs As String, ByVal Movies As String, ByVal Series As String, ByVal Music As String)
 
         ' initialize version
         _pre_version = "v1.0.1.2"
-        _version = "v1.0.1.8"
+        _version = "v1.0.1.9"
+
+        Movies = Right(Movies, Len(Movies) - Len(thumbs))
+        Series = Right(Series, Len(Series) - Len(thumbs))
+        Music = Right(Music, Len(Music) - Len(thumbs))
 
         ' initialize folder paths
-        folder(0, 0, 0) = "\MovingPictures\DVDArt\FullSize\"
-        folder(0, 0, 1) = "\MovingPictures\DVDArt\Thumbs\"
-        folder(0, 1, 0) = "\MovingPictures\ClearArt\FullSize\"
-        folder(0, 1, 1) = "\MovingPictures\ClearArt\Thumbs\"
-        folder(0, 2, 0) = "\MovingPictures\ClearLogo\FullSize\"
-        folder(0, 2, 1) = "\MovingPictures\ClearLogo\Thumbs\"
-        folder(0, 3, 0) = getBackdropPath(database, thumbs, "backdrop_folder")
-        folder(0, 3, 1) = getBackdropPath(database, thumbs, "backdrop_thumbs_folder")
+        folder(0, 0, 0) = Movies & "\DVDArt\FullSize\"
+        folder(0, 0, 1) = Movies & "\DVDArt\Thumbs\"
+        folder(0, 1, 0) = Movies & "\ClearArt\FullSize\"
+        folder(0, 1, 1) = Movies & "\ClearArt\Thumbs\"
+        folder(0, 2, 0) = Movies & "\ClearLogo\FullSize\"
+        folder(0, 2, 1) = Movies & "\ClearLogo\Thumbs\"
+        folder(0, 3, 0) = readMovingPicturesDB(database, thumbs, "backdrop_folder")
+        folder(0, 3, 1) = readMovingPicturesDB(database, thumbs, "backdrop_thumbs_folder")
+        folder(0, 4, 0) = readMovingPicturesDB(database, thumbs, "cover_art_folder")
+        folder(0, 4, 1) = readMovingPicturesDB(database, thumbs, "cover_thumbs_folder")
         folder(1, 0, 0) = Nothing
         folder(1, 0, 1) = Nothing
-        folder(1, 1, 0) = "\TVSeries\ClearArt\FullSize\"
-        folder(1, 1, 1) = "\TVSeries\ClearArt\Thumbs\"
-        folder(1, 2, 0) = "\TVSeries\ClearLogo\FullSize\"
-        folder(1, 2, 1) = "\TVSeries\ClearLogo\Thumbs\"
+        folder(1, 1, 0) = Series & "\ClearArt\FullSize\"
+        folder(1, 1, 1) = Series & "\ClearArt\Thumbs\"
+        folder(1, 2, 0) = Series & "\ClearLogo\FullSize\"
+        folder(1, 2, 1) = Series & "\ClearLogo\Thumbs\"
         folder(1, 3, 0) = Nothing
         folder(1, 3, 1) = Nothing
-        folder(2, 0, 0) = "\Music\CDArt\FullSize\"
-        folder(2, 0, 1) = "\Music\CDArt\Thumbs\"
-        folder(2, 1, 0) = "\Music\Banner\FullSize\"
-        folder(2, 1, 1) = "\Music\Banner\Thumbs\"
-        folder(2, 2, 0) = "\Music\ClearLogo\FullSize\"
-        folder(2, 2, 1) = "\Music\ClearLogo\Thumbs\"
+        folder(1, 4, 0) = Nothing
+        folder(1, 4, 1) = Nothing
+        folder(2, 0, 0) = Music & "\CDArt\FullSize\"
+        folder(2, 0, 1) = Music & "\CDArt\Thumbs\"
+        folder(2, 1, 0) = Music & "\Banner\FullSize\"
+        folder(2, 1, 1) = Music & "\Banner\Thumbs\"
+        folder(2, 2, 0) = Music & "\ClearLogo\FullSize\"
+        folder(2, 2, 1) = Music & "\ClearLogo\Thumbs\"
         folder(2, 3, 0) = Nothing
         folder(2, 3, 1) = Nothing
+        folder(2, 4, 0) = Nothing
+        folder(2, 4, 1) = Nothing
 
-        ' initialize language array
+        'set cover size
+        _coversize = "600"
+
+        'initialize language array
         lang = {"English", "Deutsch", "Française", "Italiano", "русский", "Any"}
         langcode = {"EN", "DE", "FR", "IT", "RU", "##"}
 
@@ -1175,6 +1230,18 @@ Public Class DVDArt_Common
             image.Save(png)
             image.Dispose()
         End If
+
+        'Build the path of the assembly from where it has to be loaded.
+        Dim strTempAssmbPath As String
+        strTempAssmbPath = Config.GetFile(Config.Dir.Plugins, "windows\MyFilms.dll")
+
+        Dim MyAssembly As [Assembly]
+
+        'Load the assembly from the specified path. 
+        Try
+            MyAssembly = [Assembly].LoadFrom(strTempAssmbPath)
+        Catch ex As Exception
+        End Try
 
     End Sub
 
