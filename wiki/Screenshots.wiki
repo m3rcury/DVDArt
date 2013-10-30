@@ -7,13 +7,22 @@ http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_1.jpg
 ===Set default layout for manually created DVDArt===
 http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_2.jpg
 
+===Set default download path===
+http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_3.jpg
+
 ==Series Settings==
 ===Select which artwork to scrape===
 http://dvdart.googlecode.com/svn/wiki/screens/Settings_series.jpg
 
+===Set default download path===
+http://dvdart.googlecode.com/svn/wiki/screens/Settings_series_2.jpg
+
 ==Music Settings==
 ===Select which artwork to scrape===
 http://dvdart.googlecode.com/svn/wiki/screens/Settings_music.jpg
+
+===Set default download path===
+http://dvdart.googlecode.com/svn/wiki/screens/Settings_music_2.jpg
 
 =Movies=
 
@@ -25,6 +34,12 @@ http://dvdart.googlecode.com/svn/wiki/screens/movies_2.jpg
 
 ===Clear Logo===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_3.jpg
+
+===Backdrop===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_4.jpg
+
+===Cover===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_5.jpg
 
 ===Movies missing artwork===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_missing_cm.jpg
