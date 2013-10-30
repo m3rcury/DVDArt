@@ -244,6 +244,9 @@
   <data name="cdart_mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\cdart_mask.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="myfilms" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\myfilms.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="armageddon_dvdart" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\armageddon_dvdart.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -260,4 +263,7 @@
     <value>..\Resources\rescan_movies.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="armageddon_cover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\armageddon_cover.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

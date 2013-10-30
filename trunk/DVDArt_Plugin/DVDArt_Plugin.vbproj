@@ -67,16 +67,8 @@
       <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Cornerstone">
-      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Cornerstone.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Databases">
-      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="MovingPictures">
-      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\MovingPictures.dll</HintPath>
+    <Reference Include="MyFilms">
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\MyFilms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -153,6 +145,10 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ListViewColumnSorter.vb" />
+    <Compile Include="My Project\Application1.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -222,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\armageddon_backdrop.jpg" />
+    <None Include="Resources\armageddon_cover.jpg" />
     <Content Include="Resources\cdart.png" />
     <Content Include="Resources\cdart_mask.png" />
     <Content Include="Resources\convert.png" />
@@ -235,6 +232,7 @@
     <None Include="Resources\lastfm.gif" />
     <Content Include="Resources\music.png" />
     <None Include="Resources\musicbrainz-picard.png" />
+    <None Include="Resources\myfilms.png" />
     <Content Include="Resources\na.png" />
     <Content Include="Resources\process.png" />
     <Content Include="Resources\queen_banner.jpg" />
@@ -274,17 +272,6 @@
     <Content Include="Resources\movies.ico" />
     <None Include="Resources\rescan_movies.png" />
     <None Include="Resources\movie_search.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="Shell32">
-      <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -439,7 +439,7 @@ Public Class DVDArt_ManualUpload
 
             Dim database As String = Nothing
             DVDArt_Common.Get_Paths(database, thumbs)
-            DVDArt_Common.updateBackdrop(database, _imagename, fullsize)
+            DVDArt_Common.updateMovingPicturesDB(database, "backdrop", _imagename, fullsize)
 
         End If
 
@@ -457,6 +457,10 @@ Public Class DVDArt_ManualUpload
 
     Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.CheckedChanged, cb_logos.CheckedChanged
         b_change_layout.Enabled = cb_title.Checked Or cb_logos.Checked
+    End Sub
+
+    Private Sub tb_dvdart_TextChanged(sender As System.Object, e As System.EventArgs) Handles tb_dvdart.TextChanged
+
     End Sub
 
 End Class

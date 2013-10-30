@@ -1,13 +1,7 @@
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
-E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Cornerstone.dll
-E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MovingPictures.dll
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\System.Data.SQLite.dll
-E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Cornerstone.MP.dll
-E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Interop.Shell32.dll
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\ResolveAssemblyReference.cache
-E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\Interop.Shell32.dll
-E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.ResolveComReference.cache
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_GUI.resources
@@ -20,6 +14,9 @@ E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\ResGen.write.1.tlog
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DirectShowLib.dll
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\SubCentral.dll
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MyFilms.dll
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll.config
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll
 E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.dll
