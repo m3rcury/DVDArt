@@ -10,6 +10,9 @@ http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_2.jpg
 ===Set default download path===
 http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_3.jpg
 
+===Set Actors/Writers/Directors download path===
+http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_4.jpg
+
 ==Series Settings==
 ===Select which artwork to scrape===
 http://dvdart.googlecode.com/svn/wiki/screens/Settings_series.jpg
@@ -55,6 +58,15 @@ http://dvdart.googlecode.com/svn/wiki/screens/movies_use_cover_art.jpg
 
 ===Preview your creation===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_manual_upload_preview.jpg
+
+===Actors/Writers/Directors photos===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_person_found.jpg
+
+===Actors/Writers/Directors missing photos===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_person_missing.jpg
+
+===Actors/Writers/Directors manual upload===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_person_manual_upload.jpg
 
 
 =Series=
