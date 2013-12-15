@@ -8,7 +8,7 @@ In order to facilitate skin file modding, a number of property fields have been 
 = Details =
 
   * *#MovingPictures.DVDArt*
- This property holds the folder under which full size DVDArt images are stored.  This resolves to *_thumbspath_\MovingPictures\DVDArt\FullSize*
+ This property holds the folder under which full size DVDArt images are stored.  By default, this resolves to *_thumbspath_\MovingPictures\DVDArt\FullSize*
 
  In a skin file, this can be used as follows:
  {{{
@@ -30,7 +30,7 @@ In order to facilitate skin file modding, a number of property fields have been 
 }}}
 
   * *#MovingPictures.ClearArt*
- This property holds the folder under which full size ClearArt images are stored.  This resolves to *_thumbspath_\MovingPictures\ClearArt\FullSize*
+ This property holds the folder under which full size ClearArt images are stored.  By default, this resolves to *_thumbspath_\MovingPictures\ClearArt\FullSize*
 
  In a skin file, this can be used as follows:
  {{{
@@ -51,7 +51,7 @@ In order to facilitate skin file modding, a number of property fields have been 
 }}}
 
   * *#MovingPictures.ClearLogo*
- This property holds the folder under which full size ClearLogo images are stored.  This resolves to *_thumbspath_\MovingPictures\ClearLogo\FullSize*
+ This property holds the folder under which full size ClearLogo images are stored.  By default, this resolves to *_thumbspath_\MovingPictures\ClearLogo\FullSize*
 
  In a skin file, this can be used as follows:
  {{{
@@ -72,8 +72,46 @@ In order to facilitate skin file modding, a number of property fields have been 
 <!-- m3rcury - ClearLogo -->
 }}}
 
+  * *#Person.Thumb*
+ This property holds the folder under which Actors, Writers and Directors photos are stored.  By default, this resolves to *_thumbspath_\Actors*
+
+ In a skin file, this can be used as follows:
+ {{{
+<!-- m3rcury -->
+    <!-- Selected Category Actors/Directors/Writers Facade Item --> 
+    <control>
+       <description>Default Actors-Directors-Writers Image</description>
+       <type>image</type>
+       <id>201</id>
+       <posX>225</posX>
+       <posY>495</posY>
+       <width>511</width>
+       <height>511</height>
+       <texture>#Person.Thumb\Actor.png</texture>
+       <keepaspectratio>yes</keepaspectratio>
+       <animation effect="fade" time="250">WindowOpen</animation>
+       <animation effect="fade" time="250">WindowClose</animation>
+       <visible>control.isvisible(51)+!Control.HasThumb(100)+!Control.HasThumb(200)</visible>
+     </control>
+     <control>
+       <description>Actors Image</description>
+       <type>image</type>
+       <id>200</id>
+       <posX>225</posX>
+       <posY>495</posY>
+       <width>511</width>
+       <height>511</height>
+       <texture>#Person.Thumb\#MovingPictures.SelectedNode.FileFriendlyName.png</texture>
+       <keepaspectratio>yes</keepaspectratio>
+       <animation effect="fade" time="250">WindowOpen</animation>
+       <animation effect="fade" time="250">WindowClose</animation>
+       <visible>control.isvisible(51)</visible>
+    </control>
+<!-- m3rcury -->
+}}}
+
   * *#TVSeries.ClearArt*
- This property holds the folder under which full size ClearArt images are stored.  This resolves to *_thumbspath_\TVSeries\ClearArt\FullSize*
+ This property holds the folder under which full size ClearArt images are stored.  By default, this resolves to *_thumbspath_\TVSeries\ClearArt\FullSize*
 
  In a skin file, this can be used as follows:
  {{{
@@ -92,7 +130,7 @@ In order to facilitate skin file modding, a number of property fields have been 
 }}}
 
   * *#TVSeries.ClearLogo*
- This property holds the folder under which full size ClearLogo images are stored.  This resolves to *_thumbspath_\TVSeries\ClearLogo\FullSize*
+ This property holds the folder under which full size ClearLogo images are stored.  By default, this resolves to *_thumbspath_\TVSeries\ClearLogo\FullSize*
 
  In a skin file, this can be used as follows:
  {{{
@@ -123,12 +161,12 @@ In order to facilitate skin file modding, a number of property fields have been 
 }}}
 
   * *#Music.CDArt*
- This property holds the folder under which full size Album CDArt images are stored.  This resolves to *_thumbspath_\Music\CDArt\FullSize*
+ This property holds the folder under which full size Album CDArt images are stored.  By default, this resolves to *_thumbspath_\Music\CDArt\FullSize*
 
 
   * *#Music.Banner*
- This property holds the folder under which full size Artist Banner images are stored.  This resolves to *_thumbspath_\Music\Banner\FullSize*
+ This property holds the folder under which full size Artist Banner images are stored.  By default, this resolves to *_thumbspath_\Music\Banner\FullSize*
 
 
   * *#Music.ClearLogo*
- This property holds the folder under which full size Artist Clear Logo images are stored.  This resolves to *_thumbspath_\Music\ClearLogo\FullSize*
+ This property holds the folder under which full size Artist Clear Logo images are stored.  By default, this resolves to *_thumbspath_\Music\ClearLogo\FullSize*
