@@ -39,6 +39,7 @@
     Private Sub DVDArt_Preview_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
 
         Dim imagesize As String = DVDArt_Common.getSize(IO.Path.GetDirectoryName(_path) & "\" & IO.Path.GetFileName(_path))
+        Dim i_dim() As String = Split(imagesize, "x")
 
         pb_preview.SizeMode = PictureBoxSizeMode.CenterImage
 
@@ -66,6 +67,12 @@
             pb_preview.Width = 400
             pb_preview.Height = 155
             l_copyright.Top = 155
+        ElseIf i_dim(0) = "300" Or i_dim(1) = "400" Then
+            Me.Width = 415
+            Me.Height = 546
+            pb_preview.Width = 400
+            pb_preview.Height = 500
+            l_copyright.Top = 500
         Else
             pb_preview.SizeMode = PictureBoxSizeMode.StretchImage
             Me.Width = 1290

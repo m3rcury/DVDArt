@@ -112,7 +112,7 @@ Public Class DVDArt_CoverArt
         CropImage.Save(tempfile)
         CropImage.Dispose()
 
-        DVDArt_Common.create_CoverArt(tempfile, _imdb_id, _movie_name, cb_title.Checked, cb_logos.Checked, this_template_type, preview, previewfile)
+        DVDArt_Common.create_CoverArt(tempfile, _imdb_id, _movie_name, cb_title.SelectedIndex, cb_logos.Checked, this_template_type, preview, previewfile)
 
         If FileIO.FileSystem.FileExists(tempfile) Then
             Do While DVDArt_Common.FileInUse(tempfile)
@@ -188,8 +188,8 @@ Public Class DVDArt_CoverArt
 
     End Sub
 
-    Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.CheckedChanged, cb_logos.CheckedChanged
-        b_change_layout.Enabled = cb_title.Checked Or cb_logos.Checked
+    Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.TextChanged, cb_logos.CheckedChanged
+        b_change_layout.Enabled = cb_title.SelectedIndex > 0 Or cb_logos.Checked
     End Sub
 
 End Class
