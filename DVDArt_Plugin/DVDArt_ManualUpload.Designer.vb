@@ -35,7 +35,6 @@ Partial Class DVDArt_ManualUpload
         Me.b_upload = New System.Windows.Forms.Button()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.cb_logos = New System.Windows.Forms.CheckBox()
-        Me.cb_title = New System.Windows.Forms.CheckBox()
         Me.b_change_layout = New System.Windows.Forms.Button()
         Me.tt_change = New System.Windows.Forms.ToolTip(Me.components)
         Me.b_backdrop = New System.Windows.Forms.Button()
@@ -49,6 +48,7 @@ Partial Class DVDArt_ManualUpload
         Me.b_preview_clearlogo = New System.Windows.Forms.Button()
         Me.b_preview_clearart = New System.Windows.Forms.Button()
         Me.b_preview_dvdart = New System.Windows.Forms.Button()
+        Me.cb_title = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'b_dvdart
@@ -149,24 +149,13 @@ Partial Class DVDArt_ManualUpload
         'cb_logos
         '
         Me.cb_logos.AutoSize = True
-        Me.cb_logos.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_logos.Location = New System.Drawing.Point(416, 237)
+        Me.cb_logos.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_logos.Location = New System.Drawing.Point(436, 230)
         Me.cb_logos.Name = "cb_logos"
-        Me.cb_logos.Size = New System.Drawing.Size(102, 20)
+        Me.cb_logos.Size = New System.Drawing.Size(116, 17)
         Me.cb_logos.TabIndex = 33
-        Me.cb_logos.Text = "Add Logos"
+        Me.cb_logos.Text = "Add DVD Logos"
         Me.cb_logos.UseVisualStyleBackColor = True
-        '
-        'cb_title
-        '
-        Me.cb_title.AutoSize = True
-        Me.cb_title.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_title.Location = New System.Drawing.Point(416, 211)
-        Me.cb_title.Name = "cb_title"
-        Me.cb_title.Size = New System.Drawing.Size(136, 20)
-        Me.cb_title.TabIndex = 32
-        Me.cb_title.Text = "Add Movie Title"
-        Me.cb_title.UseVisualStyleBackColor = True
         '
         'b_change_layout
         '
@@ -283,11 +272,23 @@ Partial Class DVDArt_ManualUpload
         Me.b_preview_dvdart.UseVisualStyleBackColor = True
         Me.b_preview_dvdart.Visible = False
         '
+        'cb_title
+        '
+        Me.cb_title.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_title.FormattingEnabled = True
+        Me.cb_title.Items.AddRange(New Object() {"None", "Add Movie text title", "Add Movie Clearlogo title"})
+        Me.cb_title.Location = New System.Drawing.Point(379, 203)
+        Me.cb_title.Name = "cb_title"
+        Me.cb_title.Size = New System.Drawing.Size(173, 21)
+        Me.cb_title.TabIndex = 42
+        Me.cb_title.Text = "None"
+        '
         'DVDArt_ManualUpload
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(570, 277)
+        Me.Controls.Add(Me.cb_title)
         Me.Controls.Add(Me.b_process_backdrop)
         Me.Controls.Add(Me.b_preview_backdrop)
         Me.Controls.Add(Me.b_backdrop)
@@ -295,7 +296,6 @@ Partial Class DVDArt_ManualUpload
         Me.Controls.Add(Me.l_backdrop)
         Me.Controls.Add(Me.b_change_layout)
         Me.Controls.Add(Me.cb_logos)
-        Me.Controls.Add(Me.cb_title)
         Me.Controls.Add(Me.b_process_clearart)
         Me.Controls.Add(Me.b_process_clearlogo)
         Me.Controls.Add(Me.b_process_dvdart)
@@ -341,7 +341,6 @@ Partial Class DVDArt_ManualUpload
     Friend WithEvents b_process_clearlogo As System.Windows.Forms.Button
     Friend WithEvents b_process_clearart As System.Windows.Forms.Button
     Friend WithEvents cb_logos As System.Windows.Forms.CheckBox
-    Friend WithEvents cb_title As System.Windows.Forms.CheckBox
     Friend WithEvents b_change_layout As System.Windows.Forms.Button
     Friend WithEvents tt_change As System.Windows.Forms.ToolTip
     Friend WithEvents b_process_backdrop As System.Windows.Forms.Button
@@ -349,4 +348,5 @@ Partial Class DVDArt_ManualUpload
     Friend WithEvents b_backdrop As System.Windows.Forms.Button
     Friend WithEvents tb_backdrop As System.Windows.Forms.TextBox
     Friend WithEvents l_backdrop As System.Windows.Forms.Label
+    Friend WithEvents cb_title As System.Windows.Forms.ComboBox
 End Class

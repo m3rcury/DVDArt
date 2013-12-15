@@ -15,7 +15,14 @@
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{9d3d7efb-e025-422a-8fdd-f24ccf451cfd}-DVDArt_Plugin.dll</ZipFileName>
-              <DestinationFilename>%Base%\plugins\process\DVDArt_Plugin.dll</DestinationFilename>
+              <DestinationFilename>%Plugins%\process\DVDArt_Plugin.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_PluginLauncher.exe</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9332046b-cf06-4845-a417-2b3d638e1773}-DVDArt_PluginLauncher.exe</ZipFileName>
+              <DestinationFilename>%Base%\DVDArt_PluginLauncher.exe</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -134,6 +141,34 @@ Click Next to continue or Cancel to exit Setup.</Value>
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
+            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="Default">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Desktop%\DVDArt.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Base%\DVDArt_PluginLauncher.exe</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>DVDArt launcher</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
           </Items>
         </Actions>
         <IncludedGroups />
@@ -192,13 +227,30 @@ Click Next to continue or Cancel to exit Setup.</Value>
           <Revision>27644</Revision>
         </MaxVersion>
         <WarnOnly>false</WarnOnly>
-        <Message>This version of DVDArt_Plugin requires MediaPortal 1.4.0 Beta or higher!</Message>
+        <Message>This version of DVDArt_Plugin requires MediaPortal 1.6.0 Beta or higher!</Message>
         <Name>MediaPortal</Name>
       </DependencyItem>
     </Items>
   </Dependencies>
   <PluginDependencies>
-    <Items />
+    <Items>
+      <PluginDependencyItem AssemblyName="DVDArt_Plugin.dll">
+        <CompatibleVersion>
+          <Items>
+            <CompatibleVersionItem>
+              <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+              <DesignedForVersion>1.3.100.0</DesignedForVersion>
+            </CompatibleVersionItem>
+          </Items>
+        </CompatibleVersion>
+        <SubSystemsUsed>
+          <Items>
+            <SubSystemItem Name="MP.Config" />
+            <SubSystemItem Name="MP.SkinEngine" />
+          </Items>
+        </SubSystemsUsed>
+      </PluginDependencyItem>
+    </Items>
   </PluginDependencies>
   <GeneralInfo>
     <Name>DVDArt_Plugin</Name>
@@ -210,10 +262,10 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>1</Major>
       <Minor>0</Minor>
-      <Build>1</Build>
-      <Revision>9</Revision>
+      <Build>2</Build>
+      <Revision>0</Revision>
     </Version>
-    <ExtensionDescription>This plugin scans your MovingPictures, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art and Banners  from the fanart.tv website where applicable.</ExtensionDescription>
+    <ExtensionDescription>This plugin scans your MovingPictures, MyFilms, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art, Banners, Actor, Writer and Director images from the fanart.tv and themoviedb.org websites where applicable.</ExtensionDescription>
     <VersionDescription>A scraper that srapes fanart.tv for DVD cover art, Clear Art, Clear Logo, CD cover art and Banners of you movie collection in MovingPictures, series collection in TVSeries and music collection.
 
 The scraper now also has a settings tab where you set its behaviour, select what to scrape and choose preferred language for the Importer.  You can also set default DVDArt layout for manually created DVDArt.
@@ -222,11 +274,15 @@ You have also the possibility to upload images manually and images can be of any
 
 The plugin can be set to rescrape movies and series which originally were missing any of the artwork just in case new ones were loaded.
 
-Added backdrop functionality.</VersionDescription>
+Added Music CD Art, Banner and Clearlogo functionality.
+
+Added move backdrop and cover functionality.
+
+Added Actor, Writer and Director image scraping functionality.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2013-10-28T23:39:41</ReleaseDate>
-    <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures, tvseries, music</Tags>
+    <ReleaseDate>2013-12-13T23:39:41</ReleaseDate>
+    <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures, tvseries, music, actors, writers, directors, myfilms</Tags>
     <Location>E:\Software\MediaPortal\DVDArt_Plugin\[Name]-v[Version].mpe1</Location>
     <Params>
       <Items>
@@ -267,7 +323,14 @@ Added backdrop functionality.</VersionDescription>
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{9d3d7efb-e025-422a-8fdd-f24ccf451cfd}-DVDArt_Plugin.dll</ZipFileName>
-        <DestinationFilename>%Base%\plugins\process\DVDArt_Plugin.dll</DestinationFilename>
+        <DestinationFilename>%Plugins%\process\DVDArt_Plugin.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_PluginLauncher.exe</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9332046b-cf06-4845-a417-2b3d638e1773}-DVDArt_PluginLauncher.exe</ZipFileName>
+        <DestinationFilename>%Base%\DVDArt_PluginLauncher.exe</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
@@ -294,21 +357,21 @@ Added backdrop functionality.</VersionDescription>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{5c38c1ac-3a40-4eed-a39f-fb689a73212f}-DVDArt_Plugin.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{28ff0e76-130e-449e-a1fd-591338b88ec6}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{fc7e5b2c-d458-447c-a59d-cabfba662677}-DVDArt_Plugin_logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{eac6c8b8-6f19-4d88-9449-b2a7bf8a6f7b}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{0d2b2c32-3ac2-4161-a8ba-dc0584ceeb04}-MP_Packaging.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{4c9595d7-d36a-47e1-a1f2-f14ca9503b70}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

@@ -1,6 +1,9 @@
 ﻿Imports System.IO
 Imports System.Text.RegularExpressions
+
 Imports Microsoft.VisualBasic.FileIO
+
+Imports MediaPortal.Util
 
 Public Class DVDArt_ManualUpload
 
@@ -8,7 +11,6 @@ Public Class DVDArt_ManualUpload
 
     Private _imagename, _title, _type, thumbs As String
     Private _process(3) As Boolean
-    Private invchar As String = "[^\w\(){}@'-+. ]"
 
     Private Function load_image(ByVal path As String) As System.Drawing.Image
 
@@ -46,11 +48,18 @@ Public Class DVDArt_ManualUpload
             'change labels depending of type
             If _type = "artist" Then
                 l_clearart.Text = "Banner"
+            ElseIf _type = "person" Then
+                l_clearart.Text = "Photo"
             End If
 
             If _type = "music" Then
                 l_dvdart.Text = "CD Art"
             End If
+
+            'enable DVD add-ons
+            cb_title.Visible = (_type = "movie")
+            cb_logos.Visible = (_type = "movie")
+            b_change_layout.Visible = (_type = "movie")
 
             'enable fields according to selection in setting
             l_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
@@ -58,14 +67,11 @@ Public Class DVDArt_ManualUpload
             b_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
             b_preview_dvdart.Enabled = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
 
-            cb_title.Visible = (_type = "movie")
-            cb_logos.Visible = (_type = "movie")
-            b_change_layout.Visible = (_type = "movie")
+            l_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist") Or (DVDArt_GUI.personchecked And _type = "person")
+            tb_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist") Or (DVDArt_GUI.personchecked And _type = "person")
+            b_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist") Or (DVDArt_GUI.personchecked And _type = "person")
+            b_preview_clearart.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist") Or (DVDArt_GUI.personchecked And _type = "person")
 
-            l_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
-            tb_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
-            b_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
-            b_preview_clearart.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
             l_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
             tb_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
             b_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
@@ -143,17 +149,29 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Function Check_Image(ByVal path As String, ByVal width As Integer, ByVal height As Integer) As Boolean
+    Private Function Check_Image(ByVal path As String, ByVal width As Integer, ByVal height As Integer, Optional ByVal retainaspect As Boolean = False) As Boolean
 
-        Dim imagesize, size As String
+        Dim imagesize As String
+        Dim size As String = String.Empty
 
         If FileIO.FileSystem.FileExists(path) Then
 
             imagesize = DVDArt_Common.getSize(IO.Path.GetDirectoryName(path) & "\" & IO.Path.GetFileName(path))
-            size = width.ToString & "x" & height.ToString
+
+            If retainaspect Then
+                Dim i_dim() As String = Split(imagesize, "x")
+
+                If width.ToString = i_dim(0) Or height.ToString = i_dim(1) Then
+                    size = imagesize
+                Else
+                    size = width.ToString & "x" & height.ToString
+                End If
+            Else
+                size = width.ToString & "x" & height.ToString
+            End If
 
             If imagesize <> size Then
-                DVDArt_Common.Resize(path, width, height)
+                DVDArt_Common.Resize(path, width, height, False, True)
             End If
             Return True
         Else
@@ -168,13 +186,19 @@ Public Class DVDArt_ManualUpload
     End Sub
 
     Private Sub b_preview_clearart_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_clearart.Click
-        If _type <> "artist" Then
-            Dim preview As New DVDArt_Preview(tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png"), False)
-            preview.Show()
-        Else
-            Dim preview As New DVDArt_Preview(tb_clearart.Text, False)
-            preview.Show()
-        End If
+
+        Select Case _type
+
+            Case "artist", "person"
+                Dim preview As New DVDArt_Preview(tb_clearart.Text, False)
+                preview.Show()
+
+            Case Else
+                Dim preview As New DVDArt_Preview(tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png"), False)
+                preview.Show()
+
+        End Select
+
     End Sub
 
     Private Sub b_preview_clearlogo_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_clearlogo.Click
@@ -211,7 +235,7 @@ Public Class DVDArt_ManualUpload
 
             If _type = "music" Then type = "cdart" Else type = "dvdart"
 
-            DVDArt_Common.create_CoverArt(tb_dvdart.Text, _imagename, _title, cb_title.Checked, cb_logos.Checked, this_template_type, True, file, type)
+            DVDArt_Common.create_CoverArt(tb_dvdart.Text, _imagename, _title, cb_title.SelectedIndex, cb_logos.Checked, this_template_type, True, file, type)
 
         End If
 
@@ -219,41 +243,54 @@ Public Class DVDArt_ManualUpload
 
     Private Sub b_process_clearart_Click(sender As System.Object, e As System.EventArgs) Handles b_process_clearart.Click
 
-        If _type <> "artist" Then
+        Select Case _type
 
-            If Check_Image(tb_clearart.Text, 500, 281) Then
-                b_process_clearart.Visible = False
-                b_preview_clearart.Visible = True
-                _process(1) = True
+            Case "artist"
+                If Check_Image(tb_clearart.Text, 1000, 185) Then
+                    b_process_clearart.Visible = False
+                    b_preview_clearart.Visible = True
+                    _process(1) = True
 
-                If InStr(tb_clearart.Text, " ") > 0 Then
-                    FileIO.FileSystem.RenameFile(tb_clearart.Text, IO.Path.GetFileName(tb_clearart.Text.Replace(" ", "")))
-                    tb_clearart.Text = tb_clearart.Text.Replace(" ", "")
-                    tb_clearart.Refresh()
+                    If InStr(tb_clearart.Text, " ") > 0 Then
+                        FileIO.FileSystem.RenameFile(tb_clearart.Text, IO.Path.GetFileName(tb_clearart.Text.Replace(" ", "")))
+                        tb_clearart.Text = tb_clearart.Text.Replace(" ", "")
+                        tb_clearart.Refresh()
+                    End If
                 End If
 
-                'create image with transparency
-                Dim file As String = tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png")
-                Dim params() As String = {"-bordercolor", "white", "-border", "1x1", "-alpha", "set", "-channel", "RGBA", "-fuzz", "1%", "-fill", "none", "-floodfill", "+0+0", "white", "-shave", "1x1"}
+            Case "person"
+                If Check_Image(tb_clearart.Text, 300, 400, True) Then
+                    b_process_clearart.Visible = False
+                    b_preview_clearart.Visible = True
+                    _process(1) = True
 
-                DVDArt_Common.Convert(tb_clearart.Text, file, params)
-            End If
-
-        Else
-
-            If Check_Image(tb_clearart.Text, 1000, 185) Then
-                b_process_clearart.Visible = False
-                b_preview_clearart.Visible = True
-                _process(1) = True
-
-                If InStr(tb_clearart.Text, " ") > 0 Then
-                    FileIO.FileSystem.RenameFile(tb_clearart.Text, IO.Path.GetFileName(tb_clearart.Text.Replace(" ", "")))
-                    tb_clearart.Text = tb_clearart.Text.Replace(" ", "")
-                    tb_clearart.Refresh()
+                    If InStr(tb_clearart.Text, " ") > 0 Then
+                        FileIO.FileSystem.RenameFile(tb_clearart.Text, IO.Path.GetFileName(tb_clearart.Text.Replace(" ", "")))
+                        tb_clearart.Text = tb_clearart.Text.Replace(" ", "")
+                        tb_clearart.Refresh()
+                    End If
                 End If
-            End If
 
-        End If
+            Case Else
+                If Check_Image(tb_clearart.Text, 500, 281) Then
+                    b_process_clearart.Visible = False
+                    b_preview_clearart.Visible = True
+                    _process(1) = True
+
+                    If InStr(tb_clearart.Text, " ") > 0 Then
+                        FileIO.FileSystem.RenameFile(tb_clearart.Text, IO.Path.GetFileName(tb_clearart.Text.Replace(" ", "")))
+                        tb_clearart.Text = tb_clearart.Text.Replace(" ", "")
+                        tb_clearart.Refresh()
+                    End If
+
+                    'create image with transparency
+                    Dim file As String = tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png")
+                    Dim params() As String = {"-bordercolor", "white", "-border", "1x1", "-alpha", "set", "-channel", "RGBA", "-fuzz", "1%", "-fill", "none", "-floodfill", "+0+0", "white", "-shave", "1x1"}
+
+                    DVDArt_Common.Convert(tb_clearart.Text, file, params)
+                End If
+
+        End Select
 
     End Sub
 
@@ -318,7 +355,7 @@ Public Class DVDArt_ManualUpload
                 DVDArt_Common.wait(500)
             Loop
 
-            _imagename = Regex.Replace(_imagename, invchar, "_")
+            _imagename = Utils.MakeFileName(_imagename)
 
             If _type = "music" Then
                 fullsize = thumbs & DVDArt_Common.folder(2, 0, 0) & _imagename & ".png"
@@ -341,17 +378,20 @@ Public Class DVDArt_ManualUpload
 
             If Not _process(1) Then b_process_clearart_Click(sender, e)
 
-            If _type <> "artist" Then
-                file = tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png")
-            Else
-                file = tb_clearart.Text
-            End If
+            Select Case _type
+                Case "artist", "person"
+                    file = tb_clearart.Text
+
+                Case Else
+                    file = tb_clearart.Text.Replace(IO.Path.GetExtension(tb_clearart.Text), ".png")
+
+            End Select
 
             Do While Not FileSystem.FileExists(file)
                 DVDArt_Common.wait(500)
             Loop
 
-            _imagename = Regex.Replace(_imagename, invchar, "_")
+            _imagename = Utils.MakeFileName(_imagename)
 
             If _type = "artist" Then
                 fullsize = thumbs & DVDArt_Common.folder(2, 1, 0) & _imagename & ".png"
@@ -359,6 +399,9 @@ Public Class DVDArt_ManualUpload
             ElseIf _type = "series" Then
                 fullsize = thumbs & DVDArt_Common.folder(1, 1, 0) & _imagename & ".png"
                 thumb = thumbs & DVDArt_Common.folder(1, 1, 1) & _imagename & ".png"
+            ElseIf _type = "person" Then
+                fullsize = DVDArt_GUI.personpath & _imagename & ".png"
+                thumb = Nothing
             Else
                 fullsize = thumbs & DVDArt_Common.folder(0, 1, 0) & _imagename & ".png"
                 thumb = thumbs & DVDArt_Common.folder(0, 1, 1) & _imagename & ".png"
@@ -366,14 +409,18 @@ Public Class DVDArt_ManualUpload
 
             'copy to FullSize folder
             FileIO.FileSystem.CopyFile(file, fullsize, True)
-            'resize to thumb size and copy to Thumbs folder
-            If _type <> "artist" Then
-                DVDArt_Common.Resize(file, 200, 112, True)
-            Else
-                DVDArt_Common.Resize(file, 200, 37, True)
+
+            If thumb <> Nothing Then
+                'resize to thumb size and copy to Thumbs folder
+                If _type <> "artist" Then
+                    DVDArt_Common.Resize(file, 200, 112, True)
+                Else
+                    DVDArt_Common.Resize(file, 200, 37, True)
+                End If
+
+                FileIO.FileSystem.MoveFile(file, thumb, True)
             End If
 
-            FileIO.FileSystem.MoveFile(file, thumb, True)
             If FileIO.FileSystem.FileExists(tb_clearart.Text) Then FileIO.FileSystem.DeleteFile(tb_clearart.Text)
 
         End If
@@ -426,7 +473,7 @@ Public Class DVDArt_ManualUpload
                 _imagename = _imagename.Replace(c, "_")
             Next
 
-            
+
             fullsize = thumbs & DVDArt_Common.folder(0, 3, 0) & _imagename & ".jpg"
             thumb = thumbs & DVDArt_Common.folder(0, 3, 1) & _imagename & ".jpg"
 
@@ -451,12 +498,12 @@ Public Class DVDArt_ManualUpload
     End Sub
 
     Private Sub b_change_layout_Click(sender As System.Object, e As System.EventArgs) Handles b_change_layout.Click
-        Dim layout As New DVDArt_layout
+        Dim layout As New DVDArt_Layout
         layout.ChangeLayout(this_template_type, this_template_type)
     End Sub
 
-    Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.CheckedChanged, cb_logos.CheckedChanged
-        b_change_layout.Enabled = cb_title.Checked Or cb_logos.Checked
+    Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.TextChanged, cb_logos.CheckedChanged
+        b_change_layout.Enabled = cb_title.SelectedIndex > 0 Or cb_logos.Checked
     End Sub
 
     Private Sub tb_dvdart_TextChanged(sender As System.Object, e As System.EventArgs) Handles tb_dvdart.TextChanged

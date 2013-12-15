@@ -10,7 +10,7 @@ Imports MediaPortal.Common.Utils
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("DVDArt Downloader Plugin")> 
-<Assembly: AssemblyDescription("Download Movie & Series Artwork")> 
+<Assembly: AssemblyDescription("Download Movie, Series & Music Artwork")> 
 <Assembly: AssemblyCompany("m3rcury")> 
 <Assembly: AssemblyProduct("DVDArt Downloader Plugin")> 
 <Assembly: AssemblyCopyright("Copyright ©  2012-2013")> 
@@ -26,5 +26,5 @@ Imports MediaPortal.Common.Utils
 <Assembly: UsesSubsystem("MP.SkinEngine")> 
 <Assembly: UsesSubsystem("MP.Config")> 
 
-<Assembly: AssemblyVersion("1.0.1.9")> 
-<Assembly: AssemblyFileVersion("1.0.1.9")> 
+<Assembly: AssemblyVersion("1.0.2.0")> 
+<Assembly: AssemblyFileVersion("1.0.2.0")> 
