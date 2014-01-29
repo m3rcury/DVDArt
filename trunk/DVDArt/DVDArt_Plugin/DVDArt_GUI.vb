@@ -113,7 +113,7 @@ Public Class DVDArt_GUI
         Dim imdb_id, images() As String
         Dim x, y, z As Integer
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("movingpictures") & ";Read Only=True;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
 
@@ -211,7 +211,7 @@ Public Class DVDArt_GUI
                         backdrop = DVDArt_Common.getMovingPicturesImagePath(database, lv_import.Items.Item(x).SubItems.Item(1).Text, "backdrop")
                         cover = DVDArt_Common.getMovingPicturesImagePath(database, lv_import.Items.Item(x).SubItems.Item(1).Text, "cover")
 
-                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, Nothing, _lang, "movie", personpath, checked)
+                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "movie", personpath, checked)
 
                         For y = 0 To 4
 
@@ -280,7 +280,7 @@ Public Class DVDArt_GUI
 
                     ElseIf lv_import.Items.Item(x).SubItems.Item(2).Text = "Series" Then
 
-                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, Nothing, _lang, "series", personpath, checked)
+                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "series", personpath, checked)
 
                         For y = 1 To 2
 
@@ -523,7 +523,11 @@ Public Class DVDArt_GUI
 
                     End If
 
-                    lv_import.Items(l_import_index(x)).EnsureVisible()
+                    Try
+                        lv_import.Items(l_import_index(x)).EnsureVisible()
+                    Catch ex As Exception
+                    End Try
+
                     x += 1
 
                 Loop
@@ -842,7 +846,10 @@ Public Class DVDArt_GUI
                     If addedmissing Then
                         li_missing.SubItems.Add(id)
                     Else
-                        li_missing.SubItems.RemoveAt(li_missing.Index)
+                        Try
+                            li_missing.SubItems.RemoveAt(li_missing.Index)
+                        Catch ex As Exception
+                        End Try
                     End If
 
                     l_import_queue.RemoveAt(x)
@@ -867,7 +874,7 @@ Public Class DVDArt_GUI
         Dim imdb_id, movie_name, images() As String
         Dim x, y, z, count As Integer
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("movingpictures") & ";Read Only=True;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
 
@@ -938,7 +945,7 @@ Public Class DVDArt_GUI
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "UPDATE processed_artist SET MBID = '" & new_MBID & "' WHERE MBID = '" & old_MBID & "'"
@@ -1032,7 +1039,7 @@ Public Class DVDArt_GUI
             If jsonresponse <> "null" Then
 
                 If Microsoft.VisualBasic.Left(type, 5) <> "music" Then
-                    details = DVDArt_Common.parse(jsonresponse, type)
+                    details = DVDArt_Common.parse(jsonresponse, type, id, _lang)
                 Else
                     details = DVDArt_Common.parse_music(jsonresponse, LCase(Microsoft.VisualBasic.Right(type, Len(type) - 6).Replace(" ", "-")))
                 End If
@@ -1044,7 +1051,7 @@ Public Class DVDArt_GUI
                 If cb_downloads.Checked Then
                     max_download = nud_downloads.Value - 1
                 Else
-                    max_download = (details.Length / 10) - 1
+                    max_download = UBound(details, 2)
                 End If
 
                 For x = 0 To max_download
@@ -1146,11 +1153,15 @@ Public Class DVDArt_GUI
                             thumbpath = thumbs & DVDArt_Common.folder(0, x, 1) & id & ".jpg"
                         End If
                     ElseIf type = "series" Then
-                        If x = 0 Then Continue For
+                        If x = 0 Or x > 2 Then Continue For
                         fullpath = thumbs & DVDArt_Common.folder(1, x, 0) & id & ".png"
                         thumbpath = thumbs & DVDArt_Common.folder(1, x, 1) & id & ".png"
                     ElseIf type = "artist" Or type = "album" Then
-                        If x = 0 Then Continue For
+                        If x = 0 Or x > 2 Then Continue For
+                        fullpath = thumbs & DVDArt_Common.folder(2, x, 0) & id & ".png"
+                        thumbpath = thumbs & DVDArt_Common.folder(2, x, 1) & id & ".png"
+                    ElseIf type = "music" Then
+                        If x <> 0 Then Continue For
                         fullpath = thumbs & DVDArt_Common.folder(2, x, 0) & id & ".png"
                         thumbpath = thumbs & DVDArt_Common.folder(2, x, 1) & id & ".png"
                     End If
@@ -1293,7 +1304,7 @@ Public Class DVDArt_GUI
             If x = 0 Then
                 If tbc_main.TabPages.Contains(tp_MovingPictures) Then tbc_main.TabPages.Remove(tp_MovingPictures)
                 If enabled Then
-                    If IO.File.Exists(database & "\movingpictures.db3") Or IO.File.Exists(Config.GetFile(Config.Dir.Config, "MyFilms.xml")) Then
+                    If IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) Or IO.File.Exists(DVDArt_Common.p_Databases("myfilms")) Or IO.File.Exists(database & DVDArt_Common.p_Databases("myvideos")) Then
                         tbc_main.TabPages.Insert(0, tp_MovingPictures)
                     Else
                         tbc_scraper.TabPages.Remove(tp_movies_scraper)
@@ -1304,7 +1315,7 @@ Public Class DVDArt_GUI
             If x = 1 Then
                 If tbc_main.TabPages.Contains(tp_TVSeries) Then tbc_main.TabPages.Remove(tp_TVSeries)
                 If enabled Then
-                    If IO.File.Exists(database & "\TVSeriesDatabase4.db3") Then
+                    If IO.File.Exists(database & DVDArt_Common.p_Databases("tvseries")) Then
                         If tbc_main.TabPages.Contains(tp_MovingPictures) Then tbc_main.TabPages.Insert(1, tp_TVSeries) Else tbc_main.TabPages.Insert(0, tp_TVSeries)
                     Else
                         tbc_scraper.TabPages.Remove(tp_series_scraper)
@@ -1315,7 +1326,7 @@ Public Class DVDArt_GUI
             If x = 2 Then
                 If tbc_main.TabPages.Contains(tp_Music) Then tbc_main.TabPages.Remove(tp_Music)
                 If enabled Then
-                    If IO.File.Exists(database & "\MusicDatabaseV13.db3") Then
+                    If IO.File.Exists(database & DVDArt_Common.p_Databases("music")) Then
                         If tbc_main.TabPages.Contains(tp_MovingPictures) And tbc_main.TabPages.Contains(tp_TVSeries) Then
                             tbc_main.TabPages.Insert(2, tp_Music)
                         ElseIf Not tbc_main.TabPages.Contains(tp_MovingPictures) Or Not tbc_main.TabPages.Contains(tp_TVSeries) Then
@@ -1335,17 +1346,19 @@ Public Class DVDArt_GUI
 
     Private Sub LoadMovieList()
 
-        If Not IO.File.Exists(database & "\movingpictures.db3") And Not IO.File.Exists(Config.GetFile(Config.Dir.Config, "MyFilms.xml")) Then Exit Sub
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) And Not IO.File.Exists(DVDArt_Common.p_Databases("myfilms")) And Not IO.File.Exists(database & DVDArt_Common.p_Databases("myvideos")) Then Exit Sub
 
         ' check if movie scraping is enabled
         Dim x As Integer
         Dim enabled As Boolean = False
 
-        For x = 0 To 4
+        For x = 0 To UBound(checked, 2)
             enabled = enabled Or checked(0, x)
         Next
 
         If Not enabled Then Exit Sub
+
+        DVDArt_Common.logStats("DVArt: Loading Movie List started.", "DEBUG")
 
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
@@ -1358,9 +1371,9 @@ Public Class DVDArt_GUI
 
         ' create processed movies table with a unique index
 
-        If Not IO.File.Exists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_Databases("dvdart"))
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_movies(imdb_id TEXT)"
@@ -1391,7 +1404,7 @@ Public Class DVDArt_GUI
 
         If x = 0 Then ReDim Preserve processed_movies(0)
 
-        Dim fileexist(4) As Boolean
+        Dim fileexist(UBound(checked, 2)) As Boolean
         Dim lvi As LVITEM
 
         x = 0
@@ -1411,11 +1424,17 @@ Public Class DVDArt_GUI
         Catch ex As Exception
         End Try
 
+        Try
+            mymovies = DVDArt_Common.loadMyVideos(database, mymovies)
+        Catch ex As Exception
+        End Try
+
         mymovies.Distinct()
 
         ' process loaded movies
 
         For i As Integer = 0 To UBound(mymovies)
+
             If Trim(mymovies(i).imdb_id) <> "" Then
 
                 If processed_movies.Contains(mymovies(i).imdb_id) Then
@@ -1423,7 +1442,7 @@ Public Class DVDArt_GUI
                     found = False
                     missing = False
 
-                    For y = 0 To 4
+                    For y = 0 To UBound(checked, 2)
                         If y < 3 Then
                             fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & mymovies(i).imdb_id & ".png")
                         ElseIf y = 3 Then
@@ -1448,7 +1467,7 @@ Public Class DVDArt_GUI
 
                         lvi = Nothing
 
-                        For y = 0 To 4
+                        For y = 0 To UBound(checked, 2)
 
                             If checked(0, y) Then
                                 If fileexist(y) Then
@@ -1511,7 +1530,7 @@ Public Class DVDArt_GUI
 
         Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies WHERE imdb_id is not Null ORDER BY imdb_id"
@@ -1532,17 +1551,26 @@ Public Class DVDArt_GUI
 
         SQLconnect.Close()
 
+        DVDArt_Common.logStats("DVArt: Loading Movie List complete.", "DEBUG")
+
     End Sub
 
     Private Sub loadPersonList()
 
-        If Not IO.File.Exists(database & "\movingpictures.db3") And Not IO.File.Exists(Config.GetFile(Config.Dir.Config, "MyFilms.xml")) Then Exit Sub
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) And Not IO.File.Exists(DVDArt_Common.p_Databases("mfilms")) And Not IO.File.Exists(database & DVDArt_Common.p_Databases("myvideos")) Then Exit Sub
         If Not personchecked Then Exit Sub
+
+        DVDArt_Common.logStats("DVArt: Loading Persons List started.", "DEBUG")
 
         Dim mypersons As SortedList = DVDArt_Common.loadMovingPicturesPersons(database)
 
         Try
             mypersons = DVDArt_Common.loadMyFilmsPersons(mypersons)
+        Catch ex As Exception
+        End Try
+
+        Try
+            mypersons = DVDArt_Common.loadMyVideosPersons(database, mypersons)
         Catch ex As Exception
         End Try
 
@@ -1574,11 +1602,13 @@ Public Class DVDArt_GUI
             FTV_api_connector(Nothing, Nothing, "person", "import")
         End If
 
+        DVDArt_Common.logStats("DVArt: Loading Persons List complete.", "DEBUG")
+
     End Sub
 
     Private Sub LoadSerieList()
 
-        If Not IO.File.Exists(database & "\TVSeriesDatabase4.db3") Then Exit Sub
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("tvseries")) Then Exit Sub
 
         ' check if movie scraping is enabled
         Dim x As Integer
@@ -1590,6 +1620,8 @@ Public Class DVDArt_GUI
 
         If Not enabled Then Exit Sub
 
+        DVDArt_Common.logStats("DVArt: Loading Series List started.", "DEBUG")
+
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
@@ -1600,9 +1632,9 @@ Public Class DVDArt_GUI
 
         ' create processed series table with a unique index
 
-        If Not FileSystem.FileExists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
+        If Not FileSystem.FileExists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_series(thetvdb_id TEXT)"
@@ -1737,7 +1769,7 @@ Public Class DVDArt_GUI
 
         Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT thetvdb_id FROM processed_series WHERE thetvdb_id is not Null ORDER BY thetvdb_id"
@@ -1758,11 +1790,13 @@ Public Class DVDArt_GUI
 
         SQLconnect.Close()
 
+        DVDArt_Common.logStats("DVArt: Loading Series List complete.", "DEBUG")
+
     End Sub
 
     Private Sub LoadMusicList()
 
-        If Not IO.File.Exists(database & "\MusicDatabaseV13.db3") Then Exit Sub
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("music")) Then Exit Sub
 
         Dim x As Integer
         Dim artist_enabled As Boolean = False
@@ -1783,6 +1817,8 @@ Public Class DVDArt_GUI
 
     Private Sub LoadArtistList()
 
+        DVDArt_Common.logStats("DVArt: Loading Artist List starting.", "DEBUG")
+
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
@@ -1795,9 +1831,9 @@ Public Class DVDArt_GUI
         Dim found, missing As Boolean
         Dim x As Integer = 0
 
-        If Not IO.File.Exists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
+        If Not IO.File.Exists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_artist(artist TEXT, MBID TEXT)"
@@ -1828,7 +1864,7 @@ Public Class DVDArt_GUI
 
         If x = 0 Then ReDim Preserve processed_artist(0)
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\MusicDatabaseV13.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("music") & ";Read Only=True;"
 
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
@@ -1937,7 +1973,7 @@ Public Class DVDArt_GUI
 
         Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT artist FROM processed_artist WHERE artist is not Null ORDER BY artist"
@@ -1958,9 +1994,13 @@ Public Class DVDArt_GUI
 
         SQLconnect.Close()
 
+        DVDArt_Common.logStats("DVArt: Loading Artist List complete.", "DEBUG")
+
     End Sub
 
     Private Sub LoadAlbumList()
+
+        DVDArt_Common.logStats("DVArt: Loading Album List starting.", "DEBUG")
 
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
@@ -1974,9 +2014,9 @@ Public Class DVDArt_GUI
         Dim found, missing As Boolean
         Dim x As Integer = 0
 
-        If Not IO.File.Exists(database & "\dvdart.db3") Then SQLiteConnection.CreateFile(database & "\dvdart.db3")
+        If Not IO.File.Exists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_music(album TEXT, MBID TEXT)"
@@ -2007,7 +2047,7 @@ Public Class DVDArt_GUI
 
         If x = 0 Then ReDim Preserve processed_music(0)
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\MusicDatabaseV13.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("music") & ";Read Only=True;"
 
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
@@ -2135,7 +2175,7 @@ Public Class DVDArt_GUI
 
         Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT album FROM processed_music WHERE album is not Null ORDER BY album"
@@ -2155,6 +2195,8 @@ Public Class DVDArt_GUI
         End While
 
         SQLconnect.Close()
+
+        DVDArt_Common.logStats("DVArt: Loading Album List complete.", "DEBUG")
 
     End Sub
 
@@ -3125,6 +3167,7 @@ Public Class DVDArt_GUI
             XMLwriter.SetValue("Settings", "scraping value", cb_scraping.Text)
             XMLwriter.SetValue("Settings", "missing", nud_missing.Value)
             XMLwriter.SetValue("Settings", "missing value", cb_missing.Text)
+            XMLwriter.SetValueAsBool("Settings", "debug", cb_debug.Checked)
             XMLwriter.SetValue("Scraper", "language", DVDArt_Common.langcode(Array.IndexOf(DVDArt_Common.lang, cb_language.Text)))
             XMLwriter.SetValueAsBool("Scraper Movies", "dvdart", cb_DVDArt_movies.Checked)
             XMLwriter.SetValueAsBool("Scraper Movies", "clearart", cb_ClearArt_movies.Checked)
@@ -3167,30 +3210,25 @@ Public Class DVDArt_GUI
             cb_scraping.Text = XMLreader.GetValueAsString("Settings", "scraping value", "minutes")
             nud_missing.Value = XMLreader.GetValueAsInt("Settings", "missing", 0)
             cb_missing.Text = XMLreader.GetValueAsString("Settings", "missing value", "disabled")
+            cb_debug.Checked = XMLreader.GetValueAsBool("Settings", "debug", False)
             _lang = XMLreader.GetValueAsString("Scraper", "language", "##")
             template_type = XMLreader.GetValueAsInt("Scraper Movies", "template", 1)
 
-            If xml_version > DVDArt_Common._pre_version Then
-                cb_DVDArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "dvdart", False)
-                cb_ClearArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearart", False)
-                cb_ClearLogo_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
-                cb_Backdrop_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "backdrop", False)
-                cb_Cover_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "cover", False)
-                tb_movie_path.Text = XMLreader.GetValueAsString("Scraper Movies", "path", thumbs & "\MovingPictures")
-                cb_persons.Checked = XMLreader.GetValueAsBool("Scraper Movies", "person", False)
-                tb_person_path.Text = XMLreader.GetValueAsString("Scraper Movies", "person path", thumbs & "\Actors")
-                cb_ClearArt_series.Checked = XMLreader.GetValueAsBool("Scraper Series", "clearart", False)
-                cb_ClearLogo_series.Checked = XMLreader.GetValueAsBool("Scraper Series", "clearlogo", False)
-                tb_series_path.Text = XMLreader.GetValueAsString("Scraper Series", "path", thumbs & "\TVSeries")
-                cb_CDArt_music.Checked = XMLreader.GetValueAsBool("Scraper Music", "cdart", False)
-                cb_Banner_artist.Checked = XMLreader.GetValueAsBool("Scraper Music", "banner", False)
-                cb_ClearLogo_artist.Checked = XMLreader.GetValueAsBool("Scraper Music", "clearlogo", False)
-                tb_music_path.Text = XMLreader.GetValueAsString("Scraper Music", "path", thumbs & "\Music")
-            Else
-                cb_DVDArt_movies.Checked = XMLreader.GetValueAsBool("Scraper", "dvdart", False)
-                cb_ClearArt_movies.Checked = XMLreader.GetValueAsBool("Scraper", "clearart", False)
-                cb_ClearLogo_movies.Checked = XMLreader.GetValueAsBool("Scraper", "clearlogo", False)
-            End If
+            cb_DVDArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "dvdart", False)
+            cb_ClearArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearart", False)
+            cb_ClearLogo_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
+            cb_Backdrop_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "backdrop", False)
+            cb_Cover_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "cover", False)
+            tb_movie_path.Text = XMLreader.GetValueAsString("Scraper Movies", "path", thumbs & "\MovingPictures")
+            cb_persons.Checked = XMLreader.GetValueAsBool("Scraper Movies", "person", False)
+            tb_person_path.Text = XMLreader.GetValueAsString("Scraper Movies", "person path", thumbs & "\Actors")
+            cb_ClearArt_series.Checked = XMLreader.GetValueAsBool("Scraper Series", "clearart", False)
+            cb_ClearLogo_series.Checked = XMLreader.GetValueAsBool("Scraper Series", "clearlogo", False)
+            tb_series_path.Text = XMLreader.GetValueAsString("Scraper Series", "path", thumbs & "\TVSeries")
+            cb_CDArt_music.Checked = XMLreader.GetValueAsBool("Scraper Music", "cdart", False)
+            cb_Banner_artist.Checked = XMLreader.GetValueAsBool("Scraper Music", "banner", False)
+            cb_ClearLogo_artist.Checked = XMLreader.GetValueAsBool("Scraper Music", "clearlogo", False)
+            tb_music_path.Text = XMLreader.GetValueAsString("Scraper Music", "path", thumbs & "\Music")
 
             _lastrun = XMLreader.GetValueAsString("Scheduler", "lastrun", Nothing)
 
@@ -3699,11 +3737,15 @@ Public Class DVDArt_GUI
 
         End If
 
+        DVDArt_Common.logStats("DVDArt: Plugin ended.", "LOG")
+
         Return
 
     End Sub
 
     Private Sub DVDArt_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+        DVDArt_Common.logStats("DVDArt: Plugin started.", "LOG")
 
         If DVDArt_Common.Get_Paths(database, thumbs) Then
 
@@ -3728,31 +3770,8 @@ Public Class DVDArt_GUI
             'initialize common variables
             DVDArt_Common.Initialize(database, thumbs, tb_movie_path.Text, tb_series_path.Text, tb_music_path.Text)
 
-            'check version
-            If xml_version <> DVDArt_Common._version Then
-
-                cb_ClearArt_series.Checked = cb_ClearArt_movies.Checked
-                cb_ClearLogo_series.Checked = cb_ClearLogo_movies.Checked
-                cb_CDArt_music.Checked = cb_DVDArt_movies.Checked
-                cb_Banner_artist.Checked = cb_ClearArt_movies.Checked
-                cb_ClearLogo_artist.Checked = cb_ClearLogo_movies.Checked
-                cb_backgroundscraper.Checked = True
-
-                FileIO.FileSystem.DeleteFile(Config.GetFile(Config.Dir.Config, "DVDArt_Plugin.xml"))
-
-                MediaPortal.Profile.Settings.ClearCache()
-
-                setSettings()
-
-            End If
-
             'initialize version
             Me.Text = Me.Text & DVDArt_Common._version
-
-            'create folder structure
-            If DVDArt_Common.Create_Folder_Structure(database, thumbs) = False Then
-                Application.Exit()
-            End If
 
             'initialize importer state images
             il_state.Images.Add(My.Resources.download)
@@ -3790,6 +3809,7 @@ Public Class DVDArt_GUI
             splash.Dispose()
 
         Else
+            DVDArt_Common.logStats("DVDArt: Failed to load database & thumb paths!", "ERROR")
             MsgBox("Unable to load Database & Thumbs paths from MediaPortalDirs.xml", MsgBoxStyle.Critical, "DVDArt Plugin")
             Return
         End If

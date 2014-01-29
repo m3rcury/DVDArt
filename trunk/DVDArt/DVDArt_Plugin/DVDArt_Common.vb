@@ -27,17 +27,113 @@ Public Class DVDArt_Common
         Dim name As String
     End Structure
 
-    Public Shared _version, _pre_version, folder(2, 4, 1), lang(4), langcode(4), _coversize As String
+    Public Shared _version, folder(2, 4, 1), lang(4), langcode(4), _coversize As String
     Public Shared WithEvents bw_download0, bw_download1, bw_download2, bw_download3, bw_download4, bw_download5, bw_download6, bw_download7, bw_download8, bw_download9 As New BackgroundWorker
     Public Shared _temp As String = Environ("temp")
+
+    Dim debug As Boolean
+
+    Public Shared ReadOnly Property p_Databases(ByVal item As String) As String
+        Get
+            Select Case item
+                Case "dvdart"
+                    Return "\dvdart.db3"
+                Case "movingpictures"
+                    Return "\movingpictures.db3"
+                Case "myfilms"
+                    Return Config.GetFile(Config.Dir.Config, "MyFilms.xml")
+                Case "tvseries"
+                    Return "\TVSeriesDatabase4.db3"
+                Case "myvideos"
+                    Return "\VideoDatabaseV5.db3"
+                Case "music"
+                    Return "\MusicDatabaseV13.db3"
+                Case Else
+                    Return Nothing
+            End Select
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property p_Debug As Boolean
+        Get
+            Dim debug As Boolean
+            Using XMLreader As MediaPortal.Profile.Settings = New MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "DVDArt_Plugin.xml"))
+                debug = XMLreader.GetValueAsBool("Settings", "debug", False)
+            End Using
+            Return debug
+        End Get
+    End Property
 
     Public Shared Sub wait(ByVal milliseconds As Long)
         System.Threading.Thread.Sleep(milliseconds)
     End Sub
 
+    Public Shared Sub logStats(ByVal message As String, ByVal msgtype As String)
+
+        If msgtype = "DEBUG" And p_Debug = False Then Exit Sub
+
+        Select Case msgtype
+            Case "INFO"
+                Log.Info(message)
+            Case "ERROR"
+                Log.Error(message)
+        End Select
+
+        Dim file As String = Config.GetFile(Config.Dir.Log, "dvdart_plugin.log")
+        Dim fhandle As System.IO.FileStream
+
+        If msgtype = "LOG" Then msgtype = "INFO"
+
+        Dim info() As Byte = New System.Text.UTF8Encoding(True).GetBytes(DateTime.Now & " - [" & msgtype & "] " & message & vbCrLf)
+
+        Try
+            fhandle = IO.File.Open(file, IO.FileMode.Append, IO.FileAccess.Write, IO.FileShare.ReadWrite)
+            fhandle.Write(info, 0, info.Length)
+            fhandle.Close()
+        Catch ex As Exception
+        End Try
+
+    End Sub
+
+    Public Shared Function loadMovingPictures(ByVal database As String) As Array
+
+        If Not IO.File.Exists(database & p_Databases("movingpictures")) Then Return Nothing
+
+        Dim movielist() As Movies = Nothing
+        Dim x As Integer = -1
+        Dim SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand
+        Dim SQLreader As SQLiteDataReader
+
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
+
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT imdb_id, title, backdropfullpath, coverfullpath FROM movie_info WHERE imdb_id IS NOT NULL and title IS NOT NULL ORDER BY sortby"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        While SQLreader.Read()
+
+            If Trim(SQLreader(0)) <> "" Then
+                x += 1
+                ReDim Preserve movielist(x)
+                movielist(x).imdb_id = SQLreader(0)
+                movielist(x).name = SQLreader(1)
+                movielist(x).backdrop = SQLreader(2)
+                movielist(x).cover = SQLreader(3)
+            End If
+
+        End While
+
+        SQLconnect.Close()
+
+        Return movielist
+
+    End Function
+
     Public Shared Function loadMyFilms(ByVal movielist As Movies()) As Array
 
-        If Not IO.File.Exists(Config.GetFile(Config.Dir.Config, "MyFilms.xml")) Then Return movielist
+        If Not IO.File.Exists(p_Databases("myfilms")) Then Return movielist
 
         Dim x As Integer = -1
         Dim dataExport As AntMovieCatalog = New AntMovieCatalog()
@@ -46,7 +142,7 @@ Public Class DVDArt_Common
 
         Dim lookupbyIMDB = movielist.ToLookup(Function(p) p.imdb_id)
 
-        Using XmlConfig As XmlSettings = New XmlSettings(Config.GetFile(Config.Dir.Config, "MyFilms.xml"))
+        Using XmlConfig As XmlSettings = New XmlSettings(p_Databases("myfilms"))
 
             Dim MesFilms_nb_config As Integer = XmlConfig.ReadXmlConfig("MyFilms", "MyFilms", "NbConfig", -1)
             Dim mf_configs As ArrayList = New ArrayList()
@@ -120,32 +216,45 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Function loadMovingPictures(ByVal database As String) As Array
+    Public Shared Function loadMyVideos(ByVal database As String, ByVal movielist As Movies()) As Array
 
-        If Not IO.File.Exists(database & "\movingpictures.db3") Then Return Nothing
+        If Not IO.File.Exists(database & p_Databases("myvideos")) Then Return movielist
 
-        Dim movielist() As Movies = Nothing
         Dim x As Integer = -1
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+        If movielist IsNot Nothing Then x = UBound(movielist)
+
+        Dim lookupbyIMDB = movielist.ToLookup(Function(p) p.imdb_id)
+
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("myvideos") & ";Read Only=True;"
 
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT imdb_id, title, backdropfullpath, coverfullpath FROM movie_info WHERE imdb_id IS NOT NULL and title IS NOT NULL ORDER BY sortby"
+        SQLcommand.CommandText = "SELECT IMDBID, strTitle, strFanartURL, strPictureURL FROM movieinfo WHERE IMDBID IS NOT NULL and strTitle IS NOT NULL ORDER BY strSortTitle"
         SQLreader = SQLcommand.ExecuteReader()
 
         While SQLreader.Read()
 
             If Trim(SQLreader(0)) <> "" Then
-                x += 1
-                ReDim Preserve movielist(x)
-                movielist(x).imdb_id = SQLreader(0)
-                movielist(x).name = SQLreader(1)
-                movielist(x).backdrop = SQLreader(2)
-                movielist(x).cover = SQLreader(3)
+
+                Dim y As Integer = 0
+
+                For Each film In lookupbyIMDB(SQLreader(0))
+                    y += 1
+                    Exit For
+                Next
+
+                If y = 0 Then
+                    x += 1
+                    ReDim Preserve movielist(x)
+                    movielist(x).imdb_id = SQLreader(0)
+                    movielist(x).name = SQLreader(1)
+                    movielist(x).backdrop = SQLreader(2)
+                    movielist(x).cover = SQLreader(3)
+                End If
             End If
 
         End While
@@ -158,7 +267,7 @@ Public Class DVDArt_Common
 
     Public Shared Function loadTVSeries(ByVal database As String) As Array
 
-        If Not IO.File.Exists(database & "\TVSeriesDatabase4.db3") Then Return Nothing
+        If Not IO.File.Exists(database & p_Databases("tvseries")) Then Return Nothing
 
         Dim serielist() As Series = Nothing
         Dim x As Integer = -1
@@ -166,7 +275,7 @@ Public Class DVDArt_Common
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\TVSeriesDatabase4.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("tvseries") & ";Read Only=True;"
 
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
@@ -192,7 +301,7 @@ Public Class DVDArt_Common
 
     Public Shared Function loadMovingPicturesPersons(ByVal database As String) As SortedList
 
-        If Not IO.File.Exists(database & "\movingpictures.db3") Then Return Nothing
+        If Not IO.File.Exists(database & p_Databases("movingpictures")) Then Return Nothing
 
         Dim personlist As New SortedList
         Dim persons As Array
@@ -202,7 +311,7 @@ Public Class DVDArt_Common
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
 
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
@@ -235,7 +344,7 @@ Public Class DVDArt_Common
 
     Public Shared Function loadMyFilmsPersons(ByVal personlist As SortedList) As SortedList
 
-        If Not IO.File.Exists(Config.GetFile(Config.Dir.Config, "MyFilms.xml")) Then Return personlist
+        If Not IO.File.Exists(p_Databases("myfilms")) Then Return personlist
 
         Dim x As Integer = -1
         Dim y As Integer
@@ -244,7 +353,7 @@ Public Class DVDArt_Common
 
         If personlist IsNot Nothing Then x = personlist.Count - 1
 
-        Using XmlConfig As XmlSettings = New XmlSettings(Config.GetFile(Config.Dir.Config, "MyFilms.xml"))
+        Using XmlConfig As XmlSettings = New XmlSettings(p_Databases("myfilms"))
 
             Dim MesFilms_nb_config As Integer = XmlConfig.ReadXmlConfig("MyFilms", "MyFilms", "NbConfig", -1)
             Dim mf_configs As ArrayList = New ArrayList()
@@ -293,6 +402,50 @@ Public Class DVDArt_Common
 
     End Function
 
+    Public Shared Function loadMyVideosPersons(ByVal database As String, ByVal personlist As SortedList) As SortedList
+
+        If Not IO.File.Exists(database & p_Databases("myvideos")) Then Return personlist
+
+        Dim persons As Array
+        Dim x As Integer = -1
+        Dim y As Integer
+        Dim SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand
+        Dim SQLreader As SQLiteDataReader
+
+        If personlist IsNot Nothing Then x = personlist.Count - 1
+
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("myvideos") & ";Read Only=True;"
+
+        SQLconnect.Open()
+        SQLcommand = SQLconnect.CreateCommand
+        SQLcommand.CommandText = "SELECT strDirector||REPLACE(strCast, CHAR(10), '|'), IMDBID FROM movieinfo WHERE strDirector||REPLACE(strCast, CHAR(10), '|') IS NOT NULL AND IMDBID IS NOT NULL"
+        SQLreader = SQLcommand.ExecuteReader()
+
+        While SQLreader.Read()
+
+            If Trim(SQLreader(0)) <> "" Then
+
+                persons = Split(Mid(SQLreader(0), 2, Len(SQLreader(0)) - 2).Replace("||", "|"), "|")
+
+                For y = 0 To UBound(persons)
+
+                    If Not String.IsNullOrEmpty(Trim(persons(y))) Then
+                        If Not personlist.ContainsKey(persons(y)) Then personlist.Add(persons(y), SQLreader(1))
+                    End If
+
+                Next
+
+            End If
+
+        End While
+
+        SQLconnect.Close()
+
+        Return personlist
+
+    End Function
+
     Public Shared Function get_MBID(ByVal database As String, ByVal album As String, ByVal artist As String) As String
 
         Dim MBID As String = Nothing
@@ -301,7 +454,7 @@ Public Class DVDArt_Common
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("dvdart") & ";Read Only=True;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT MBID FROM processed_artist WHERE LOWER(artist) = """ & LCase(artist) & """"
@@ -492,7 +645,7 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Function parse(ByVal jsonresponse As String, ByVal type As String, Optional ByVal language As String = "##") As Array
+    Public Shared Function parse(ByVal jsonresponse As String, ByVal type As String, ByVal id As String, Optional ByVal language As String = "##") As Array
 
         Dim parseHD_l As String = Nothing
         Dim parseHD_c As String = Nothing
@@ -501,6 +654,8 @@ Public Class DVDArt_Common
         Dim details(9, 0), returndetails(9, 0), parsestring(4), keyword(8) As String
         Dim starting(4), startHD_l, startHD_c, start_bd, start_ps, startp, endp, len, x, y, i, j As Integer
         Dim invalidimage As String = "http://assets.fanart.tv/fanart/movies/0/movieposter/-5278db34067a7.jpg"
+
+        logStats("DVDArt: " & type & " JSON parsing for " & id & " started.", "LOG")
 
         If type = "movie" Then
             keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """backdrops"":", "posters"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebackground"":", "movieposter"":"}
@@ -552,17 +707,17 @@ Public Class DVDArt_Common
         ' if there are HD images, merge with SD images
 
         If startHD_l > 0 Then
-            parsestring(2) = Trim(parsestring(2)) & parseHD_l.Replace(keyword(0), keyword(5))
+            parsestring(2) = Trim(parsestring(2)) & parseHD_l.Replace(keyword(0), keyword(6))
             If starting(2) = 0 Then starting(2) = startHD_l
         End If
 
         If startHD_c > 0 Then
-            parsestring(1) = Trim(parsestring(1)) & parseHD_c.Replace(keyword(1), keyword(4))
+            parsestring(1) = Trim(parsestring(1)) & parseHD_c.Replace(keyword(1), keyword(5))
             If starting(1) = 0 Then starting(1) = startHD_c
         End If
 
         If start_bd > 0 Then
-            parsestring(3) = Trim(parsestring(3)) & parse_bd.Replace(keyword(2), keyword(6))
+            parsestring(3) = Trim(parsestring(3)) & parse_bd.Replace(keyword(2), keyword(7))
             If starting(3) = 0 Then starting(3) = start_bd
         End If
 
@@ -648,40 +803,37 @@ Public Class DVDArt_Common
 
         If language <> "##" Then
 
-            For x = 0 To (details.Length / 8) - 1
-                For y = 1 To 5 Step 2
-                    If InStr(details(y, x), "LANG:" & language) > 0 Then
+            Dim size_array As Boolean
 
-                        For i = 0 To 5
-                            returndetails(i, 0) = details(i, x)
-                        Next
+            j = -1
 
-                        Return returndetails
+            For x = 0 To UBound(details, 2)
+
+                size_array = True
+
+                For y = 1 To UBound(details, 1) Step 2
+
+                    If InStr(details(y, x), "LANG:" & language) > 0 Or InStr(details(y, x), "LANG:EN") > 0 Or (details(y - 1, x) <> Nothing And details(y, x) = Nothing) Then
+
+                        If size_array Then
+                            j += 1
+                            ReDim Preserve returndetails(UBound(details, 1), j)
+                            size_array = False
+                        End If
+
+                        returndetails(y - 1, j) = details(y - 1, x)
+                        returndetails(y, j) = details(y, x)
 
                     End If
+
                 Next
             Next
-
-            ' if no artwork found for preferred language, check if there is anything in english
-            If language <> "EN" Then
-                For x = 0 To (details.Length / 8) - 1
-                    For y = 1 To 5 Step 2
-                        If InStr(details(y, x), "LANG:EN") > 0 Then
-
-                            For i = 0 To 5
-                                returndetails(i, 0) = details(i, x)
-                            Next
-
-                            Return returndetails
-
-                        End If
-                    Next
-                Next
-            End If
 
         Else
             returndetails = details
         End If
+
+        logStats("DVDArt: " & type & " JSON parsing for " & id & " complete.", "LOG")
 
         Return returndetails
 
@@ -819,7 +971,7 @@ Public Class DVDArt_Common
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT " & field & "fullpath FROM movie_info WHERE imdb_id = '" & imdb_id & "'"
@@ -885,6 +1037,8 @@ Public Class DVDArt_Common
 
                     load_image(pb_image, path)
 
+                    logStats("DVDArt: person image downloaded to " & path, "LOG")
+
                     IO.File.Delete(_temp & "\" & filename)
                 Else
                     If IO.File.Exists(path) Then
@@ -912,7 +1066,7 @@ Public Class DVDArt_Common
 
         If IO.File.Exists(path) Then
 
-            Do Until Not DVDArt_Common.FileInUse(path)
+            Do Until Not FileInUse(path)
                 wait(200)
             Loop
 
@@ -937,9 +1091,9 @@ Public Class DVDArt_Common
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3"
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("dvdart")
 
-        Log.Info("DVDArt: downloading artwork for " & type & " - """ & title & """")
+        logStats("DVDArt: downloading artwork for " & type & " - """ & title & """", "LOG")
 
         If type = "movie" Then
 
@@ -1021,7 +1175,7 @@ Public Class DVDArt_Common
 
         ElseIf type = "person" Then
 
-            Dim pb_image As PictureBox = Nothing
+            Dim pb_image As New PictureBox
 
             get_Person_image(title, personpath & Utils.MakeFileName(title) & ".png", pb_image)
 
@@ -1037,16 +1191,16 @@ Public Class DVDArt_Common
             Try
                 SQLcommand.ExecuteNonQuery()
             Catch ex As Exception
-                Log.Error("DVDArt: " & SQLcommand.CommandText & " failed with exception - " & ex.Message)
+                logStats("DVDArt: " & SQLcommand.CommandText & " failed with exception - " & ex.Message, "ERROR")
             End Try
 
             SQLconnect.Close()
         End If
 
         If downloaded.Contains(True) Then
-            Log.Info("DVDArt: artwork found for: """ & title & """")
+            logStats("DVDArt: artwork found for: """ & title & """", "LOG")
         Else
-            Log.Info("DVDArt: no artwork found for: """ & title & """")
+            logStats("DVDArt: no artwork found for: """ & title & """", "LOG")
         End If
 
         Return downloaded
@@ -1055,63 +1209,76 @@ Public Class DVDArt_Common
 
     Public Shared Sub bw_download_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork, bw_download6.DoWork, bw_download7.DoWork, bw_download8.DoWork, bw_download9.DoWork
 
-        Dim parm As String = e.Argument
-        Dim url, path As String
-        Dim endp As Integer
-        Dim factor As Decimal = 1
-        Dim shrink As Boolean = False
-        Dim WebClient As New System.Net.WebClient
+        Try
 
-        endp = InStr(parm, "|shrink")
+            Dim parm As String = e.Argument
 
-        If endp > 0 Then
-            shrink = True
-            parm = Left(parm, endp - 1)
-        End If
+            logStats("DVDArt: download thread started for [" & parm & "]", "DEBUG")
 
-        endp = InStr(parm, "|")
-        path = Left(parm, endp - 1)
-        url = Right(parm, Microsoft.VisualBasic.Len(parm) - endp)
+            Dim url, path As String
+            Dim endp As Integer
+            Dim factor As Decimal = 1
+            Dim shrink As Boolean = False
+            Dim WebClient As New System.Net.WebClient
 
-        'download image and if not preview, reduce size to 500x500
+            endp = InStr(parm, "|shrink")
 
-        If url <> "" And url <> "/preview" Then
-            Dim image As Image
-            Dim ImageInBytes() As Byte
-            Dim stream As System.IO.MemoryStream
-            Dim imagekey As String = Guid.NewGuid().ToString()
-            ImageInBytes = WebClient.DownloadData(url)
-            stream = New System.IO.MemoryStream(ImageInBytes)
-            image = image.FromStream(stream)
-
-            If shrink Then factor = 500 / image.Size.Height
-
-            image = New Bitmap(image, New Size(image.Size.Width * factor, image.Size.Height * factor))
-            image.Save(path)
-            image.Dispose()
-
-            Dim info As New IO.FileInfo(path)
-
-            If info.Extension = ".jpg" And (InStr(url, "/preview") = 0 Or InStr(url, "/w1920/") > 0) Then
-
-                reduceSize(path, info.Length)
-
-                Dim database As String = Nothing
-                Dim t As String = Nothing
-                Get_Paths(database, t)
-
-                If InStr(url, "/w" & _coversize & "/") > 0 Or InStr(url, "movieposter") > 0 Or InStr(LCase(path), "\covers\") > 0 Then
-                    If InStr(LCase(path), "\fullsize\") > 0 Then
-                        updateMovingPicturesDB(database, "cover", IO.Path.GetFileNameWithoutExtension(path), path)
-                    ElseIf InStr(LCase(path), "covers\thumbs\") > 0 Then
-                        updateMovingPicturesDB(database, "coverthumb", IO.Path.GetFileNameWithoutExtension(path), path)
-                    End If
-                Else
-                    If InStr(LCase(path), "\backdrops\thumbs\") = 0 Then updateMovingPicturesDB(database, "backdrop", IO.Path.GetFileNameWithoutExtension(path), path)
-                End If
+            If endp > 0 Then
+                shrink = True
+                parm = Left(parm, endp - 1)
             End If
 
-        End If
+            endp = InStr(parm, "|")
+            path = Left(parm, endp - 1)
+            url = Right(parm, Microsoft.VisualBasic.Len(parm) - endp)
+
+            'download image and if not preview, reduce size to 500x500
+
+            If url <> String.Empty And url <> "/preview" Then
+                Dim image As Image
+                Dim ImageInBytes() As Byte
+                Dim stream As System.IO.MemoryStream
+                Dim imagekey As String = Guid.NewGuid().ToString()
+                ImageInBytes = WebClient.DownloadData(url)
+                stream = New System.IO.MemoryStream(ImageInBytes)
+                image = image.FromStream(stream)
+
+                If shrink Then factor = 500 / image.Size.Height
+
+                image = New Bitmap(image, New Size(image.Size.Width * factor, image.Size.Height * factor))
+                image.Save(path)
+                image.Dispose()
+
+                logStats("DVDArt: artwork downloaded to " & path, "LOG")
+
+                Dim info As New IO.FileInfo(path)
+
+                If info.Extension = ".jpg" And (InStr(url, "/preview") = 0 Or InStr(url, "/w1920/") > 0) Then
+
+                    reduceSize(path, info.Length)
+
+                    Dim database As String = Nothing
+                    Dim t As String = Nothing
+                    Get_Paths(database, t)
+
+                    If InStr(url, "/w" & _coversize & "/") > 0 Or InStr(url, "movieposter") > 0 Or InStr(LCase(path), "\covers\") > 0 Then
+                        If InStr(LCase(path), "\fullsize\") > 0 Then
+                            updateMovingPicturesDB(database, "cover", IO.Path.GetFileNameWithoutExtension(path), path)
+                        ElseIf InStr(LCase(path), "covers\thumbs\") > 0 Then
+                            updateMovingPicturesDB(database, "coverthumb", IO.Path.GetFileNameWithoutExtension(path), path)
+                        End If
+                    Else
+                        If InStr(LCase(path), "\backdrops\thumbs\") = 0 Then updateMovingPicturesDB(database, "backdrop", IO.Path.GetFileNameWithoutExtension(path), path)
+                    End If
+                End If
+
+            End If
+
+            logStats("DVDArt: download thread complete for [" & parm & "]", "DEBUG")
+
+        Catch ex As Exception
+            logStats("DVDArt: Error downloading with exception " & ex.Message, "ERROR")
+        End Try
 
         e.Result = "DONE"
 
@@ -1151,7 +1318,7 @@ Public Class DVDArt_Common
             If jsonresponse <> "null" Then
 
                 If Left(type, 5) <> "music" Then
-                    url = parse(jsonresponse, type, language)
+                    url = parse(jsonresponse, type, id, language)
                 Else
                     url = parse_music(jsonresponse, LCase(title.Replace(" ", "-")))
                 End If
@@ -1167,10 +1334,11 @@ Public Class DVDArt_Common
                             thumbpath = thumbs & folder(0, y, 1) & id & ".jpg"
                         End If
                     ElseIf type = "series" Then
+                        If y = 0 Or y > 2 Then Continue For
                         fullpath = thumbs & folder(1, y, 0) & id & ".png"
                         thumbpath = thumbs & folder(1, y, 1) & id & ".png"
                     ElseIf type = "artist" Then
-                        If y = 0 Then Continue For
+                        If y = 0 Or y > 2 Then Continue For
                         fullpath = thumbs & folder(2, y, 0) & title & ".png"
                         thumbpath = thumbs & folder(2, y, 1) & title & ".png"
                     ElseIf Left(type, 5) = "music" Then
@@ -1223,7 +1391,10 @@ Public Class DVDArt_Common
                     found(y) = found(y) Or FileSystem.FileExists(thumbpath) Or (url(y * 2, 0) <> Nothing)
 
                     If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
-                        If y = 0 Then parm = fullpath & "|" & url(y * 2, 0) & "|shrink" Else parm = fullpath & "|" & url(y * 2, 0)
+
+                        parm = fullpath & "|" & url(y * 2, 0)
+                        If y = 0 Then parm += "|shrink"
+
                         Do
                             If Not bw_download1.IsBusy Then
                                 bw_download1.WorkerSupportsCancellation = True
@@ -1256,7 +1427,7 @@ Public Class DVDArt_Common
             End If
 
         Catch ex As Exception
-            Log.Error("DVDArt: failed with exception - " & ex.Message)
+            Log.Error("DVDArt: download failed with exception - " & ex.Message)
         End Try
 
         Return found
@@ -1319,6 +1490,8 @@ Public Class DVDArt_Common
             Convert(path, path, params)
         End If
 
+        logStats("DVDArt: artwork in " & path & " reseized.", "LOG")
+
     End Sub
 
     Public Shared Sub Convert(ByVal source As String, ByVal destination As String, ByVal ParamArray params() As String)
@@ -1371,7 +1544,7 @@ Public Class DVDArt_Common
             Dim SQLcommand As SQLiteCommand
             Dim SQLreader As SQLiteDataReader
 
-            SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+            SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
             SQLconnect.Open()
             SQLcommand = SQLconnect.CreateCommand
             SQLcommand.CommandText = "SELECT l.videoresolution, m.certification, m.studios FROM local_media l, movie_info m, local_media__movie_info lm WHERE lm.movie_info_id = m.id AND l.id = lm.local_media_id AND m.imdb_id = """ & imagename & """"
@@ -1625,61 +1798,40 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Function Create_Folder_Structure(ByVal database As String, ByVal thumbs As String) As Boolean
+    Private Shared Sub Create_Folder_Structure(ByVal database As String, ByVal thumbs As String)
 
         Dim db_exist(2) As Boolean
 
         ' Check and create directory structure
-
-        db_exist(0) = FileSystem.FileExists(database + "\movingpictures.db3")
-        db_exist(1) = FileSystem.FileExists(database + "\TVSeriesDatabase4.db3")
-        db_exist(2) = FileSystem.FileExists(database + "\MusicDatabaseV12.db3")
-
-        ' DVDArt
-        If db_exist(0) And Not FileSystem.DirectoryExists(thumbs & "\MovingPictures\DVDArt") Then FileSystem.CreateDirectory(thumbs & "\MovingPictures\DVDArt")
-
-        ' CDArt
-        If db_exist(2) And Not FileSystem.DirectoryExists(thumbs & "\Music\CDArt") Then FileSystem.CreateDirectory(thumbs & "\Music\CDArt")
-
-        ' ClearArt
-        If db_exist(0) And Not FileSystem.DirectoryExists(thumbs & "\MovingPictures\ClearArt") Then FileSystem.CreateDirectory(thumbs & "\MovingPictures\ClearArt")
-        If db_exist(1) And Not FileSystem.DirectoryExists(thumbs & "\TVSeries\ClearArt") Then FileSystem.CreateDirectory(thumbs & "\TVSeries\ClearArt")
-
-        ' Banner
-        If db_exist(2) And Not FileSystem.DirectoryExists(thumbs & "\Music\Banner") Then FileSystem.CreateDirectory(thumbs & "\Music\Banner")
-
-        ' ClearLogo
-        If db_exist(0) And Not FileSystem.DirectoryExists(thumbs & "\MovingPictures\ClearLogo") Then FileSystem.CreateDirectory(thumbs & "\MovingPictures\ClearLogo")
-        If db_exist(1) And Not FileSystem.DirectoryExists(thumbs & "\TVSeries\ClearLogo") Then FileSystem.CreateDirectory(thumbs & "\TVSeries\ClearLogo")
-        If db_exist(2) And Not FileSystem.DirectoryExists(thumbs & "\Music\ClearLogo") Then FileSystem.CreateDirectory(thumbs & "\Music\ClearLogo")
+        db_exist(0) = IO.File.Exists(database + p_Databases("movingpictures")) Or IO.File.Exists(p_Databases("myfilms")) Or IO.File.Exists(database & p_Databases("myvideos"))
+        db_exist(1) = IO.File.Exists(database + p_Databases("tvseries"))
+        db_exist(2) = IO.File.Exists(database + p_Databases("music"))
 
         For x = 0 To 2
             If db_exist(x) Then
-                For y = 0 To 1
-                    For z = 0 To 2
-                        If folder(z, x, y) IsNot Nothing Then
-                            If Not FileSystem.DirectoryExists(thumbs & folder(z, x, y)) Then FileSystem.CreateDirectory(thumbs & folder(z, x, y))
+                For y = 0 To 2
+                    For z = 0 To 1
+                        If folder(x, y, z) IsNot Nothing Then
+                            If Not IO.Directory.Exists(thumbs & folder(x, y, z)) Then IO.Directory.CreateDirectory(thumbs & folder(x, y, z))
                         End If
                     Next
                 Next
             End If
         Next
 
-        Return db_exist(0) Or db_exist(1) Or db_exist(2)
-
-    End Function
+    End Sub
 
     Private Shared Function readMovingPicturesDB(ByVal database As String, ByVal thumbs As String, ByVal key As String) As String
 
         Dim value As String = Nothing
 
-        If FileSystem.FileExists(database & "\movingpictures.db3") Then
+        If FileSystem.FileExists(database & p_Databases("movingpictures")) Then
 
             Dim SQLconnect As New SQLiteConnection()
             Dim SQLcommand As SQLiteCommand
             Dim SQLreader As SQLiteDataReader
 
-            SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+            SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
             SQLconnect.Open()
             SQLcommand = SQLconnect.CreateCommand
             SQLcommand.CommandText = "SELECT value FROM settings WHERE key = '" & key & "'"
@@ -1705,7 +1857,7 @@ Public Class DVDArt_Common
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;"
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";"
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "UPDATE movie_info SET " & field & "fullpath = '" & value & "' WHERE imdb_id = '" & key & "'"
@@ -1722,9 +1874,18 @@ Public Class DVDArt_Common
 
     Public Shared Sub preInitialize()
 
+        ' create log file
+        Dim file As String = Config.GetFile(Config.Dir.Log, "dvdart_plugin.log")
+
+        If IO.File.Exists(Config.GetFile(Config.Dir.Log, "dvdart_plugin.bak")) Then IO.File.Delete(Config.GetFile(Config.Dir.Log, "dvdart_plugin.bak"))
+        If IO.File.Exists(file) Then FileIO.FileSystem.RenameFile(file, "dvdart_plugin.bak")
+        Dim fhandle As System.IO.FileStream = IO.File.Open(file, IO.FileMode.OpenOrCreate)
+        fhandle.Close()
+
         ' initialize version
-        _pre_version = "v1.0.1.2"
-        _version = "v1.0.2.2"
+        _version = "v1.0.2.3"
+
+        logStats("DVDArt: Plugin version " & _version, "LOG")
 
         'set cover size
         _coversize = "600"
@@ -1748,6 +1909,12 @@ Public Class DVDArt_Common
     End Sub
 
     Public Shared Sub Initialize(ByVal database As String, ByVal thumbs As String, ByVal Movies As String, ByVal Series As String, ByVal Music As String)
+
+        logStats("DVDArt: Initialization in progress.", "LOG")
+
+        logStats("DVDArt: Movies artwork path - " & Movies, "LOG")
+        logStats("DVDArt: Series artwork path - " & Series, "LOG")
+        logStats("DVDArt: Music artwork path  - " & Music, "LOG")
 
         Movies = Right(Movies, Len(Movies) - Len(thumbs))
         Series = Right(Series, Len(Series) - Len(thumbs))
@@ -1785,8 +1952,11 @@ Public Class DVDArt_Common
         folder(2, 4, 0) = Nothing
         folder(2, 4, 1) = Nothing
 
+        'create thumb folder structure
+        Create_Folder_Structure(database, thumbs)
+
         'extract dvdart.png from resources to temporary folder
-        Dim png As String = DVDArt_Common._temp & "\dvdart.png"
+        Dim png As String = _temp & "\dvdart.png"
         If Not FileSystem.FileExists(png) Then
             Dim image As Image = New Bitmap(My.Resources.dvdart)
             image.Save(png)
@@ -1794,7 +1964,7 @@ Public Class DVDArt_Common
         End If
 
         'extract dvdart_title.png from resources to temporary folder
-        png = DVDArt_Common._temp & "\dvdart_title.png"
+        png = _temp & "\dvdart_title.png"
         If Not FileSystem.FileExists(png) Then
             Dim image As Image = New Bitmap(My.Resources.dvdart_title)
             image.Save(png)
@@ -1802,7 +1972,7 @@ Public Class DVDArt_Common
         End If
 
         'extract dvdart_mask.png from resources to temporary folder
-        png = DVDArt_Common._temp & "\dvdart_mask.png"
+        png = _temp & "\dvdart_mask.png"
         If Not FileSystem.FileExists(png) Then
             Dim image As Image = New Bitmap(My.Resources.dvdart_mask)
             image.Save(png)
@@ -1810,7 +1980,7 @@ Public Class DVDArt_Common
         End If
 
         'extract cdart.png from resources to temporary folder
-        png = DVDArt_Common._temp & "\cdart.png"
+        png = _temp & "\cdart.png"
         If Not FileSystem.FileExists(png) Then
             Dim image As Image = New Bitmap(My.Resources.cdart)
             image.Save(png)
@@ -1818,12 +1988,14 @@ Public Class DVDArt_Common
         End If
 
         'extract cdart_mask.png from resources to temporary folder
-        png = DVDArt_Common._temp & "\cdart_mask.png"
+        png = _temp & "\cdart_mask.png"
         If Not FileSystem.FileExists(png) Then
             Dim image As Image = New Bitmap(My.Resources.cdart_mask)
             image.Save(png)
             image.Dispose()
         End If
+
+        logStats("DVDArt: Initialization complete.", "LOG")
 
     End Sub
 
