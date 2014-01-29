@@ -319,8 +319,6 @@ Public Class DVDArt_GUI
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_movies_missing.Handle, lvi)
 
-                            lv_import.Items(x).EnsureVisible()
-
                         Next
 
                         If addedmissing Then
@@ -398,8 +396,6 @@ Public Class DVDArt_GUI
 
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_series_missing.Handle, lvi)
-
-                            lv_import.Items(x).EnsureVisible()
 
                         Next
 
@@ -494,8 +490,6 @@ Public Class DVDArt_GUI
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_music_missing.Handle, lvi)
 
-                            lv_import.Items(x).EnsureVisible()
-
                         Next
 
                         If addedmissing Then
@@ -588,8 +582,6 @@ Public Class DVDArt_GUI
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_music_missing.Handle, lvi)
 
-                            lv_import.Items(x).EnsureVisible()
-
                         Next
 
                         If addedmissing Then
@@ -603,27 +595,22 @@ Public Class DVDArt_GUI
 
                     ElseIf lv_import.Items.Item(x).SubItems.Item(2).Text = "Person" Then
 
-                        Dim image As Image = DVDArt_Common.get_Person_image(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                        Dim person As String = lv_import.Items.Item(x).SubItems.Item(0).Text
+                        Dim pb_image As PictureBox = Nothing
 
-                        If image IsNot Nothing Then
-                            lv_import.Items(l_import_index(x)).StateImageIndex = 1
-                            image.Save(personpath & Utils.MakeFileName(lv_import.Items.Item(x).SubItems.Item(0).Text) & ".png")
-                            li_person = lv_person.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                        DVDArt_Common.get_Person_image(person, personpath & Utils.MakeFileName(person) & ".png", pb_image)
+
+                        If IO.File.Exists(personpath & Utils.MakeFileName(person) & ".png") Then
+                            lv_import.Items(x).StateImageIndex = 1
+                            li_person = lv_person.Items.Add(person)
                         Else
-                            If IO.File.Exists(personpath & Utils.MakeFileName(lv_import.Items.Item(x).SubItems.Item(0).Text) & ".png") Then
-                                lv_import.Items(l_import_index(x)).StateImageIndex = 1
-                            Else
-                                lv_import.Items(l_import_index(x)).StateImageIndex = 2
-                                If lv_persons_missing.FindItemWithText(lv_import.Items.Item(x).SubItems.Item(0).Text).Text = Nothing Then
-                                    li_missing = lv_persons_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                End If
-                            End If
+                            lv_import.Items(x).StateImageIndex = 2
+                            li_missing = lv_persons_missing.Items.Add(person)
                         End If
-
-                        lv_import.Items(l_import_index(x)).EnsureVisible()
 
                     End If
 
+                    lv_import.Items(l_import_index(x)).EnsureVisible()
                     x += 1
 
                 Loop
@@ -738,8 +725,6 @@ Public Class DVDArt_GUI
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_movies_missing.Handle, lvi)
 
-                            lv_import.Items(l_import_index(x)).EnsureVisible()
-
                         Next
 
                         SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_movies (imdb_id) VALUES('" & " & id & " ')"
@@ -809,8 +794,6 @@ Public Class DVDArt_GUI
 
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_series_missing.Handle, lvi)
-
-                            lv_import.Items(l_import_index(x)).EnsureVisible()
 
                         Next
 
@@ -892,8 +875,6 @@ Public Class DVDArt_GUI
 
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_music_missing.Handle, lvi)
-
-                            lv_import.Items(l_import_index(x)).EnsureVisible()
 
                         Next
 
@@ -979,8 +960,6 @@ Public Class DVDArt_GUI
                             lvi.mask = LVIF_IMAGE
                             ListView_SetItem(lv_music_missing.Handle, lvi)
 
-                            lv_import.Items(l_import_index(x)).EnsureVisible()
-
                         Next
 
                         SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_music (album, MBID) VALUES('" & title.Replace("'", "''") & "','" & id & "')"
@@ -988,24 +967,21 @@ Public Class DVDArt_GUI
 
                     ElseIf type = "person" Then
 
-                        Dim image As Image = DVDArt_Common.get_Person_image(title)
+                        Dim pb_image As PictureBox = Nothing
 
-                        If image IsNot Nothing Then
+                        DVDArt_Common.get_Person_image(title, personpath & Utils.MakeFileName(title) & ".png", pb_image)
+
+                        If IO.File.Exists(personpath & Utils.MakeFileName(title) & ".png") Then
                             lv_import.Items(l_import_index(x)).StateImageIndex = 1
-                            image.Save(personpath & Utils.MakeFileName(title) & ".png")
                             li_person = lv_person.Items.Add(title)
                         Else
-                            If IO.File.Exists(personpath & Utils.MakeFileName(title) & ".png") Then
-                                lv_import.Items(l_import_index(x)).StateImageIndex = 1
-                            Else
-                                lv_import.Items(l_import_index(x)).StateImageIndex = 2
-                                li_missing = lv_persons_missing.Items.Add(title)
-                            End If
+                            lv_import.Items(l_import_index(x)).StateImageIndex = 2
+                            li_missing = lv_persons_missing.Items.Add(title)
                         End If
 
-                        lv_import.Items(l_import_index(x)).EnsureVisible()
-
                     End If
+
+                    lv_import.Items(l_import_index(x)).EnsureVisible()
 
                     If addedmissing Then
                         li_missing.SubItems.Add(id)
@@ -1674,7 +1650,7 @@ Public Class DVDArt_GUI
 
         If x = 0 Then ReDim Preserve imdb_id_in_mp(0)
 
-        If lv_import.Items.Count > 0 Then
+        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
             FTV_api_connector(Nothing, Nothing, "movie", "import")
         End If
 
@@ -1707,12 +1683,15 @@ Public Class DVDArt_GUI
 
     Private Sub loadPersonList()
 
+        If Not IO.File.Exists(database & "\movingpictures.db3") And Not IO.File.Exists(Config.GetFile(Config.Dir.Config, "MyFilms.xml")) Then Exit Sub
+        If Not personchecked Then Exit Sub
+
         Dim mypersons As SortedList = DVDArt_Common.loadMovingPicturesPersons(database)
 
-        'Try
-        'mypersons = DVDArt_Common.loadMyFilmsPersons(mypersons)
-        'Catch ex As Exception
-        'End Try
+        Try
+            mypersons = DVDArt_Common.loadMyFilmsPersons(mypersons)
+        Catch ex As Exception
+        End Try
 
         ' process loaded persons
 
@@ -1725,8 +1704,12 @@ Public Class DVDArt_GUI
                     li_import = lv_import.Items.Add(mypersons.GetKey(i))
                     li_import.SubItems.Add("")
                     li_import.SubItems.Add("Person")
-                    l_import_queue.Add("|" & mypersons.GetKey(i) & "|person")
-                    l_import_index.Add(lv_import.Items.Count - 1)
+                    If cb_autoimport.Checked = False Then
+                        l_import_queue.Add("|" & mypersons.GetKey(i) & "|person")
+                        l_import_index.Add(lv_import.Items.Count - 1)
+                    End If
+
+                    lv_persons_missing.Items.RemoveByKey(mypersons.GetKey(i))
                 Else
                     li_missing = lv_persons_missing.Items.Add(mypersons.GetKey(i))
                 End If
@@ -1734,7 +1717,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        If lv_import.Items.Count > 0 Then
+        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
             FTV_api_connector(Nothing, Nothing, "person", "import")
         End If
 
@@ -1888,7 +1871,7 @@ Public Class DVDArt_GUI
 
         If x = 0 Then ReDim Preserve thetvdb_id_in_tv(0)
 
-        If lv_import.Items.Count > 0 Then
+        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
             FTV_api_connector(Nothing, Nothing, "series", "import")
         End If
 
@@ -2088,7 +2071,7 @@ Public Class DVDArt_GUI
 
         SQLconnect.Close()
 
-        If lv_import.Items.Count > 0 Then
+        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
             FTV_api_connector(Nothing, Nothing, "artist", "import")
         End If
 
@@ -2286,7 +2269,7 @@ Public Class DVDArt_GUI
 
         SQLconnect.Close()
 
-        If lv_import.Items.Count > 0 Then
+        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
             FTV_api_connector(Nothing, Nothing, "music", "import")
         End If
 
@@ -2314,29 +2297,6 @@ Public Class DVDArt_GUI
         End While
 
         SQLconnect.Close()
-
-    End Sub
-
-    Private Sub load_image(ByRef pb_image As PictureBox, ByVal path As String)
-
-        On Error Resume Next
-
-        If IO.File.Exists(path) Then
-
-            Do Until Not DVDArt_Common.FileInUse(path)
-                wait(200)
-            Loop
-
-            Dim fs As System.IO.FileStream
-            fs = New System.IO.FileStream(path, IO.FileMode.Open, IO.FileAccess.Read)
-            pb_image.Image = System.Drawing.Image.FromStream(fs)
-            fs.Close()
-
-            pb_image.Tag = Nothing
-        Else
-            pb_image.Image = Nothing
-            pb_image.Tag = Nothing
-        End If
 
     End Sub
 
@@ -2437,7 +2397,7 @@ Public Class DVDArt_GUI
                     End If
 
                     If x = 0 Then
-                        load_image(pb_movie_dvdart, thumbpath)
+                        DVDArt_Common.load_image(pb_movie_dvdart, thumbpath)
 
                         If pb_movie_dvdart.Image IsNot Nothing Then
                             l_movie_size.Text = DVDArt_Common.getSize(thumbs & DVDArt_Common.folder(0, x, 0) & current_imdb_id & ".png")
@@ -2452,16 +2412,16 @@ Public Class DVDArt_GUI
                         End If
 
                     ElseIf x = 1 Then
-                        load_image(pb_movie_clearart, thumbpath)
+                        DVDArt_Common.load_image(pb_movie_clearart, thumbpath)
                         b_movie_deleteart.Visible = (pb_movie_clearart.Image IsNot Nothing)
                     ElseIf x = 2 Then
-                        load_image(pb_movie_clearlogo, thumbpath)
+                        DVDArt_Common.load_image(pb_movie_clearlogo, thumbpath)
                         b_movie_deletelogo.Visible = (pb_movie_clearlogo.Image IsNot Nothing)
                     ElseIf x = 3 Then
-                        load_image(pb_movie_backdrop, thumbpath)
+                        DVDArt_Common.load_image(pb_movie_backdrop, thumbpath)
                         b_movie_deletebackdrop.Visible = (pb_movie_backdrop.Image IsNot Nothing)
                     ElseIf x = 4 Then
-                        load_image(pb_movie_cover, thumbpath)
+                        DVDArt_Common.load_image(pb_movie_cover, thumbpath)
                         b_movie_deletecover.Visible = (pb_movie_cover.Image IsNot Nothing)
                     End If
 
@@ -2486,7 +2446,7 @@ Public Class DVDArt_GUI
             current_person = lv_person.FocusedItem.SubItems.Item(0).Text
             thumbpath = personpath & current_image & ".png"
 
-            load_image(pb_person, thumbpath)
+            DVDArt_Common.load_image(pb_person, thumbpath)
 
         Catch ex As Exception
         End Try
@@ -2525,10 +2485,10 @@ Public Class DVDArt_GUI
                 If checked(1, x) Then
                     thumbpath = thumbs & DVDArt_Common.folder(1, x, 1) & current_thetvdb_id & ".png"
                     If x = 1 Then
-                        load_image(pb_serie_clearart, thumbpath)
+                        DVDArt_Common.load_image(pb_serie_clearart, thumbpath)
                         b_serie_deleteart.Visible = (pb_serie_clearart.Image IsNot Nothing)
                     ElseIf x = 2 Then
-                        load_image(pb_serie_clearlogo, thumbpath)
+                        DVDArt_Common.load_image(pb_serie_clearlogo, thumbpath)
                         b_serie_deletelogo.Visible = (pb_serie_clearlogo.Image IsNot Nothing)
                     End If
                 End If
@@ -2573,10 +2533,10 @@ Public Class DVDArt_GUI
                     thumbpath = thumbs & DVDArt_Common.folder(2, x, 1) & current_image & ".png"
 
                     If x = 1 Then
-                        load_image(pb_artist_banner, thumbpath)
+                        DVDArt_Common.load_image(pb_artist_banner, thumbpath)
                         b_artist_deletebanner.Visible = (pb_artist_banner.Image IsNot Nothing)
                     ElseIf x = 2 Then
-                        load_image(pb_artist_clearlogo, thumbpath)
+                        DVDArt_Common.load_image(pb_artist_clearlogo, thumbpath)
                         b_artist_deletelogo.Visible = (pb_artist_clearlogo.Image IsNot Nothing)
                     End If
                 End If
@@ -2609,7 +2569,7 @@ Public Class DVDArt_GUI
 
             If checked(2, 0) Then
                 thumbpath = thumbs & DVDArt_Common.folder(2, 0, 1) & current_image & ".png"
-                load_image(pb_album_cdart, thumbpath)
+                DVDArt_Common.load_image(pb_album_cdart, thumbpath)
 
                 If pb_album_cdart.Image IsNot Nothing Then
                     l_music_size.Text = DVDArt_Common.getSize(thumbs & DVDArt_Common.folder(2, 0, 0) & current_image & ".png")
@@ -3048,13 +3008,13 @@ Public Class DVDArt_GUI
 
         If lv_person.SelectedItems.Count > 0 Then
             If e.ClickedItem.Text = "Refresh person image from online" Then
-                pb_person.Image = DVDArt_Common.get_Person_image(lv_person.SelectedItems(0).SubItems.Item(0).Text)
-                If pb_person IsNot Nothing Then pb_person.Image.Save(personpath & Utils.MakeFileName(lv_person.SelectedItems(0).SubItems.Item(0).Text) & ".png")
+                DVDArt_Common.get_Person_image(lv_person.SelectedItems(0).SubItems.Item(0).Text, personpath & Utils.MakeFileName(lv_person.SelectedItems(0).SubItems.Item(0).Text) & ".png", pb_person)
             ElseIf e.ClickedItem.Text = "Manually Upload person image" Then
                 For x = 0 To (lv_person.SelectedItems.Count - 1)
                     Dim person As String = lv_person.SelectedItems(x).SubItems(0).Text
                     Dim upload As New DVDArt_ManualUpload(Utils.MakeFileName(person), person, "person")
                     upload.ShowDialog()
+                    current_person = String.Empty
                     lv_person_SelectedIndexChanged(sender, e)
                 Next
             ElseIf e.ClickedItem.Text = "Delete person image" Then
@@ -3806,6 +3766,26 @@ Public Class DVDArt_GUI
 
     Private Sub tb_person_path_TextChanged(sender As Object, e As EventArgs) Handles tb_person_path.TextChanged
         personpath = tb_person_path.Text
+    End Sub
+
+    Private Sub pbFTV_Logo_Click(sender As Object, e As EventArgs) Handles pbFTV_Logo.Click, pbFTV_Logo2.Click, pbFTV_Logo3.Click
+        Dim url As String = "http://www.fanart.tv"
+        Process.Start(url)
+    End Sub
+
+    Private Sub pbthemoviedb_Click(sender As Object, e As EventArgs) Handles pbthemoviedb.Click
+        Dim url As String = "http://www.themoviedb.org"
+        Process.Start(url)
+    End Sub
+
+    Private Sub pbLastFM_Click(sender As Object, e As EventArgs) Handles pbLastFM.Click
+        Dim url As String = "http://www.last.fm/"
+        Process.Start(url)
+    End Sub
+
+    Private Sub pbAudioDB_Click(sender As Object, e As EventArgs) Handles pbAudioDB.Click
+        Dim url As String = "http://www.theaudiodb.com/"
+        Process.Start(url)
     End Sub
 
     Private Sub DVDArt_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed

@@ -41,45 +41,20 @@
         Dim imagesize As String = DVDArt_Common.getSize(IO.Path.GetDirectoryName(_path) & "\" & IO.Path.GetFileName(_path))
         Dim i_dim() As String = Split(imagesize, "x")
 
-        pb_preview.SizeMode = PictureBoxSizeMode.CenterImage
-
-        If imagesize = "1000x185" Then
-            Me.Width = 1010
-            Me.Height = 224
-            pb_preview.Width = 1000
-            pb_preview.Height = 185
-            l_copyright.Top = 186
-        ElseIf imagesize = "500x500" Then
-            Me.Width = 510
-            Me.Height = 527
-            pb_preview.Width = 500
-            pb_preview.Height = 500
-            l_copyright.Top = 488
-        ElseIf imagesize = "500x281" Then
-            Me.Width = 510
-            Me.Height = 320
-            pb_preview.Width = 500
-            pb_preview.Height = 281
-            l_copyright.Top = 281
-        ElseIf imagesize = "400x155" Then
-            Me.Width = 410
-            Me.Height = 194
-            pb_preview.Width = 400
-            pb_preview.Height = 155
-            l_copyright.Top = 155
-        ElseIf i_dim(0) = "300" Or i_dim(1) = "400" Then
-            Me.Width = 415
-            Me.Height = 546
-            pb_preview.Width = 400
-            pb_preview.Height = 500
-            l_copyright.Top = 500
+        If i_dim(0) <= 1000 Then
+            pb_preview.SizeMode = PictureBoxSizeMode.CenterImage
+            Me.Width = i_dim(0) + 20
+            Me.Height = i_dim(1) + 40
+            pb_preview.Width = i_dim(0)
+            pb_preview.Height = i_dim(1)
+            l_copyright.Top = i_dim(1) - 10
         Else
             pb_preview.SizeMode = PictureBoxSizeMode.StretchImage
-            Me.Width = 1290
-            Me.Height = 759
+            Me.Width = 1310
+            Me.Height = 760
             pb_preview.Width = 1280
             pb_preview.Height = 720
-            l_copyright.Top = 720
+            l_copyright.Top = 710
         End If
 
         Me.CenterToScreen()

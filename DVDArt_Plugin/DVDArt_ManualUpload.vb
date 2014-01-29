@@ -260,6 +260,9 @@ Public Class DVDArt_ManualUpload
 
             Case "person"
                 If Check_Image(tb_clearart.Text, 300, 400, True) Then
+                    Dim params() As String = {"-compose", "Copy", "-frame", "5x5+2+2"}
+                    DVDArt_Common.Convert(tb_clearart.Text, tb_clearart.Text, params)
+
                     b_process_clearart.Visible = False
                     b_preview_clearart.Visible = True
                     _process(1) = True

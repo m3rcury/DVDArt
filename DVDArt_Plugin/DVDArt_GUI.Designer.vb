@@ -48,7 +48,7 @@ Partial Class DVDArt_GUI
         Me.bw_import = New System.ComponentModel.BackgroundWorker()
         Me.tbc_main = New System.Windows.Forms.TabControl()
         Me.tp_MovingPictures = New System.Windows.Forms.TabPage()
-        Me.PictureBox13 = New System.Windows.Forms.PictureBox()
+        Me.pbthemoviedb = New System.Windows.Forms.PictureBox()
         Me.pb_movingpictures = New System.Windows.Forms.PictureBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tp_movies = New System.Windows.Forms.TabPage()
@@ -131,12 +131,12 @@ Partial Class DVDArt_GUI
         Me.c_ClearLogo = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.c_id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.pbFTV_Logo2 = New System.Windows.Forms.PictureBox()
         Me.tp_Music = New System.Windows.Forms.TabPage()
-        Me.PictureBox11 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox10 = New System.Windows.Forms.PictureBox()
+        Me.pbAudioDB = New System.Windows.Forms.PictureBox()
+        Me.pbLastFM = New System.Windows.Forms.PictureBox()
         Me.PictureBox9 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox5 = New System.Windows.Forms.PictureBox()
+        Me.pbFTV_Logo3 = New System.Windows.Forms.PictureBox()
         Me.tbc_music = New System.Windows.Forms.TabControl()
         Me.tp_artists = New System.Windows.Forms.TabPage()
         Me.lv_artist = New System.Windows.Forms.ListView()
@@ -263,7 +263,7 @@ Partial Class DVDArt_GUI
         Me.cms_missing.SuspendLayout()
         Me.tbc_main.SuspendLayout()
         Me.tp_MovingPictures.SuspendLayout()
-        CType(Me.PictureBox13, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbthemoviedb, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pb_movingpictures, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.tp_movies.SuspendLayout()
@@ -296,12 +296,12 @@ Partial Class DVDArt_GUI
         CType(Me.pb_serie_clearlogo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tp_series_missing.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbFTV_Logo2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tp_Music.SuspendLayout()
-        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbAudioDB, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbLastFM, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbFTV_Logo3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tbc_music.SuspendLayout()
         Me.tp_artists.SuspendLayout()
         Me.tbc_artist.SuspendLayout()
@@ -520,7 +520,7 @@ Partial Class DVDArt_GUI
         'tp_MovingPictures
         '
         Me.tp_MovingPictures.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.tp_MovingPictures.Controls.Add(Me.PictureBox13)
+        Me.tp_MovingPictures.Controls.Add(Me.pbthemoviedb)
         Me.tp_MovingPictures.Controls.Add(Me.pb_movingpictures)
         Me.tp_MovingPictures.Controls.Add(Me.TabControl1)
         Me.tp_MovingPictures.Controls.Add(Me.pbFTV_Logo)
@@ -532,15 +532,15 @@ Partial Class DVDArt_GUI
         Me.tp_MovingPictures.TabIndex = 0
         Me.tp_MovingPictures.Text = "Movies"
         '
-        'PictureBox13
+        'pbthemoviedb
         '
-        Me.PictureBox13.Image = Global.DVDArt_Plugin.My.Resources.Resources.tmdb_logo
-        Me.PictureBox13.Location = New System.Drawing.Point(522, 816)
-        Me.PictureBox13.Name = "PictureBox13"
-        Me.PictureBox13.Size = New System.Drawing.Size(96, 20)
-        Me.PictureBox13.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
-        Me.PictureBox13.TabIndex = 33
-        Me.PictureBox13.TabStop = False
+        Me.pbthemoviedb.Image = Global.DVDArt_Plugin.My.Resources.Resources.tmdb_logo
+        Me.pbthemoviedb.Location = New System.Drawing.Point(522, 816)
+        Me.pbthemoviedb.Name = "pbthemoviedb"
+        Me.pbthemoviedb.Size = New System.Drawing.Size(96, 20)
+        Me.pbthemoviedb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.pbthemoviedb.TabIndex = 33
+        Me.pbthemoviedb.TabStop = False
         '
         'pb_movingpictures
         '
@@ -1123,7 +1123,7 @@ Partial Class DVDArt_GUI
         Me.tp_TVSeries.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.tp_TVSeries.Controls.Add(Me.TabControl2)
         Me.tp_TVSeries.Controls.Add(Me.PictureBox2)
-        Me.tp_TVSeries.Controls.Add(Me.PictureBox1)
+        Me.tp_TVSeries.Controls.Add(Me.pbFTV_Logo2)
         Me.tp_TVSeries.Location = New System.Drawing.Point(4, 22)
         Me.tp_TVSeries.Name = "tp_TVSeries"
         Me.tp_TVSeries.Padding = New System.Windows.Forms.Padding(3)
@@ -1351,23 +1351,23 @@ Partial Class DVDArt_GUI
         Me.PictureBox2.TabIndex = 31
         Me.PictureBox2.TabStop = False
         '
-        'PictureBox1
+        'pbFTV_Logo2
         '
-        Me.PictureBox1.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
-        Me.PictureBox1.Location = New System.Drawing.Point(469, 785)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(258, 48)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 30
-        Me.PictureBox1.TabStop = False
+        Me.pbFTV_Logo2.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
+        Me.pbFTV_Logo2.Location = New System.Drawing.Point(469, 785)
+        Me.pbFTV_Logo2.Name = "pbFTV_Logo2"
+        Me.pbFTV_Logo2.Size = New System.Drawing.Size(258, 48)
+        Me.pbFTV_Logo2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.pbFTV_Logo2.TabIndex = 30
+        Me.pbFTV_Logo2.TabStop = False
         '
         'tp_Music
         '
         Me.tp_Music.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.tp_Music.Controls.Add(Me.PictureBox11)
-        Me.tp_Music.Controls.Add(Me.PictureBox10)
+        Me.tp_Music.Controls.Add(Me.pbAudioDB)
+        Me.tp_Music.Controls.Add(Me.pbLastFM)
         Me.tp_Music.Controls.Add(Me.PictureBox9)
-        Me.tp_Music.Controls.Add(Me.PictureBox5)
+        Me.tp_Music.Controls.Add(Me.pbFTV_Logo3)
         Me.tp_Music.Controls.Add(Me.tbc_music)
         Me.tp_Music.Location = New System.Drawing.Point(4, 22)
         Me.tp_Music.Name = "tp_Music"
@@ -1376,25 +1376,25 @@ Partial Class DVDArt_GUI
         Me.tp_Music.TabIndex = 4
         Me.tp_Music.Text = "Music"
         '
-        'PictureBox11
+        'pbAudioDB
         '
-        Me.PictureBox11.Image = Global.DVDArt_Plugin.My.Resources.Resources.theAudioDB
-        Me.PictureBox11.Location = New System.Drawing.Point(519, 817)
-        Me.PictureBox11.Name = "PictureBox11"
-        Me.PictureBox11.Size = New System.Drawing.Size(80, 17)
-        Me.PictureBox11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
-        Me.PictureBox11.TabIndex = 35
-        Me.PictureBox11.TabStop = False
+        Me.pbAudioDB.Image = Global.DVDArt_Plugin.My.Resources.Resources.theAudioDB
+        Me.pbAudioDB.Location = New System.Drawing.Point(519, 817)
+        Me.pbAudioDB.Name = "pbAudioDB"
+        Me.pbAudioDB.Size = New System.Drawing.Size(80, 17)
+        Me.pbAudioDB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.pbAudioDB.TabIndex = 35
+        Me.pbAudioDB.TabStop = False
         '
-        'PictureBox10
+        'pbLastFM
         '
-        Me.PictureBox10.Image = Global.DVDArt_Plugin.My.Resources.Resources.lastfm
-        Me.PictureBox10.Location = New System.Drawing.Point(600, 819)
-        Me.PictureBox10.Name = "PictureBox10"
-        Me.PictureBox10.Size = New System.Drawing.Size(55, 14)
-        Me.PictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox10.TabIndex = 34
-        Me.PictureBox10.TabStop = False
+        Me.pbLastFM.Image = Global.DVDArt_Plugin.My.Resources.Resources.lastfm
+        Me.pbLastFM.Location = New System.Drawing.Point(600, 819)
+        Me.pbLastFM.Name = "pbLastFM"
+        Me.pbLastFM.Size = New System.Drawing.Size(55, 14)
+        Me.pbLastFM.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.pbLastFM.TabIndex = 34
+        Me.pbLastFM.TabStop = False
         '
         'PictureBox9
         '
@@ -1407,15 +1407,15 @@ Partial Class DVDArt_GUI
         Me.PictureBox9.TabIndex = 33
         Me.PictureBox9.TabStop = False
         '
-        'PictureBox5
+        'pbFTV_Logo3
         '
-        Me.PictureBox5.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
-        Me.PictureBox5.Location = New System.Drawing.Point(469, 785)
-        Me.PictureBox5.Name = "PictureBox5"
-        Me.PictureBox5.Size = New System.Drawing.Size(258, 48)
-        Me.PictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox5.TabIndex = 32
-        Me.PictureBox5.TabStop = False
+        Me.pbFTV_Logo3.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
+        Me.pbFTV_Logo3.Location = New System.Drawing.Point(469, 785)
+        Me.pbFTV_Logo3.Name = "pbFTV_Logo3"
+        Me.pbFTV_Logo3.Size = New System.Drawing.Size(258, 48)
+        Me.pbFTV_Logo3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.pbFTV_Logo3.TabIndex = 32
+        Me.pbFTV_Logo3.TabStop = False
         '
         'tbc_music
         '
@@ -2682,7 +2682,7 @@ Partial Class DVDArt_GUI
         Me.tbc_main.ResumeLayout(False)
         Me.tp_MovingPictures.ResumeLayout(False)
         Me.tp_MovingPictures.PerformLayout()
-        CType(Me.PictureBox13, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbthemoviedb, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pb_movingpictures, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)
         Me.tp_movies.ResumeLayout(False)
@@ -2717,13 +2717,13 @@ Partial Class DVDArt_GUI
         CType(Me.pb_serie_clearlogo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tp_series_missing.ResumeLayout(False)
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbFTV_Logo2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tp_Music.ResumeLayout(False)
         Me.tp_Music.PerformLayout()
-        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbAudioDB, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbLastFM, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbFTV_Logo3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tbc_music.ResumeLayout(False)
         Me.tp_artists.ResumeLayout(False)
         Me.tbc_artist.ResumeLayout(False)
@@ -2838,7 +2838,7 @@ Partial Class DVDArt_GUI
     Friend WithEvents pb_movingpictures As System.Windows.Forms.PictureBox
     Friend WithEvents pbFTV_Logo As System.Windows.Forms.PictureBox
     Friend WithEvents tp_TVSeries As System.Windows.Forms.TabPage
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+    Friend WithEvents pbFTV_Logo2 As System.Windows.Forms.PictureBox
     Friend WithEvents tp_Settings As System.Windows.Forms.TabPage
     Friend WithEvents gb2 As System.Windows.Forms.GroupBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
@@ -2910,7 +2910,7 @@ Partial Class DVDArt_GUI
     Friend WithEvents u_CDArt As System.Windows.Forms.ColumnHeader
     Friend WithEvents u_Banner As System.Windows.Forms.ColumnHeader
     Friend WithEvents u_ClearLogo As System.Windows.Forms.ColumnHeader
-    Friend WithEvents PictureBox5 As System.Windows.Forms.PictureBox
+    Friend WithEvents pbFTV_Logo3 As System.Windows.Forms.PictureBox
     Friend WithEvents PictureBox9 As System.Windows.Forms.PictureBox
     Friend WithEvents MBID As System.Windows.Forms.ColumnHeader
     Friend WithEvents u_MBID As System.Windows.Forms.ColumnHeader
@@ -2937,7 +2937,7 @@ Partial Class DVDArt_GUI
     Friend WithEvents b_artist_deletebanner As System.Windows.Forms.Button
     Friend WithEvents pb_artist_banner As System.Windows.Forms.PictureBox
     Friend WithEvents lv_artist_banner As System.Windows.Forms.ListView
-    Friend WithEvents PictureBox10 As System.Windows.Forms.PictureBox
+    Friend WithEvents pbLastFM As System.Windows.Forms.PictureBox
     Friend WithEvents b_album_delete As System.Windows.Forms.Button
     Friend WithEvents tbc_movie_settings As System.Windows.Forms.TabControl
     Friend WithEvents tp_movies_scraper As System.Windows.Forms.TabPage
@@ -2948,7 +2948,7 @@ Partial Class DVDArt_GUI
     Friend WithEvents ChangeMBID_found As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ChangeMBID_missing As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents u_Artist As System.Windows.Forms.ColumnHeader
-    Friend WithEvents PictureBox11 As System.Windows.Forms.PictureBox
+    Friend WithEvents pbAudioDB As System.Windows.Forms.PictureBox
     Friend WithEvents tp_Movie_Backdrop As System.Windows.Forms.TabPage
     Friend WithEvents b_movie_deletebackdrop As System.Windows.Forms.Button
     Friend WithEvents pb_movie_backdrop As System.Windows.Forms.PictureBox
@@ -2956,7 +2956,7 @@ Partial Class DVDArt_GUI
     Friend WithEvents PictureBox12 As System.Windows.Forms.PictureBox
     Friend WithEvents cb_Backdrop_movies As System.Windows.Forms.CheckBox
     Friend WithEvents il_backdrop As System.Windows.Forms.ImageList
-    Friend WithEvents PictureBox13 As System.Windows.Forms.PictureBox
+    Friend WithEvents pbthemoviedb As System.Windows.Forms.PictureBox
     Friend WithEvents m_Backdrop As System.Windows.Forms.ColumnHeader
     Friend WithEvents gb3 As System.Windows.Forms.GroupBox
     Friend WithEvents pnl_online As System.Windows.Forms.Panel

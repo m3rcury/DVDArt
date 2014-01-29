@@ -808,7 +808,11 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Function get_Person_image(ByVal artist As String) As Image
+    Private Shared Function cotainsNULL(ByVal s As String) As Boolean
+        Return s.Contains("null}")
+    End Function
+
+    Public Shared Sub get_Person_image(ByVal artist As String, ByVal path As String, ByRef pb_image As PictureBox)
 
         Try
             Dim apikey As String = "cc25933c4094ca50635f94574491f320"
@@ -825,27 +829,82 @@ Public Class DVDArt_Common
             response.Close()
             readStream.Close()
 
-            If downstring <> Nothing And InStr(downstring, artist) > 0 And InStr(downstring, "profile_path"":null") = 0 Then
-                Dim s As Integer = InStr(downstring, "profile_path") + 16
-                Dim l As Integer = InStr(s, downstring, """},") - s
+            If downstring <> Nothing And InStr(downstring, artist) > 0 Then
+                Dim images As New List(Of String)
 
-                downstring = "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w300/" & Mid(downstring, s, l)
+                images.AddRange(Split(downstring, """profile_path"":"))
+                downstring = Nothing
 
-                Dim ImageClient As New System.Net.WebClient
-                Dim ImageInBytes() As Byte
-                Dim stream As System.IO.MemoryStream
-                ImageInBytes = ImageClient.DownloadData(downstring)
-                stream = New System.IO.MemoryStream(ImageInBytes)
+                images.RemoveAll(AddressOf cotainsNULL)
 
-                Return Image.FromStream(stream)
+                For Each image In images
+                    If InStr(image, "}") > 0 Then
+                        downstring = Left(image, InStr(image, "}") - 1).Replace("""", "")
+                        Exit For
+                    End If
+                Next
+
+                If downstring <> Nothing Then
+                    Dim filename As String = downstring.Replace("/", "")
+                    downstring = "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w300/" & downstring
+
+                    Dim ImageClient As New System.Net.WebClient
+                    Dim ImageInBytes() As Byte
+                    Dim stream As System.IO.MemoryStream
+                    ImageInBytes = ImageClient.DownloadData(downstring)
+                    stream = New System.IO.MemoryStream(ImageInBytes)
+
+                    Dim person As Image = Image.FromStream(stream)
+
+                    person.Save(_temp & "\" & filename)
+
+                    Dim params() As String = {"-compose", "Copy", "-frame", "5x5+2+2"}
+                    Convert(_temp & "\" & filename, path, params)
+
+                    load_image(pb_image, path)
+
+                    IO.File.Delete(_temp & "\" & filename)
+                Else
+                    If IO.File.Exists(path) Then
+                        load_image(pb_image, path)
+                    Else
+                        pb_image.Image = Nothing
+                    End If
+                End If
             Else
-                Return Nothing
+                If IO.File.Exists(path) Then
+                    load_image(pb_image, path)
+                Else
+                    pb_image.Image = Nothing
+                End If
             End If
         Catch ex As Exception
-            Return Nothing
+            pb_image.Image = Nothing
         End Try
 
-    End Function
+    End Sub
+
+    Public Shared Sub load_image(ByRef pb_image As PictureBox, ByVal path As String)
+
+        On Error Resume Next
+
+        If IO.File.Exists(path) Then
+
+            Do Until Not DVDArt_Common.FileInUse(path)
+                wait(200)
+            Loop
+
+            Dim fs As IO.FileStream = New IO.FileStream(path, IO.FileMode.Open, IO.FileAccess.Read)
+            pb_image.Image = Image.FromStream(fs)
+            fs.Close()
+
+            pb_image.Tag = Nothing
+        Else
+            pb_image.Image = Nothing
+            pb_image.Tag = Nothing
+        End If
+
+    End Sub
 
     Public Shared Sub bw_download_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork, bw_download6.DoWork, bw_download7.DoWork, bw_download8.DoWork, bw_download9.DoWork
 
@@ -1480,7 +1539,7 @@ Public Class DVDArt_Common
             Else
                 value = SQLreader(0)
             End If
-            
+
             SQLconnect.Close()
 
         End If
