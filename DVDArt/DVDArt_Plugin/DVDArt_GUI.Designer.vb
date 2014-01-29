@@ -258,6 +258,7 @@ Partial Class DVDArt_GUI
         Me.MUploadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SendToImporterToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RescanAllToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.cb_debug = New System.Windows.Forms.CheckBox()
         Me.cms_found.SuspendLayout()
         Me.cms_import.SuspendLayout()
         Me.cms_missing.SuspendLayout()
@@ -1816,6 +1817,7 @@ Partial Class DVDArt_GUI
         'tp_Settings
         '
         Me.tp_Settings.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_Settings.Controls.Add(Me.cb_debug)
         Me.tp_Settings.Controls.Add(Me.gb3)
         Me.tp_Settings.Controls.Add(Me.gb2)
         Me.tp_Settings.Controls.Add(Me.gb1)
@@ -1830,7 +1832,7 @@ Partial Class DVDArt_GUI
         '
         Me.gb3.Controls.Add(Me.pnl_online)
         Me.gb3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gb3.Location = New System.Drawing.Point(36, 21)
+        Me.gb3.Location = New System.Drawing.Point(36, 33)
         Me.gb3.Name = "gb3"
         Me.gb3.Size = New System.Drawing.Size(584, 97)
         Me.gb3.TabIndex = 22
@@ -2473,7 +2475,7 @@ Partial Class DVDArt_GUI
         Me.gb1.Controls.Add(Me.cb_backgroundscraper)
         Me.gb1.Controls.Add(Me.pnl_background)
         Me.gb1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gb1.Location = New System.Drawing.Point(36, 128)
+        Me.gb1.Location = New System.Drawing.Point(36, 132)
         Me.gb1.Name = "gb1"
         Me.gb1.Size = New System.Drawing.Size(584, 190)
         Me.gb1.TabIndex = 20
@@ -2664,6 +2666,16 @@ Partial Class DVDArt_GUI
         Me.RescanAllToolStripMenuItem1.Size = New System.Drawing.Size(232, 22)
         Me.RescanAllToolStripMenuItem1.Text = "Rescan all"
         '
+        'cb_debug
+        '
+        Me.cb_debug.AutoSize = True
+        Me.cb_debug.Location = New System.Drawing.Point(528, 13)
+        Me.cb_debug.Name = "cb_debug"
+        Me.cb_debug.Size = New System.Drawing.Size(92, 17)
+        Me.cb_debug.TabIndex = 23
+        Me.cb_debug.Text = "Enable debug"
+        Me.cb_debug.UseVisualStyleBackColor = True
+        '
         'DVDArt_GUI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2739,6 +2751,7 @@ Partial Class DVDArt_GUI
         Me.tp_artist_album_missing.ResumeLayout(False)
         Me.tp_Importer.ResumeLayout(False)
         Me.tp_Settings.ResumeLayout(False)
+        Me.tp_Settings.PerformLayout()
         Me.gb3.ResumeLayout(False)
         Me.pnl_online.ResumeLayout(False)
         Me.pnl_online.PerformLayout()
@@ -3022,5 +3035,6 @@ Partial Class DVDArt_GUI
     Friend WithEvents b_person_path As System.Windows.Forms.Button
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents cb_persons As System.Windows.Forms.CheckBox
+    Friend WithEvents cb_debug As System.Windows.Forms.CheckBox
 
 End Class

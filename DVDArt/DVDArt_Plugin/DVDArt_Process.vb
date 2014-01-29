@@ -1,5 +1,6 @@
 ﻿Imports MediaPortal.Configuration
 Imports MediaPortal.GUI.Library
+Imports MediaPortal.Util
 
 Imports Microsoft.VisualBasic.FileIO
 
@@ -10,12 +11,10 @@ Public Class DVDArt_Process
 
     Private _delay, _scraping, _maxcpu, _missing As Integer
     Private _checked(2, 4), _persons, backgroundscraper As Boolean
-    Private _lastrun, _language, _movies, _persons_path, _series, _music As String
-
-    Private database, thumbs As String
+    Private database, thumbs, _lastrun, _language, _movies, _persons_path, _series, _music As String
+    Private l_new_movies As New List(Of String)
     Private lv_import As New ListView
     Private li_import As New ListViewItem
-    Private WithEvents bw_import As New BackgroundWorker
 
     Public Function CPU_Usage_Percent() As String
 
@@ -38,31 +37,16 @@ Public Class DVDArt_Process
 
     End Sub
 
-    Private Sub bw_import_worker(sender As System.Object, e As System.ComponentModel.DoWorkEventArgs) Handles bw_import.DoWork
-
-        If lv_import.Items.Count > 0 Then
-
-            For x As Integer = 0 To (lv_import.Items.Count - 1)
-                DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _language, lv_import.Items.Item(x).SubItems.Item(2).Text, Nothing, _checked)
-            Next
-
-        End If
-
-        e.Result = "Import Complete"
-
-    End Sub
-
     Private Sub Execute_Missing()
 
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
-        Dim parm As Object = "queue"
-        Dim filenotexist(2) As Boolean
+        Dim filenotexist(4) As Boolean
 
         ' Read movingpictures database
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\movingpictures.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("movingpictures") & ";Read Only=True;"
 
         SQLconnect.Open()
 
@@ -78,7 +62,7 @@ Public Class DVDArt_Process
 
             If Trim(SQLreader(0)) <> "" Then
 
-                For y = 0 To 2
+                For y = 0 To 4
                     filenotexist(y) = _checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & SQLreader(0) & ".png")
                 Next
 
@@ -90,8 +74,6 @@ Public Class DVDArt_Process
                     For y = 0 To 2
                         li_import.SubItems.Add(filenotexist(y))
                     Next
-
-                    If Not bw_import.IsBusy Then bw_import.RunWorkerAsync(parm)
                 End If
 
             End If
@@ -102,7 +84,7 @@ Public Class DVDArt_Process
 
         ' Read TVSeries database
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\TVSeriesDatabase4.db3;Read Only=True;"
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("tvseries") & ";Read Only=True;"
 
         SQLconnect.Open()
 
@@ -118,7 +100,7 @@ Public Class DVDArt_Process
 
             If Trim(SQLreader(0)) <> "" Then
 
-                For y = 0 To 2
+                For y = 1 To 2
                     filenotexist(y) = _checked(1, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & SQLreader(0) & ".png")
                 Next
 
@@ -127,11 +109,9 @@ Public Class DVDArt_Process
                     li_import.SubItems.Add(SQLreader(0))
                     li_import.SubItems.Add("series")
 
-                    For y = 0 To 2
+                    For y = 1 To 2
                         li_import.SubItems.Add(filenotexist(y))
                     Next
-
-                    If Not bw_import.IsBusy Then bw_import.RunWorkerAsync(parm)
                 End If
 
             End If
@@ -140,12 +120,14 @@ Public Class DVDArt_Process
 
         SQLconnect.Close()
 
-        Do While bw_import.IsBusy
-            wait(200)
-        Loop
-
         If lv_import.Items.Count > 0 Then
-            bw_import.RunWorkerAsync(parm)
+            DVDArt_Common.logStats("DVDArt: Missing import process started.", "LOG")
+
+            For x = 0 To (lv_import.Items.Count - 1)
+                DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _language, lv_import.Items.Item(x).SubItems.Item(2).Text, Nothing, _checked)
+            Next
+
+            DVDArt_Common.logStats("DVDArt: Missing import process complete.", "LOG")
         End If
 
         Using XMLwriter As MediaPortal.Profile.Settings = New MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "DVDArt_Plugin.xml"))
@@ -156,113 +138,191 @@ Public Class DVDArt_Process
 
     Private Sub Execute_Importer()
 
+        Dim x As Integer = 0
+        Dim enabled As Boolean = False
+
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
+
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart") & ";Read Only=True;"
+        SQLconnect.Open()
 
         ' Read already processed movies to identify newly imported ones in movingpictures
 
-        Dim x As Integer = 0
-        Dim processed_movies() As String = Nothing
+        If IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) Or IO.File.Exists(DVDArt_Common.p_Databases("myfilms")) Or IO.File.Exists(database & DVDArt_Common.p_Databases("myvideos")) Then
 
-        SQLconnect.ConnectionString = "Data Source=" & database & "\dvdart.db3;Read Only=True;"
-        SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies WHERE imdb_id is not Null ORDER BY imdb_id"
-        SQLreader = SQLcommand.ExecuteReader()
+            For x = 0 To UBound(_checked, 2)
+                enabled = enabled Or _checked(0, x)
+            Next
 
-        While SQLreader.Read()
+            If enabled Then
 
-            ReDim Preserve processed_movies(x)
-            processed_movies(x) = SQLreader(0)
-            x += 1
+                DVDArt_Common.logStats("DVArt: Loading already processed movies.", "DEBUG")
 
-        End While
+                Dim processed_movies() As String = Nothing
 
-        SQLreader.Close()
+                SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies WHERE imdb_id is not Null ORDER BY imdb_id"
+                SQLreader = SQLcommand.ExecuteReader()
 
-        If x = 0 Then ReDim Preserve processed_movies(0)
+                While SQLreader.Read()
 
-        ' load movies from respective databases
+                    ReDim Preserve processed_movies(x)
+                    processed_movies(x) = SQLreader(0)
+                    x += 1
 
-        Dim mymovies As DVDArt_Common.Movies() = DVDArt_Common.loadMovingPictures(database)
+                End While
 
-        Try
-            mymovies = DVDArt_Common.loadMyFilms(mymovies)
-        Catch ex As Exception
-        End Try
+                SQLreader.Close()
 
-        mymovies.Distinct()
+                If x = 0 Then ReDim Preserve processed_movies(0)
 
-        lv_import.Items.Clear()
+                ' load movies from respective databases
 
-        ' process loaded movies
+                DVDArt_Common.logStats("DVArt: Loading Movie List started.", "DEBUG")
 
-        For i As Integer = 0 To UBound(mymovies)
+                Dim mymovies As DVDArt_Common.Movies() = DVDArt_Common.loadMovingPictures(database)
 
-            If Trim(mymovies(i).imdb_id) <> "" Then
+                Try
+                    mymovies = DVDArt_Common.loadMyFilms(mymovies)
+                Catch ex As Exception
+                End Try
 
-                If Not processed_movies.Contains(mymovies(i).imdb_id) Then
-                    Log.Info("DVDArt: new movie - """ & mymovies(i).name & """ found.")
-                    li_import = lv_import.Items.Add(mymovies(i).name)
-                    li_import.SubItems.Add(mymovies(i).imdb_id)
-                    li_import.SubItems.Add("movie")
-                End If
+                Try
+                    mymovies = DVDArt_Common.loadMyVideos(database, mymovies)
+                Catch ex As Exception
+                End Try
+
+                mymovies.Distinct()
+
+                lv_import.Items.Clear()
+
+                ' process loaded movies
+
+                For i As Integer = 0 To UBound(mymovies)
+
+                    If Trim(mymovies(i).imdb_id) <> "" Then
+
+                        If Not processed_movies.Contains(mymovies(i).imdb_id) Then
+                            DVDArt_Common.logStats("DVDArt: new movie - """ & mymovies(i).name & """ found.", "LOG")
+                            li_import = lv_import.Items.Add(mymovies(i).name)
+                            li_import.SubItems.Add(mymovies(i).imdb_id)
+                            li_import.SubItems.Add("movie")
+                            l_new_movies.Add(mymovies(i).imdb_id)
+                        End If
+
+                    End If
+
+                Next
+
+                DVDArt_Common.logStats("DVArt: Loading Movie List complete.", "DEBUG")
+
+                ' Check for any new person images to download
+
+                DVDArt_Common.logStats("DVArt: Loading Persons List started.", "DEBUG")
+
+                Dim mypersons As SortedList = DVDArt_Common.loadMovingPicturesPersons(database)
+
+                Try
+                    mypersons = DVDArt_Common.loadMyFilmsPersons(mypersons)
+                Catch ex As Exception
+                End Try
+
+                Try
+                    mypersons = DVDArt_Common.loadMyVideosPersons(database, mypersons)
+                Catch ex As Exception
+                End Try
+
+                For i As Integer = 0 To mypersons.Count - 1
+
+                    If Not IO.File.Exists(_persons_path & Utils.MakeFileName(mypersons.GetKey(i)) & ".png") Then
+                        If l_new_movies.Contains(mypersons.GetByIndex(i)) Then
+                            DVDArt_Common.logStats("DVDArt: new person - """ & mypersons.GetKey(i) & """ found.", "LOG")
+                            li_import = lv_import.Items.Add(mypersons.GetKey(i))
+                            li_import.SubItems.Add("")
+                            li_import.SubItems.Add("person")
+                        End If
+                    End If
+
+                Next
+
+                DVDArt_Common.logStats("DVArt: Loading Persons List complete.", "DEBUG")
 
             End If
 
-        Next
+        End If
 
         ' Read already processed TVSeries to identify newly imported ones in TVSeries
 
-        SQLcommand.CommandText = "SELECT thetvdb_id FROM processed_series WHERE thetvdb_id is not Null ORDER BY thetvdb_id"
-        SQLreader = SQLcommand.ExecuteReader()
+        If IO.File.Exists(database & DVDArt_Common.p_Databases("tvseries")) Then
 
-        Dim processed_series() As String = Nothing
+            enabled = False
 
-        x = 0
+            For x = 1 To 2
+                enabled = enabled Or _checked(1, x)
+            Next
 
-        While SQLreader.Read()
+            If enabled Then
 
-            ReDim Preserve processed_series(x)
-            processed_series(x) = SQLreader(0)
-            x += 1
+                DVDArt_Common.logStats("DVArt: Loading Series List started.", "DEBUG")
 
-        End While
+                SQLcommand.CommandText = "SELECT thetvdb_id FROM processed_series WHERE thetvdb_id is not Null ORDER BY thetvdb_id"
+                SQLreader = SQLcommand.ExecuteReader()
 
-        SQLconnect.Close()
+                Dim processed_series() As String = Nothing
 
-        If x = 0 Then ReDim Preserve processed_series(0)
+                x = 0
 
-        ' Read tvseries database
+                While SQLreader.Read()
 
-        ' load series from respective databases
+                    ReDim Preserve processed_series(x)
+                    processed_series(x) = SQLreader(0)
+                    x += 1
 
-        Dim myseries As DVDArt_Common.Series() = DVDArt_Common.loadTVSeries(database)
+                End While
 
-        ' process loaded series
+                SQLreader.Close()
 
-        For i As Integer = 0 To UBound(myseries)
+                If x = 0 Then ReDim Preserve processed_series(0)
 
-            If Trim(myseries(i).thetvdb_id) <> "" Then
+                ' load series from respective databases
 
-                If Not processed_series.Contains(myseries(i).thetvdb_id) Then
-                    Log.Info("DVDArt: new serie - """ & myseries(i).name & """ found.")
-                    li_import = lv_import.Items.Add(myseries(i).name)
-                    li_import.SubItems.Add(myseries(i).thetvdb_id)
-                    li_import.SubItems.Add("series")
-                End If
+                Dim myseries As DVDArt_Common.Series() = DVDArt_Common.loadTVSeries(database)
+
+                ' process loaded series
+
+                For i As Integer = 0 To UBound(myseries)
+
+                    If Trim(myseries(i).thetvdb_id) <> "" Then
+
+                        If Not processed_series.Contains(myseries(i).thetvdb_id) Then
+                            DVDArt_Common.logStats("DVDArt: new serie - """ & myseries(i).name & """ found.", "LOG")
+                            li_import = lv_import.Items.Add(myseries(i).name)
+                            li_import.SubItems.Add(myseries(i).thetvdb_id)
+                            li_import.SubItems.Add("series")
+                        End If
+
+                    End If
+
+                Next
+
+                DVDArt_Common.logStats("DVArt: Loading Series List complete.", "DEBUG")
 
             End If
 
-        Next
+        End If
 
-        If lv_import.Items.Count > 0 Then bw_import.RunWorkerAsync()
+        SQLconnect.Close()
 
-        Do While bw_import.IsBusy
-            Log.Info("DVDArt: waiting for importer to import found movies/series.")
-            wait(20)
-        Loop
+        If lv_import.Items.Count > 0 Then
+            DVDArt_Common.logStats("DVDArt: Import process started.", "LOG")
+
+            For x = 0 To (lv_import.Items.Count - 1)
+                DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _language, lv_import.Items.Item(x).SubItems.Item(2).Text, Nothing, _checked)
+            Next
+
+            DVDArt_Common.logStats("DVDArt: Import process complete.", "LOG")
+        End If
 
     End Sub
 
@@ -282,27 +342,21 @@ Public Class DVDArt_Process
             _missing = XMLreader.GetValueAsInt("Settings", "missing", 0)
             missing_value = XMLreader.GetValueAsString("Settings", "missing value", "disabled")
 
-            If xml_version > DVDArt_Common._pre_version Then
-                _checked(0, 0) = XMLreader.GetValueAsBool("Scraper Movies", "dvdart", False)
-                _checked(0, 1) = XMLreader.GetValueAsBool("Scraper Movies", "clearart", False)
-                _checked(0, 2) = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
-                _checked(0, 3) = XMLreader.GetValueAsBool("Scraper Movies", "backdrop", False)
-                _checked(0, 4) = XMLreader.GetValueAsBool("Scraper Movies", "cover", False)
-                _movies = XMLreader.GetValueAsString("Scraper Movies", "path", thumbs & "\MovingPictures")
-                _persons = XMLreader.GetValueAsBool("Scraper Movies", "person", False)
-                _persons_path = XMLreader.GetValueAsString("Scraper Movies", "person path", thumbs & "\Actors")
-                _checked(1, 1) = XMLreader.GetValueAsBool("Scraper Series", "clearart", False)
-                _checked(1, 2) = XMLreader.GetValueAsBool("Scraper Series", "clearlogo", False)
-                _series = XMLreader.GetValueAsString("Scraper Series", "path", thumbs & "\TVSeries")
-                _checked(2, 0) = XMLreader.GetValueAsBool("Scraper Music", "cdart", False)
-                _checked(2, 1) = XMLreader.GetValueAsBool("Scraper Music", "banner", False)
-                _checked(2, 2) = XMLreader.GetValueAsBool("Scraper Music", "clearlogo", False)
-                _music = XMLreader.GetValueAsString("Scraper Music", "path", thumbs & "\Music")
-            Else
-                _checked(0, 0) = XMLreader.GetValueAsBool("Scraper", "dvdart", False)
-                _checked(0, 1) = XMLreader.GetValueAsBool("Scraper", "clearart", False)
-                _checked(0, 2) = XMLreader.GetValueAsBool("Scraper", "clearlogo", False)
-            End If
+            _checked(0, 0) = XMLreader.GetValueAsBool("Scraper Movies", "dvdart", False)
+            _checked(0, 1) = XMLreader.GetValueAsBool("Scraper Movies", "clearart", False)
+            _checked(0, 2) = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
+            _checked(0, 3) = XMLreader.GetValueAsBool("Scraper Movies", "backdrop", False)
+            _checked(0, 4) = XMLreader.GetValueAsBool("Scraper Movies", "cover", False)
+            _movies = XMLreader.GetValueAsString("Scraper Movies", "path", thumbs & "\MovingPictures")
+            _persons = XMLreader.GetValueAsBool("Scraper Movies", "person", False)
+            _persons_path = XMLreader.GetValueAsString("Scraper Movies", "person path", thumbs & "\Actors")
+            _checked(1, 1) = XMLreader.GetValueAsBool("Scraper Series", "clearart", False)
+            _checked(1, 2) = XMLreader.GetValueAsBool("Scraper Series", "clearlogo", False)
+            _series = XMLreader.GetValueAsString("Scraper Series", "path", thumbs & "\TVSeries")
+            _checked(2, 0) = XMLreader.GetValueAsBool("Scraper Music", "cdart", False)
+            _checked(2, 1) = XMLreader.GetValueAsBool("Scraper Music", "banner", False)
+            _checked(2, 2) = XMLreader.GetValueAsBool("Scraper Music", "clearlogo", False)
+            _music = XMLreader.GetValueAsString("Scraper Music", "path", thumbs & "\Music")
 
             _language = XMLreader.GetValueAsString("Scraper", "language", "##")
 
@@ -344,7 +398,7 @@ Public Class DVDArt_Process
 
     Public Sub DVDArt_Process()
 
-        Log.Info("DVDArt: process plugin initialisation.")
+        DVDArt_Common.logStats("DVDArt: process plugin initialisation.", "INFO")
 
         If DVDArt_Common.Get_Paths(database, thumbs) Then
 
@@ -354,14 +408,10 @@ Public Class DVDArt_Process
             'get plugin settings
             getSettings()
 
-            Log.Info("DVDArt: Movies artwork - " & _movies)
-            Log.Info("DVDArt: Series artwork - " & _series)
-            Log.Info("DVDArt: Music artwork  - " & _music)
-
             'initialize common variables
             DVDArt_Common.Initialize(database, thumbs, _movies, _series, _music)
 
-            Log.Info("DVDArt: process plugin setting property tags.")
+            DVDArt_Common.logStats("DVDArt: process plugin setting property tags.", "INFO")
 
             ' intialize plugin properties
             GUIPropertyManager.SetProperty("#MovingPictures.DVDArt", thumbs & Microsoft.VisualBasic.Left(DVDArt_Common.folder(0, 0, 0), Len(DVDArt_Common.folder(0, 0, 0)) - 1))
@@ -376,18 +426,15 @@ Public Class DVDArt_Process
 
             If backgroundscraper Then
 
-                'create thumb folder structure
-                DVDArt_Common.Create_Folder_Structure(database, thumbs)
-
                 wait(_delay)
 
                 Do
 
                     If CUInt(Replace(CPU_Usage_Percent(), "%", Nothing)) <= _maxcpu Then
-                        Log.Info("DVDArt: process plugin starting.")
+                        DVDArt_Common.logStats("DVDArt: process plugin starting.", "INFO")
                         Execute_Importer()
                     Else
-                        Log.Info("DVDArt: process delayed as HTPC is too busy!...")
+                        DVDArt_Common.logStats("DVDArt: process delayed as HTPC is too busy!...", "INFO")
                     End If
 
                     ' get when last missing run was effected and if it is due, execute
@@ -404,13 +451,13 @@ Public Class DVDArt_Process
 
                 Loop
 
-                Log.Info("DVDArt: process plugin ending.")
+                DVDArt_Common.logStats("DVDArt: process plugin ending.", "INFO")
 
             Else
-                Log.Info("DVDArt: background scraping disabled.  Plugin ending.")
+                DVDArt_Common.logStats("DVDArt: background scraping disabled.  Plugin ending.", "INFO")
             End If
         Else
-            Log.Error("DVDArt: process failed to load database & thumb paths.  Process Aborted!")
+            DVDArt_Common.logStats("DVDArt: process failed to load database & thumb paths.  Process Aborted!", "ERROR")
         End If
 
         Return
