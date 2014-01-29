@@ -1,0 +1,19 @@
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.pdb
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Common.Utils.dll
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Utils.dll
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csprojResolveAssemblyReference.cache
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.Properties.Resources.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csproj.GenerateResource.Cache
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.exe
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.pdb
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.exe
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.pdb
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe.config
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csprojResolveAssemblyReference.cache
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.Properties.Resources.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csproj.GenerateResource.Cache
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.pdb
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Common.Utils.dll
+E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Utils.dll

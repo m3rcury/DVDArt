@@ -12,14 +12,14 @@
           <Items>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{9d3d7efb-e025-422a-8fdd-f24ccf451cfd}-DVDArt_Plugin.dll</ZipFileName>
               <DestinationFilename>%Plugins%\process\DVDArt_Plugin.dll</DestinationFilename>
             </FileItem>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_PluginLauncher.exe</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{9332046b-cf06-4845-a417-2b3d638e1773}-DVDArt_PluginLauncher.exe</ZipFileName>
               <DestinationFilename>%Base%\DVDArt_PluginLauncher.exe</DestinationFilename>
@@ -28,6 +28,7 @@
         </Files>
       </GroupItem>
       <GroupItem Name="SQLite">
+        <ParentGroup />
         <DisplayName>SQLite</DisplayName>
         <DefaulChecked>true</DefaulChecked>
         <Description>SQLite</Description>
@@ -35,7 +36,7 @@
           <Items>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\..\..\..\DVDArt_Plugin\System.Data.SQLite.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{1fbd08de-c668-40b0-9f4f-2979ade36654}-System.Data.SQLite.dll</ZipFileName>
               <DestinationFilename>%Base%\System.Data.SQLite.dll</DestinationFilename>
@@ -263,9 +264,9 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>2</Build>
-      <Revision>0</Revision>
+      <Revision>3</Revision>
     </Version>
-    <ExtensionDescription>This plugin scans your MovingPictures, MyFilms, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art, Banners, Actor, Writer and Director images from the fanart.tv and themoviedb.org websites where applicable.</ExtensionDescription>
+    <ExtensionDescription>This plugin scans your MovingPictures, MyFilms, MyVideos, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art, Banners, Actor, Writer and Director images from the fanart.tv and themoviedb.org websites where applicable.</ExtensionDescription>
     <VersionDescription>A scraper that srapes fanart.tv for DVD cover art, Clear Art, Clear Logo, CD cover art and Banners of you movie collection in MovingPictures, series collection in TVSeries and music collection.
 
 The scraper now also has a settings tab where you set its behaviour, select what to scrape and choose preferred language for the Importer.  You can also set default DVDArt layout for manually created DVDArt.
@@ -278,10 +279,14 @@ Added Music CD Art, Banner and Clearlogo functionality.
 
 Added move backdrop and cover functionality.
 
-Added Actor, Writer and Director image scraping functionality.</VersionDescription>
+Added Actor, Writer and Director image scraping functionality.
+
+.NET 4 version
+
+Now caters for MyVideos as well.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2013-12-13T23:39:41</ReleaseDate>
+    <ReleaseDate>2014-01-26T23:39:41</ReleaseDate>
     <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures, tvseries, music, actors, writers, directors, myfilms</Tags>
     <Location>E:\Software\MediaPortal\DVDArt_Plugin\[Name]-v[Version].mpe1</Location>
     <Params>
@@ -320,21 +325,21 @@ Added Actor, Writer and Director image scraping functionality.</VersionDescripti
     <Items>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{9d3d7efb-e025-422a-8fdd-f24ccf451cfd}-DVDArt_Plugin.dll</ZipFileName>
         <DestinationFilename>%Plugins%\process\DVDArt_Plugin.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_PluginLauncher.exe</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{9332046b-cf06-4845-a417-2b3d638e1773}-DVDArt_PluginLauncher.exe</ZipFileName>
         <DestinationFilename>%Base%\DVDArt_PluginLauncher.exe</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\System.Data.SQLite.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{1fbd08de-c668-40b0-9f4f-2979ade36654}-System.Data.SQLite.dll</ZipFileName>
         <DestinationFilename>%Base%\System.Data.SQLite.dll</DestinationFilename>
@@ -357,21 +362,21 @@ Added Actor, Writer and Director image scraping functionality.</VersionDescripti
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{28ff0e76-130e-449e-a1fd-591338b88ec6}-DVDArt_Plugin.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{69c24cb1-a68c-4ca6-9f7d-96b515dfc034}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{eac6c8b8-6f19-4d88-9449-b2a7bf8a6f7b}-DVDArt_Plugin_logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{64c8cca3-0a80-4fb6-be8a-47df2895c5e1}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{4c9595d7-d36a-47e1-a1f2-f14ca9503b70}-MP_Packaging.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{9007f6a4-51a5-4672-b917-f26642d3b7d4}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -379,7 +384,7 @@ Added Actor, Writer and Director image scraping functionality.</VersionDescripti
   <ProjectSettings>
     <FolderGroups />
     <ProjectFilename>DVDArt_Plugin.xmp2</ProjectFilename>
-    <UpdatePath1>E:\Software\MediaPortal\Subversion\dvdart\trunk\DVDArt_Plugin_update.xml</UpdatePath1>
+    <UpdatePath1>E:\Software\MediaPortal\Subversion\dvdart\trunk\DVDArt\DVDArt_Plugin_update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
   </ProjectSettings>
