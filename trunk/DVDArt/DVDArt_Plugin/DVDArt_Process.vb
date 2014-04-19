@@ -409,7 +409,7 @@ Public Class DVDArt_Process
             getSettings()
 
             'initialize common variables
-            DVDArt_Common.Initialize(database, thumbs, _movies, _series, _music)
+            DVDArt_Common.Initialize(database, thumbs, _movies, _series, _music, _persons_path)
 
             DVDArt_Common.logStats("DVDArt: process plugin setting property tags.", "INFO")
 

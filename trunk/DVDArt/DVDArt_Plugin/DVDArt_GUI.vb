@@ -107,15 +107,16 @@ Public Class DVDArt_GUI
 
     Private Sub bw_coverart_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_coverart.DoWork
 
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) Then Exit Sub
+
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
         Dim imdb_id, images() As String
         Dim x, y, z As Integer
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("movingpictures") & ";Read Only=True;"
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
 
         CheckForIllegalCrossThreadCalls = False
 
@@ -208,10 +209,10 @@ Public Class DVDArt_GUI
 
                     If lv_import.Items.Item(x).SubItems.Item(2).Text = "Movie" Then
 
-                        backdrop = DVDArt_Common.getMovingPicturesImagePath(database, lv_import.Items.Item(x).SubItems.Item(1).Text, "backdrop")
-                        cover = DVDArt_Common.getMovingPicturesImagePath(database, lv_import.Items.Item(x).SubItems.Item(1).Text, "cover")
+                        backdrop = lv_import.Items.Item(x).SubItems.Item(3).Text
+                        cover = lv_import.Items.Item(x).SubItems.Item(4).Text
 
-                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "movie", personpath, checked)
+                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "movie", personpath, checked, backdrop, cover)
 
                         For y = 0 To 4
 
@@ -233,14 +234,20 @@ Public Class DVDArt_GUI
                                 End If
 
                                 If Not addedmissing Then
-                                    li_missing = lv_movies_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                    addedmissing = True
+                                    Try
+                                        addedmissing = True
+                                        li_missing = lv_movies_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
 
                             If Not addedmissing Then
-                                li_missing = lv_movies_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                addedmissing = True
+                                Try
+                                    addedmissing = True
+                                    li_missing = lv_movies_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                Catch ex As Exception
+                                End Try
                             End If
 
                             If checked(0, y) Then
@@ -300,14 +307,20 @@ Public Class DVDArt_GUI
                                 End If
 
                                 If Not addedmissing Then
-                                    li_missing = lv_series_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                    addedmissing = True
+                                    Try
+                                        addedmissing = True
+                                        li_missing = lv_series_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
 
                             If Not addedmissing Then
-                                li_missing = lv_series_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                addedmissing = True
+                                Try
+                                    addedmissing = True
+                                    li_missing = lv_series_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                Catch ex As Exception
+                                End Try
                             End If
 
                             If checked(1, y) Then
@@ -378,14 +391,20 @@ Public Class DVDArt_GUI
                                 End If
 
                                 If Not addedmissing Then
-                                    li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                    addedmissing = True
+                                    Try
+                                        addedmissing = True
+                                        li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
 
                             If Not addedmissing Then
-                                li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                addedmissing = True
+                                Try
+                                    addedmissing = True
+                                    li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                Catch ex As Exception
+                                End Try
                             End If
 
                             If checked(2, y) Then
@@ -459,14 +478,20 @@ Public Class DVDArt_GUI
                                 End If
 
                                 If Not addedmissing Then
-                                    li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                    addedmissing = True
+                                    Try
+                                        addedmissing = True
+                                        li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
 
                             If Not addedmissing Then
-                                li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
-                                addedmissing = True
+                                Try
+                                    addedmissing = True
+                                    li_missing = lv_music_missing.Items.Add(lv_import.Items.Item(x).SubItems.Item(0).Text)
+                                Catch ex As Exception
+                                End Try
                             End If
 
                             If checked(2, y) And y = 0 Then
@@ -510,7 +535,7 @@ Public Class DVDArt_GUI
                     ElseIf lv_import.Items.Item(x).SubItems.Item(2).Text = "Person" Then
 
                         Dim person As String = lv_import.Items.Item(x).SubItems.Item(0).Text
-                        
+
                         downloaded = DVDArt_Common.import(database, thumbs, Nothing, person, _lang, "person", personpath, checked)
 
                         If IO.File.Exists(personpath & Utils.MakeFileName(person) & ".png") Then
@@ -561,10 +586,10 @@ Public Class DVDArt_GUI
 
                     If type = "movie" Then
 
-                        backdrop = DVDArt_Common.getMovingPicturesImagePath(database, id, "backdrop")
-                        cover = DVDArt_Common.getMovingPicturesImagePath(database, id, "cover")
+                        backdrop = DVDArt_Common.getImagePath(database, id, "backdrop")
+                        cover = DVDArt_Common.getImagePath(database, id, "cover")
 
-                        downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type, personpath, checked)
+                        downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type, personpath, checked, backdrop, cover)
 
                         For y = 0 To 4
 
@@ -586,14 +611,20 @@ Public Class DVDArt_GUI
                                 End If
 
                                 If Not addedmissing Then
-                                    li_missing = lv_movies_missing.Items.Add(title)
-                                    addedmissing = True
+                                    Try
+                                        addedmissing = True
+                                        li_missing = lv_movies_missing.Items.Add(title)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
 
                             If Not addedmissing Then
-                                li_missing = lv_movies_missing.Items.Add(title)
-                                addedmissing = True
+                                Try
+                                    addedmissing = True
+                                    li_missing = lv_movies_missing.Items.Add(title)
+                                Catch ex As Exception
+                                End Try
                             End If
 
                             If checked(0, y) Then
@@ -627,7 +658,7 @@ Public Class DVDArt_GUI
                     ElseIf type = "series" Then
 
                         downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type, personpath, checked)
-                        
+
                         For y = 1 To 2
 
                             If downloaded(y) Then
@@ -646,14 +677,20 @@ Public Class DVDArt_GUI
                                 End If
 
                                 If Not addedmissing Then
-                                    li_missing = lv_series_missing.Items.Add(title)
-                                    addedmissing = True
+                                    Try
+                                        addedmissing = True
+                                        li_missing = lv_series_missing.Items.Add(title)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
 
                             If Not addedmissing Then
-                                li_missing = lv_series_missing.Items.Add(title)
-                                addedmissing = True
+                                Try
+                                    addedmissing = True
+                                    li_missing = lv_series_missing.Items.Add(title)
+                                Catch ex As Exception
+                                End Try
                             End If
 
                             If checked(1, y) Then
@@ -712,14 +749,20 @@ Public Class DVDArt_GUI
                                 End If
 
                                 If Not addedmissing Then
-                                    li_missing = lv_music_missing.Items.Add(title)
-                                    addedmissing = True
+                                    Try
+                                        addedmissing = True
+                                        li_missing = lv_music_missing.Items.Add(title)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
 
                             If Not addedmissing Then
-                                li_missing = lv_music_missing.Items.Add(title)
-                                addedmissing = True
+                                Try
+                                    addedmissing = True
+                                    li_missing = lv_music_missing.Items.Add(title)
+                                Catch ex As Exception
+                                End Try
                             End If
 
                             If checked(2, y) And y <> 0 Then
@@ -756,14 +799,6 @@ Public Class DVDArt_GUI
 
                     ElseIf Microsoft.VisualBasic.Left(type, 5) = "music" Then
 
-                        Dim artist = LCase(Microsoft.VisualBasic.Right(type, Len(type) - 6).Replace(" ", "-"))
-                        type = Microsoft.VisualBasic.Left(type, 5)
-
-                        If id = "" Then
-                            id = DVDArt_Common.get_MBID(database, title, artist)
-                            lv_import.Items(l_import_index(x)).SubItems.Item(1).Text = id
-                        End If
-
                         downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type & "|" & title, personpath, checked)
 
                         For y = 0 To 2
@@ -785,14 +820,20 @@ Public Class DVDArt_GUI
                                 End If
 
                                 If Not addedmissing Then
-                                    li_missing = lv_music_missing.Items.Add(title)
-                                    addedmissing = True
+                                    Try
+                                        addedmissing = True
+                                        li_missing = lv_music_missing.Items.Add(title)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
 
                             If Not addedmissing Then
-                                li_missing = lv_music_missing.Items.Add(title)
-                                addedmissing = True
+                                Try
+                                    addedmissing = True
+                                    li_missing = lv_music_missing.Items.Add(title)
+                                Catch ex As Exception
+                                End Try
                             End If
 
                             If checked(2, y) And y = 0 Then
@@ -868,15 +909,16 @@ Public Class DVDArt_GUI
 
     Private Sub use_coverart(mode As String)
 
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) Then Exit Sub
+
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
         Dim imdb_id, movie_name, images() As String
         Dim x, y, z, count As Integer
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("movingpictures") & ";Read Only=True;"
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
 
         If mode = "movie" Then
             count = lv_movies.SelectedItems.Count - 1
@@ -943,11 +985,10 @@ Public Class DVDArt_GUI
     Private Sub changeMBID(ByVal old_MBID As String, ByVal new_MBID As String)
 
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "UPDATE processed_artist SET MBID = '" & new_MBID & "' WHERE MBID = '" & old_MBID & "'"
         SQLcommand.ExecuteNonQuery()
         SQLcommand.CommandText = "UPDATE processed_music SET MBID = '" & new_MBID & "' WHERE MBID = '" & old_MBID & "'"
@@ -1363,7 +1404,8 @@ Public Class DVDArt_GUI
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
         Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
         Dim processed_movies() As String = Nothing
         Dim imdb_id_in_mp() As String = Nothing
@@ -1375,7 +1417,6 @@ Public Class DVDArt_GUI
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_movies(imdb_id TEXT)"
         SQLcommand.ExecuteNonQuery()
 
@@ -1505,6 +1546,8 @@ Public Class DVDArt_GUI
                     li_import = lv_import.Items.Add(mymovies(i).name)
                     li_import.SubItems.Add(mymovies(i).imdb_id)
                     li_import.SubItems.Add("Movie")
+                    li_import.SubItems.Add(mymovies(i).backdrop)
+                    li_import.SubItems.Add(mymovies(i).cover)
                     l_new_movies.Add(mymovies(i).imdb_id)
                     If cb_autoimport.Checked = False Then
                         l_import_queue.Add(mymovies(i).imdb_id & "|" & mymovies(i).name & "|movie")
@@ -1528,12 +1571,10 @@ Public Class DVDArt_GUI
 
         ' remove imdb ids from dvdart that no longer exist in movingpictures
 
-        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
-
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT imdb_id FROM processed_movies WHERE imdb_id is not Null ORDER BY imdb_id"
+        SQLcommand.CommandText = "SELECT imdb_id, rowid FROM processed_movies ORDER BY imdb_id"
         SQLreader = SQLcommand.ExecuteReader()
 
         x = 0
@@ -1541,10 +1582,8 @@ Public Class DVDArt_GUI
         While SQLreader.Read()
 
             If Not imdb_id_in_mp.Contains(SQLreader(0)) Then
-
-                SQLdelete.CommandText = "DELETE FROM processed_movies WHERE imdb_id = """ & SQLreader(0) & """"
+                SQLdelete.CommandText = "DELETE FROM processed_movies WHERE rowid = " & SQLreader(1)
                 SQLdelete.ExecuteNonQuery()
-
             End If
 
         End While
@@ -1624,8 +1663,9 @@ Public Class DVDArt_GUI
 
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
-        Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
         Dim processed_series() As String = Nothing
         Dim thetvdb_id_in_tv() As String = Nothing
@@ -1636,7 +1676,6 @@ Public Class DVDArt_GUI
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_series(thetvdb_id TEXT)"
         SQLcommand.ExecuteNonQuery()
 
@@ -1767,12 +1806,10 @@ Public Class DVDArt_GUI
 
         ' remove theTVDB ids from dvdart that no longer exist in TVSeries
 
-        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
-
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT thetvdb_id FROM processed_series WHERE thetvdb_id is not Null ORDER BY thetvdb_id"
+        SQLcommand.CommandText = "SELECT thetvdb_id, rowid FROM processed_series ORDER BY thetvdb_id"
         SQLreader = SQLcommand.ExecuteReader()
 
         x = 0
@@ -1780,10 +1817,8 @@ Public Class DVDArt_GUI
         While SQLreader.Read()
 
             If Not thetvdb_id_in_tv.Contains(SQLreader(0)) Then
-
-                SQLdelete.CommandText = "DELETE FROM processed_series WHERE thetvdb_id = """ & SQLreader(0) & """"
+                SQLdelete.CommandText = "DELETE FROM processed_series WHERE rowid = " & SQLreader(1)
                 SQLdelete.ExecuteNonQuery()
-
             End If
 
         End While
@@ -1821,8 +1856,9 @@ Public Class DVDArt_GUI
 
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
 
-        Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
         Dim processed_artist() As String = Nothing
         Dim processed_MBID() As String = Nothing
@@ -1833,133 +1869,138 @@ Public Class DVDArt_GUI
 
         If Not IO.File.Exists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
 
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
-        SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_artist(artist TEXT, MBID TEXT)"
-        SQLcommand.ExecuteNonQuery()
+        Try
+            SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
+            SQLconnect.Open()
+            SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_artist(artist TEXT, MBID TEXT)"
+            SQLcommand.ExecuteNonQuery()
 
-        SQLcommand.CommandText = "DELETE FROM processed_artist WHERE rowid NOT IN (SELECT MIN(rowid) FROM processed_artist GROUP BY artist, MBID)"
-        SQLcommand.ExecuteNonQuery()
+            SQLcommand.CommandText = "DELETE FROM processed_artist WHERE rowid NOT IN (SELECT MIN(rowid) FROM processed_artist GROUP BY artist, MBID)"
+            SQLcommand.ExecuteNonQuery()
 
-        SQLcommand.CommandText = "CREATE UNIQUE INDEX IF NOT EXISTS artist_index ON processed_artist (artist, MBID)"
-        SQLcommand.ExecuteNonQuery()
+            SQLcommand.CommandText = "CREATE UNIQUE INDEX IF NOT EXISTS artist_index ON processed_artist (artist, MBID)"
+            SQLcommand.ExecuteNonQuery()
 
-        ' Read already processed movies to identify newly imported ones in music
+            ' Read already processed movies to identify newly imported ones in music
+            SQLcommand.CommandText = "SELECT artist, MBID FROM processed_artist WHERE artist is not Null ORDER BY artist"
+            SQLreader = SQLcommand.ExecuteReader()
 
-        SQLcommand.CommandText = "SELECT artist, MBID FROM processed_artist WHERE artist is not Null ORDER BY artist"
-        SQLreader = SQLcommand.ExecuteReader()
+            While SQLreader.Read()
 
-        While SQLreader.Read()
+                ReDim Preserve processed_artist(x)
+                ReDim Preserve processed_MBID(x)
+                processed_artist(x) = "@" & LCase(Utils.MakeFileName(SQLreader(0))) & "@"
+                processed_MBID(x) = SQLreader(1)
+                x += 1
 
-            ReDim Preserve processed_artist(x)
-            ReDim Preserve processed_MBID(x)
-            processed_artist(x) = "@" & LCase(Utils.MakeFileName(SQLreader(0))) & "@"
-            processed_MBID(x) = SQLreader(1)
-            x += 1
-
-        End While
+            End While
+        Catch ex As Exception
+            DVDArt_Common.logStats("DVArt: Error in Loading Artist [dvdart database].  Failed with exception: " & ex.Message, "ERROR")
+        End Try
 
         SQLconnect.Close()
 
         If x = 0 Then ReDim Preserve processed_artist(0)
 
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("music") & ";Read Only=True;"
+        Try
+            SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("music") & ";Read Only=True;"
+            SQLconnect.Open()
+            SQLcommand = SQLconnect.CreateCommand
+            SQLcommand.CommandText = "SELECT strArtist FROM artist WHERE strArtist IS NOT NULL AND strArtist <> '' ORDER BY strArtist"
+            SQLreader = SQLcommand.ExecuteReader()
 
-        SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT strArtist FROM artist WHERE strArtist IS NOT NULL AND strArtist <> '' ORDER BY strArtist"
-        SQLreader = SQLcommand.ExecuteReader()
+            Dim fileexist(2) As Boolean
+            Dim lvi As LVITEM
 
-        Dim fileexist(2) As Boolean
-        Dim lvi As LVITEM
+            x = 0
 
-        x = 0
+            SendMessage(lv_music_missing.Handle, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_SUBITEMIMAGES, LVS_EX_SUBITEMIMAGES)
 
-        SendMessage(lv_music_missing.Handle, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_SUBITEMIMAGES, LVS_EX_SUBITEMIMAGES)
+            lv_artist.Items.Clear()
 
-        lv_artist.Items.Clear()
+            While SQLreader.Read()
 
-        While SQLreader.Read()
+                If Trim(SQLreader(0)) <> "" Then
 
-            If Trim(SQLreader(0)) <> "" Then
+                    ReDim Preserve artist(x)
+                    artist(x) = LCase(Utils.MakeFileName(SQLreader(0)))
+                    x += 1
 
-                ReDim Preserve artist(x)
-                artist(x) = LCase(Utils.MakeFileName(SQLreader(0)))
-                x += 1
+                    t_artist = "@" & artist(x - 1) & "@"
 
-                t_artist = "@" & artist(x - 1) & "@"
+                    If processed_artist.Contains(t_artist) Then
 
-                If processed_artist.Contains(t_artist) Then
+                        found = False
+                        missing = False
 
-                    found = False
-                    missing = False
-
-                    For y = 1 To 2
-                        fileexist(y) = IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & artist(x - 1) & ".png")
-                        If Not found Then found = checked(2, y) And fileexist(y)
-                        If Not missing Then missing = checked(2, y) And Not fileexist(y)
-                    Next
-
-                    If found Then
-                        li_artist = lv_artist.Items.Add(SQLreader(0))
-                        li_artist.SubItems.Add(processed_MBID(Array.IndexOf(processed_artist, t_artist)))
-                    End If
-
-                    If missing Then
-
-                        li_missing = lv_music_missing.Items.Add(SQLreader(0))
-
-                        lvi = Nothing
-
-                        For y = 0 To 2
-
-                            If checked(2, y) And y > 0 Then
-                                If fileexist(y) Then
-                                    li_missing.SubItems.Add("Yes", Color.White, Color.White, DefaultFont)
-                                Else
-                                    li_missing.SubItems.Add("No", Color.White, Color.White, DefaultFont)
-                                End If
-                            Else
-                                li_missing.SubItems.Add("")
-                            End If
-
-                            lvi.iItem = li_missing.Index
-                            lvi.subItem = li_missing.SubItems.Count - 1
-
-                            If checked(2, y) And y > 0 Then
-                                If fileexist(y) Then
-                                    lvi.iImage = 1
-                                Else
-                                    lvi.iImage = 2
-                                End If
-                            Else
-                                lvi.iImage = 3
-                            End If
-
-                            lvi.mask = LVIF_IMAGE
-                            ListView_SetItem(lv_music_missing.Handle, lvi)
-
+                        For y = 1 To 2
+                            fileexist(y) = IO.File.Exists(thumbs & DVDArt_Common.folder(2, y, 1) & artist(x - 1) & ".png")
+                            If Not found Then found = checked(2, y) And fileexist(y)
+                            If Not missing Then missing = checked(2, y) And Not fileexist(y)
                         Next
 
-                        li_missing.SubItems.Add(processed_MBID(Array.IndexOf(processed_artist, t_artist)))
-                        li_missing.SubItems.Add("")
+                        If found Then
+                            li_artist = lv_artist.Items.Add(SQLreader(0))
+                            li_artist.SubItems.Add(processed_MBID(Array.IndexOf(processed_artist, t_artist)))
+                        End If
 
+                        If missing Then
+
+                            li_missing = lv_music_missing.Items.Add(SQLreader(0))
+
+                            lvi = Nothing
+
+                            For y = 0 To 2
+
+                                If checked(2, y) And y > 0 Then
+                                    If fileexist(y) Then
+                                        li_missing.SubItems.Add("Yes", Color.White, Color.White, DefaultFont)
+                                    Else
+                                        li_missing.SubItems.Add("No", Color.White, Color.White, DefaultFont)
+                                    End If
+                                Else
+                                    li_missing.SubItems.Add("")
+                                End If
+
+                                lvi.iItem = li_missing.Index
+                                lvi.subItem = li_missing.SubItems.Count - 1
+
+                                If checked(2, y) And y > 0 Then
+                                    If fileexist(y) Then
+                                        lvi.iImage = 1
+                                    Else
+                                        lvi.iImage = 2
+                                    End If
+                                Else
+                                    lvi.iImage = 3
+                                End If
+
+                                lvi.mask = LVIF_IMAGE
+                                ListView_SetItem(lv_music_missing.Handle, lvi)
+
+                            Next
+
+                            li_missing.SubItems.Add(processed_MBID(Array.IndexOf(processed_artist, t_artist)))
+                            li_missing.SubItems.Add("")
+
+                        End If
+
+                    Else
+                        li_import = lv_import.Items.Add(SQLreader(0))
+                        li_import.SubItems.Add("*** searching MBID ***")
+                        li_import.SubItems.Add("Artist")
+                        If cb_autoimport.Checked = False Then
+                            l_import_queue.Add("|" & SQLreader(0) & "|artist")
+                            l_import_index.Add(lv_import.Items.Count - 1)
+                        End If
                     End If
 
-                Else
-                    li_import = lv_import.Items.Add(SQLreader(0))
-                    li_import.SubItems.Add("*** searching MBID ***")
-                    li_import.SubItems.Add("Artist")
-                    If cb_autoimport.Checked = False Then
-                        l_import_queue.Add("|" & SQLreader(0) & "|artist")
-                        l_import_index.Add(lv_import.Items.Count - 1)
-                    End If
                 End If
 
-            End If
-
-        End While
+            End While
+        Catch ex As Exception
+            DVDArt_Common.logStats("DVArt: Error in Loading Artist [music database].  Failed with exception: " & ex.Message, "ERROR")
+        End Try
 
         If x = 0 Then ReDim Preserve artist(0)
 
@@ -1969,28 +2010,27 @@ Public Class DVDArt_GUI
             FTV_api_connector(Nothing, Nothing, "artist", "import")
         End If
 
-        ' remove artists from dvdart that no longer exist in music
+        Try
+            ' remove artists from dvdart that no longer exist in music
+            SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
+            SQLconnect.Open()
+            SQLcommand = SQLconnect.CreateCommand
+            SQLcommand.CommandText = "SELECT artist, rowid FROM processed_artist ORDER BY artist"
+            SQLreader = SQLcommand.ExecuteReader()
 
-        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
+            x = 0
 
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
-        SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT artist FROM processed_artist WHERE artist is not Null ORDER BY artist"
-        SQLreader = SQLcommand.ExecuteReader()
+            While SQLreader.Read()
 
-        x = 0
+                If Not artist.Contains(LCase(Utils.MakeFileName(SQLreader(0)))) Then
+                    SQLdelete.CommandText = "DELETE FROM processed_artist WHERE rowid = " & SQLreader(1)
+                    SQLdelete.ExecuteNonQuery()
+                End If
 
-        While SQLreader.Read()
-
-            If Not artist.Contains(LCase(Utils.MakeFileName(SQLreader(0)))) Then
-
-                SQLdelete.CommandText = "DELETE FROM processed_artist WHERE artist = """ & SQLreader(0) & """"
-                SQLdelete.ExecuteNonQuery()
-
-            End If
-
-        End While
+            End While
+        Catch ex As Exception
+            DVDArt_Common.logStats("DVArt: Error in Loading Artist housekeeping].  Failed with exception: " & ex.Message, "ERROR")
+        End Try
 
         SQLconnect.Close()
 
@@ -2002,9 +2042,12 @@ Public Class DVDArt_GUI
 
         DVDArt_Common.logStats("DVArt: Loading Album List starting.", "DEBUG")
 
+        'On Error Resume Next
+
         ' check if dvdart.db3 SQLite database exists and if not, create it together with respective table
-        Dim SQLconnect, MP_SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
         Dim processed_music() As String = Nothing
         Dim processed_MBID() As String = Nothing
@@ -2018,7 +2061,6 @@ Public Class DVDArt_GUI
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_music(album TEXT, MBID TEXT)"
         SQLcommand.ExecuteNonQuery()
 
@@ -2048,7 +2090,6 @@ Public Class DVDArt_GUI
         If x = 0 Then ReDim Preserve processed_music(0)
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("music") & ";Read Only=True;"
-
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT DISTINCT strAlbum, strAlbumArtist FROM tracks WHERE strAlbum IS NOT NULL AND strAlbum <> '' ORDER BY strAlbum"
@@ -2173,12 +2214,10 @@ Public Class DVDArt_GUI
 
         ' remove albums and artists from dvdart that no longer exist in music
 
-        Dim SQLdelete As SQLiteCommand = SQLconnect.CreateCommand
-
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
         SQLconnect.Open()
         SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT album FROM processed_music WHERE album is not Null ORDER BY album"
+        SQLcommand.CommandText = "SELECT album, rowid FROM processed_music ORDER BY album"
         SQLreader = SQLcommand.ExecuteReader()
 
         x = 0
@@ -2186,10 +2225,8 @@ Public Class DVDArt_GUI
         While SQLreader.Read()
 
             If Not album.Contains(LCase(Utils.MakeFileName(SQLreader(0)))) Then
-
-                SQLdelete.CommandText = "DELETE FROM processed_music WHERE album = """ & SQLreader(0) & """"
+                SQLdelete.CommandText = "DELETE FROM processed_music WHERE rowid = " & SQLreader(1)
                 SQLdelete.ExecuteNonQuery()
-
             End If
 
         End While
@@ -3252,10 +3289,10 @@ Public Class DVDArt_GUI
 
         If cb_autoimport.Checked Then
             b_import_Click(Nothing, Nothing)
-            lv_import.Height = 817
+            lv_import.Height = 681
         Else
             t_import_timer.Stop()
-            lv_import.Height = 792
+            lv_import.Height = 656
         End If
 
         b_import.Enabled = Not cb_autoimport.Checked
@@ -3768,7 +3805,7 @@ Public Class DVDArt_GUI
             If Not checked(2, 0) Then tbc_music.TabPages.Remove(tp_albums)
 
             'initialize common variables
-            DVDArt_Common.Initialize(database, thumbs, tb_movie_path.Text, tb_series_path.Text, tb_music_path.Text)
+            DVDArt_Common.Initialize(database, thumbs, tb_movie_path.Text, tb_series_path.Text, tb_music_path.Text, personpath)
 
             'initialize version
             Me.Text = Me.Text & DVDArt_Common._version

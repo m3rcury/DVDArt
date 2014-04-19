@@ -179,12 +179,30 @@ Partial Class DVDArt_GUI
         Me.i_Type = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.b_import = New System.Windows.Forms.Button()
         Me.tp_Settings = New System.Windows.Forms.TabPage()
+        Me.tbc_settings = New System.Windows.Forms.TabControl()
+        Me.tp_pluginsettings = New System.Windows.Forms.TabPage()
+        Me.gb1 = New System.Windows.Forms.GroupBox()
+        Me.cb_backgroundscraper = New System.Windows.Forms.CheckBox()
+        Me.pnl_background = New System.Windows.Forms.Panel()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.cb_delay = New System.Windows.Forms.ComboBox()
+        Me.nud_delay = New System.Windows.Forms.NumericUpDown()
+        Me.cb_missing = New System.Windows.Forms.ComboBox()
+        Me.nud_missing = New System.Windows.Forms.NumericUpDown()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.cb_scraping = New System.Windows.Forms.ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.nud_scraping = New System.Windows.Forms.NumericUpDown()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.mtb_cpu = New System.Windows.Forms.MaskedTextBox()
         Me.gb3 = New System.Windows.Forms.GroupBox()
         Me.pnl_online = New System.Windows.Forms.Panel()
         Me.nud_downloads = New System.Windows.Forms.NumericUpDown()
         Me.l_downloads = New System.Windows.Forms.Label()
         Me.cb_downloads = New System.Windows.Forms.CheckBox()
         Me.cb_autoimport = New System.Windows.Forms.CheckBox()
+        Me.cb_debug = New System.Windows.Forms.CheckBox()
+        Me.tp_scrapersettings = New System.Windows.Forms.TabPage()
         Me.gb2 = New System.Windows.Forms.GroupBox()
         Me.tbc_scraper = New System.Windows.Forms.TabControl()
         Me.tp_sMovies = New System.Windows.Forms.TabPage()
@@ -239,26 +257,11 @@ Partial Class DVDArt_GUI
         Me.Label7 = New System.Windows.Forms.Label()
         Me.cb_language = New System.Windows.Forms.ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.gb1 = New System.Windows.Forms.GroupBox()
-        Me.cb_backgroundscraper = New System.Windows.Forms.CheckBox()
-        Me.pnl_background = New System.Windows.Forms.Panel()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.cb_delay = New System.Windows.Forms.ComboBox()
-        Me.nud_delay = New System.Windows.Forms.NumericUpDown()
-        Me.cb_missing = New System.Windows.Forms.ComboBox()
-        Me.nud_missing = New System.Windows.Forms.NumericUpDown()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.cb_scraping = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.nud_scraping = New System.Windows.Forms.NumericUpDown()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.mtb_cpu = New System.Windows.Forms.MaskedTextBox()
         Me.il_column = New System.Windows.Forms.ImageList(Me.components)
         Me.RefreshToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MUploadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SendToImporterToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RescanAllToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.cb_debug = New System.Windows.Forms.CheckBox()
         Me.cms_found.SuspendLayout()
         Me.cms_import.SuspendLayout()
         Me.cms_missing.SuspendLayout()
@@ -317,9 +320,17 @@ Partial Class DVDArt_GUI
         Me.tp_artist_album_missing.SuspendLayout()
         Me.tp_Importer.SuspendLayout()
         Me.tp_Settings.SuspendLayout()
+        Me.tbc_settings.SuspendLayout()
+        Me.tp_pluginsettings.SuspendLayout()
+        Me.gb1.SuspendLayout()
+        Me.pnl_background.SuspendLayout()
+        CType(Me.nud_delay, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nud_missing, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nud_scraping, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gb3.SuspendLayout()
         Me.pnl_online.SuspendLayout()
         CType(Me.nud_downloads, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tp_scrapersettings.SuspendLayout()
         Me.gb2.SuspendLayout()
         Me.tbc_scraper.SuspendLayout()
         Me.tp_sMovies.SuspendLayout()
@@ -346,11 +357,6 @@ Partial Class DVDArt_GUI
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tp_music_path.SuspendLayout()
-        Me.gb1.SuspendLayout()
-        Me.pnl_background.SuspendLayout()
-        CType(Me.nud_delay, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nud_missing, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nud_scraping, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'il_dvdart
@@ -406,11 +412,11 @@ Partial Class DVDArt_GUI
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.SystemColors.ActiveCaption
-        Me.Label1.Location = New System.Drawing.Point(1, 884)
+        Me.Label1.Location = New System.Drawing.Point(1, 747)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(160, 13)
         Me.Label1.TabIndex = 24
-        Me.Label1.Text = "Copyright © 2012-2013, m3rcury"
+        Me.Label1.Text = "Copyright © 2012-2014, m3rcury"
         '
         'il_clearart
         '
@@ -515,7 +521,7 @@ Partial Class DVDArt_GUI
         Me.tbc_main.Location = New System.Drawing.Point(12, 4)
         Me.tbc_main.Name = "tbc_main"
         Me.tbc_main.SelectedIndex = 0
-        Me.tbc_main.Size = New System.Drawing.Size(664, 865)
+        Me.tbc_main.Size = New System.Drawing.Size(664, 729)
         Me.tbc_main.TabIndex = 29
         '
         'tp_MovingPictures
@@ -529,14 +535,14 @@ Partial Class DVDArt_GUI
         Me.tp_MovingPictures.Location = New System.Drawing.Point(4, 22)
         Me.tp_MovingPictures.Name = "tp_MovingPictures"
         Me.tp_MovingPictures.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_MovingPictures.Size = New System.Drawing.Size(656, 839)
+        Me.tp_MovingPictures.Size = New System.Drawing.Size(656, 703)
         Me.tp_MovingPictures.TabIndex = 0
         Me.tp_MovingPictures.Text = "Movies"
         '
         'pbthemoviedb
         '
         Me.pbthemoviedb.Image = Global.DVDArt_Plugin.My.Resources.Resources.tmdb_logo
-        Me.pbthemoviedb.Location = New System.Drawing.Point(522, 816)
+        Me.pbthemoviedb.Location = New System.Drawing.Point(522, 680)
         Me.pbthemoviedb.Name = "pbthemoviedb"
         Me.pbthemoviedb.Size = New System.Drawing.Size(96, 20)
         Me.pbthemoviedb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -547,7 +553,7 @@ Partial Class DVDArt_GUI
         '
         Me.pb_movingpictures.BackColor = System.Drawing.Color.Transparent
         Me.pb_movingpictures.Image = Global.DVDArt_Plugin.My.Resources.Resources.movingpictures
-        Me.pb_movingpictures.Location = New System.Drawing.Point(259, 780)
+        Me.pb_movingpictures.Location = New System.Drawing.Point(259, 644)
         Me.pb_movingpictures.Name = "pb_movingpictures"
         Me.pb_movingpictures.Size = New System.Drawing.Size(208, 59)
         Me.pb_movingpictures.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -563,7 +569,7 @@ Partial Class DVDArt_GUI
         Me.TabControl1.Location = New System.Drawing.Point(4, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(650, 775)
+        Me.TabControl1.Size = New System.Drawing.Size(650, 639)
         Me.TabControl1.TabIndex = 30
         '
         'tp_movies
@@ -574,7 +580,7 @@ Partial Class DVDArt_GUI
         Me.tp_movies.Location = New System.Drawing.Point(4, 22)
         Me.tp_movies.Name = "tp_movies"
         Me.tp_movies.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_movies.Size = New System.Drawing.Size(642, 749)
+        Me.tp_movies.Size = New System.Drawing.Size(642, 613)
         Me.tp_movies.TabIndex = 0
         Me.tp_movies.Text = "Movies with Artwork"
         Me.tp_movies.ToolTipText = "This tab contails all movies that already have a DVD artwork."
@@ -590,7 +596,7 @@ Partial Class DVDArt_GUI
         Me.lv_movies.Location = New System.Drawing.Point(8, 8)
         Me.lv_movies.MultiSelect = False
         Me.lv_movies.Name = "lv_movies"
-        Me.lv_movies.Size = New System.Drawing.Size(340, 735)
+        Me.lv_movies.Size = New System.Drawing.Size(340, 599)
         Me.lv_movies.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_movies.TabIndex = 11
         Me.lv_movies.UseCompatibleStateImageBehavior = False
@@ -616,7 +622,7 @@ Partial Class DVDArt_GUI
         Me.tbc_movies.Location = New System.Drawing.Point(352, 8)
         Me.tbc_movies.Name = "tbc_movies"
         Me.tbc_movies.SelectedIndex = 0
-        Me.tbc_movies.Size = New System.Drawing.Size(284, 735)
+        Me.tbc_movies.Size = New System.Drawing.Size(284, 599)
         Me.tbc_movies.TabIndex = 12
         '
         'tp_Movie_DVDArt
@@ -632,7 +638,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_DVDArt.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_DVDArt.Name = "tp_Movie_DVDArt"
         Me.tp_Movie_DVDArt.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Movie_DVDArt.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Movie_DVDArt.Size = New System.Drawing.Size(276, 573)
         Me.tp_Movie_DVDArt.TabIndex = 0
         Me.tp_Movie_DVDArt.Text = "DVDArt"
         '
@@ -685,7 +691,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_dvdart.Location = New System.Drawing.Point(12, 215)
         Me.lv_movie_dvdart.MultiSelect = False
         Me.lv_movie_dvdart.Name = "lv_movie_dvdart"
-        Me.lv_movie_dvdart.Size = New System.Drawing.Size(252, 488)
+        Me.lv_movie_dvdart.Size = New System.Drawing.Size(252, 352)
         Me.lv_movie_dvdart.TabIndex = 13
         Me.lv_movie_dvdart.UseCompatibleStateImageBehavior = False
         '
@@ -718,7 +724,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_ClearArt.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_ClearArt.Name = "tp_Movie_ClearArt"
         Me.tp_Movie_ClearArt.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Movie_ClearArt.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Movie_ClearArt.Size = New System.Drawing.Size(276, 573)
         Me.tp_Movie_ClearArt.TabIndex = 1
         Me.tp_Movie_ClearArt.Text = "ClearArt"
         '
@@ -751,7 +757,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_clearart.Location = New System.Drawing.Point(12, 125)
         Me.lv_movie_clearart.MultiSelect = False
         Me.lv_movie_clearart.Name = "lv_movie_clearart"
-        Me.lv_movie_clearart.Size = New System.Drawing.Size(252, 578)
+        Me.lv_movie_clearart.Size = New System.Drawing.Size(252, 442)
         Me.lv_movie_clearart.TabIndex = 16
         Me.lv_movie_clearart.UseCompatibleStateImageBehavior = False
         '
@@ -763,7 +769,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_ClearLogo.Controls.Add(Me.lv_movie_clearlogo)
         Me.tp_Movie_ClearLogo.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_ClearLogo.Name = "tp_Movie_ClearLogo"
-        Me.tp_Movie_ClearLogo.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Movie_ClearLogo.Size = New System.Drawing.Size(276, 573)
         Me.tp_Movie_ClearLogo.TabIndex = 2
         Me.tp_Movie_ClearLogo.Text = "ClearLogo"
         '
@@ -796,7 +802,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_clearlogo.Location = New System.Drawing.Point(12, 90)
         Me.lv_movie_clearlogo.MultiSelect = False
         Me.lv_movie_clearlogo.Name = "lv_movie_clearlogo"
-        Me.lv_movie_clearlogo.Size = New System.Drawing.Size(252, 612)
+        Me.lv_movie_clearlogo.Size = New System.Drawing.Size(252, 476)
         Me.lv_movie_clearlogo.TabIndex = 19
         Me.lv_movie_clearlogo.UseCompatibleStateImageBehavior = False
         '
@@ -809,7 +815,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_Backdrop.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_Backdrop.Name = "tp_Movie_Backdrop"
         Me.tp_Movie_Backdrop.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Movie_Backdrop.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Movie_Backdrop.Size = New System.Drawing.Size(276, 573)
         Me.tp_Movie_Backdrop.TabIndex = 3
         Me.tp_Movie_Backdrop.Text = "Backdrop"
         '
@@ -842,7 +848,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_backdrop.Location = New System.Drawing.Point(12, 125)
         Me.lv_movie_backdrop.MultiSelect = False
         Me.lv_movie_backdrop.Name = "lv_movie_backdrop"
-        Me.lv_movie_backdrop.Size = New System.Drawing.Size(252, 578)
+        Me.lv_movie_backdrop.Size = New System.Drawing.Size(252, 442)
         Me.lv_movie_backdrop.TabIndex = 19
         Me.lv_movie_backdrop.UseCompatibleStateImageBehavior = False
         '
@@ -861,7 +867,7 @@ Partial Class DVDArt_GUI
         Me.tp_Movie_Cover.Location = New System.Drawing.Point(4, 22)
         Me.tp_Movie_Cover.Name = "tp_Movie_Cover"
         Me.tp_Movie_Cover.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Movie_Cover.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Movie_Cover.Size = New System.Drawing.Size(276, 573)
         Me.tp_Movie_Cover.TabIndex = 4
         Me.tp_Movie_Cover.Text = "Covers"
         '
@@ -884,7 +890,7 @@ Partial Class DVDArt_GUI
         Me.lv_movie_cover.Location = New System.Drawing.Point(42, 215)
         Me.lv_movie_cover.MultiSelect = False
         Me.lv_movie_cover.Name = "lv_movie_cover"
-        Me.lv_movie_cover.Size = New System.Drawing.Size(222, 488)
+        Me.lv_movie_cover.Size = New System.Drawing.Size(222, 352)
         Me.lv_movie_cover.TabIndex = 15
         Me.lv_movie_cover.UseCompatibleStateImageBehavior = False
         '
@@ -924,7 +930,7 @@ Partial Class DVDArt_GUI
         Me.lv_movies_missing.GridLines = True
         Me.lv_movies_missing.Location = New System.Drawing.Point(8, 8)
         Me.lv_movies_missing.Name = "lv_movies_missing"
-        Me.lv_movies_missing.Size = New System.Drawing.Size(628, 735)
+        Me.lv_movies_missing.Size = New System.Drawing.Size(628, 599)
         Me.lv_movies_missing.SmallImageList = Me.il_state
         Me.lv_movies_missing.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_movies_missing.TabIndex = 10
@@ -981,7 +987,7 @@ Partial Class DVDArt_GUI
         Me.pb_person.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.pb_person.Location = New System.Drawing.Point(254, 8)
         Me.pb_person.Name = "pb_person"
-        Me.pb_person.Size = New System.Drawing.Size(382, 735)
+        Me.pb_person.Size = New System.Drawing.Size(382, 599)
         Me.pb_person.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.pb_person.TabIndex = 13
         Me.pb_person.TabStop = False
@@ -997,7 +1003,7 @@ Partial Class DVDArt_GUI
         Me.lv_person.Location = New System.Drawing.Point(8, 8)
         Me.lv_person.MultiSelect = False
         Me.lv_person.Name = "lv_person"
-        Me.lv_person.Size = New System.Drawing.Size(240, 735)
+        Me.lv_person.Size = New System.Drawing.Size(240, 599)
         Me.lv_person.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_person.TabIndex = 12
         Me.lv_person.UseCompatibleStateImageBehavior = False
@@ -1045,7 +1051,7 @@ Partial Class DVDArt_GUI
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(642, 749)
+        Me.TabPage2.Size = New System.Drawing.Size(642, 613)
         Me.TabPage2.TabIndex = 4
         Me.TabPage2.Text = "Actors/Writers/Directors missing Picture"
         '
@@ -1058,7 +1064,7 @@ Partial Class DVDArt_GUI
         Me.lv_persons_missing.GridLines = True
         Me.lv_persons_missing.Location = New System.Drawing.Point(8, 8)
         Me.lv_persons_missing.Name = "lv_persons_missing"
-        Me.lv_persons_missing.Size = New System.Drawing.Size(628, 735)
+        Me.lv_persons_missing.Size = New System.Drawing.Size(628, 599)
         Me.lv_persons_missing.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_persons_missing.TabIndex = 11
         Me.lv_persons_missing.UseCompatibleStateImageBehavior = False
@@ -1102,7 +1108,7 @@ Partial Class DVDArt_GUI
         'pbFTV_Logo
         '
         Me.pbFTV_Logo.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
-        Me.pbFTV_Logo.Location = New System.Drawing.Point(469, 785)
+        Me.pbFTV_Logo.Location = New System.Drawing.Point(469, 649)
         Me.pbFTV_Logo.Name = "pbFTV_Logo"
         Me.pbFTV_Logo.Size = New System.Drawing.Size(258, 48)
         Me.pbFTV_Logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1112,7 +1118,7 @@ Partial Class DVDArt_GUI
         'PictureBox14
         '
         Me.PictureBox14.Image = Global.DVDArt_Plugin.My.Resources.Resources.myfilms
-        Me.PictureBox14.Location = New System.Drawing.Point(77, 780)
+        Me.PictureBox14.Location = New System.Drawing.Point(77, 644)
         Me.PictureBox14.Name = "PictureBox14"
         Me.PictureBox14.Size = New System.Drawing.Size(180, 60)
         Me.PictureBox14.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -1128,7 +1134,7 @@ Partial Class DVDArt_GUI
         Me.tp_TVSeries.Location = New System.Drawing.Point(4, 22)
         Me.tp_TVSeries.Name = "tp_TVSeries"
         Me.tp_TVSeries.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_TVSeries.Size = New System.Drawing.Size(656, 839)
+        Me.tp_TVSeries.Size = New System.Drawing.Size(656, 703)
         Me.tp_TVSeries.TabIndex = 1
         Me.tp_TVSeries.Text = "Series"
         '
@@ -1139,7 +1145,7 @@ Partial Class DVDArt_GUI
         Me.TabControl2.Location = New System.Drawing.Point(4, 3)
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(650, 775)
+        Me.TabControl2.Size = New System.Drawing.Size(650, 639)
         Me.TabControl2.TabIndex = 32
         '
         'tp_series
@@ -1150,7 +1156,7 @@ Partial Class DVDArt_GUI
         Me.tp_series.Location = New System.Drawing.Point(4, 22)
         Me.tp_series.Name = "tp_series"
         Me.tp_series.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_series.Size = New System.Drawing.Size(642, 749)
+        Me.tp_series.Size = New System.Drawing.Size(642, 613)
         Me.tp_series.TabIndex = 0
         Me.tp_series.Text = "Series with Artwork"
         Me.tp_series.ToolTipText = "This tab contails all movies that already have a DVD artwork."
@@ -1166,7 +1172,7 @@ Partial Class DVDArt_GUI
         Me.lv_series.Location = New System.Drawing.Point(8, 8)
         Me.lv_series.MultiSelect = False
         Me.lv_series.Name = "lv_series"
-        Me.lv_series.Size = New System.Drawing.Size(340, 735)
+        Me.lv_series.Size = New System.Drawing.Size(340, 599)
         Me.lv_series.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_series.TabIndex = 11
         Me.lv_series.UseCompatibleStateImageBehavior = False
@@ -1189,7 +1195,7 @@ Partial Class DVDArt_GUI
         Me.tbc_series.Location = New System.Drawing.Point(352, 8)
         Me.tbc_series.Name = "tbc_series"
         Me.tbc_series.SelectedIndex = 0
-        Me.tbc_series.Size = New System.Drawing.Size(284, 735)
+        Me.tbc_series.Size = New System.Drawing.Size(284, 599)
         Me.tbc_series.TabIndex = 12
         '
         'tp_Serie_ClearArt
@@ -1245,7 +1251,7 @@ Partial Class DVDArt_GUI
         Me.lv_serie_clearart.Location = New System.Drawing.Point(12, 125)
         Me.lv_serie_clearart.MultiSelect = False
         Me.lv_serie_clearart.Name = "lv_serie_clearart"
-        Me.lv_serie_clearart.Size = New System.Drawing.Size(252, 578)
+        Me.lv_serie_clearart.Size = New System.Drawing.Size(252, 442)
         Me.lv_serie_clearart.TabIndex = 16
         Me.lv_serie_clearart.UseCompatibleStateImageBehavior = False
         '
@@ -1257,7 +1263,7 @@ Partial Class DVDArt_GUI
         Me.tp_Serie_ClearLogo.Controls.Add(Me.lv_serie_clearlogo)
         Me.tp_Serie_ClearLogo.Location = New System.Drawing.Point(4, 22)
         Me.tp_Serie_ClearLogo.Name = "tp_Serie_ClearLogo"
-        Me.tp_Serie_ClearLogo.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Serie_ClearLogo.Size = New System.Drawing.Size(276, 573)
         Me.tp_Serie_ClearLogo.TabIndex = 2
         Me.tp_Serie_ClearLogo.Text = "ClearLogo"
         '
@@ -1290,7 +1296,7 @@ Partial Class DVDArt_GUI
         Me.lv_serie_clearlogo.Location = New System.Drawing.Point(12, 90)
         Me.lv_serie_clearlogo.MultiSelect = False
         Me.lv_serie_clearlogo.Name = "lv_serie_clearlogo"
-        Me.lv_serie_clearlogo.Size = New System.Drawing.Size(252, 612)
+        Me.lv_serie_clearlogo.Size = New System.Drawing.Size(252, 476)
         Me.lv_serie_clearlogo.TabIndex = 19
         Me.lv_serie_clearlogo.UseCompatibleStateImageBehavior = False
         '
@@ -1301,7 +1307,7 @@ Partial Class DVDArt_GUI
         Me.tp_series_missing.Location = New System.Drawing.Point(4, 22)
         Me.tp_series_missing.Name = "tp_series_missing"
         Me.tp_series_missing.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_series_missing.Size = New System.Drawing.Size(642, 749)
+        Me.tp_series_missing.Size = New System.Drawing.Size(642, 613)
         Me.tp_series_missing.TabIndex = 2
         Me.tp_series_missing.Text = "Series missing Artwork"
         '
@@ -1314,7 +1320,7 @@ Partial Class DVDArt_GUI
         Me.lv_series_missing.GridLines = True
         Me.lv_series_missing.Location = New System.Drawing.Point(8, 8)
         Me.lv_series_missing.Name = "lv_series_missing"
-        Me.lv_series_missing.Size = New System.Drawing.Size(628, 735)
+        Me.lv_series_missing.Size = New System.Drawing.Size(628, 599)
         Me.lv_series_missing.SmallImageList = Me.il_state
         Me.lv_series_missing.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_series_missing.TabIndex = 10
@@ -1345,7 +1351,7 @@ Partial Class DVDArt_GUI
         'PictureBox2
         '
         Me.PictureBox2.Image = Global.DVDArt_Plugin.My.Resources.Resources.tvseries
-        Me.PictureBox2.Location = New System.Drawing.Point(259, 780)
+        Me.PictureBox2.Location = New System.Drawing.Point(259, 644)
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(208, 59)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1355,7 +1361,7 @@ Partial Class DVDArt_GUI
         'pbFTV_Logo2
         '
         Me.pbFTV_Logo2.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
-        Me.pbFTV_Logo2.Location = New System.Drawing.Point(469, 785)
+        Me.pbFTV_Logo2.Location = New System.Drawing.Point(469, 649)
         Me.pbFTV_Logo2.Name = "pbFTV_Logo2"
         Me.pbFTV_Logo2.Size = New System.Drawing.Size(258, 48)
         Me.pbFTV_Logo2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1373,14 +1379,14 @@ Partial Class DVDArt_GUI
         Me.tp_Music.Location = New System.Drawing.Point(4, 22)
         Me.tp_Music.Name = "tp_Music"
         Me.tp_Music.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Music.Size = New System.Drawing.Size(656, 839)
+        Me.tp_Music.Size = New System.Drawing.Size(656, 703)
         Me.tp_Music.TabIndex = 4
         Me.tp_Music.Text = "Music"
         '
         'pbAudioDB
         '
         Me.pbAudioDB.Image = Global.DVDArt_Plugin.My.Resources.Resources.theAudioDB
-        Me.pbAudioDB.Location = New System.Drawing.Point(519, 817)
+        Me.pbAudioDB.Location = New System.Drawing.Point(519, 681)
         Me.pbAudioDB.Name = "pbAudioDB"
         Me.pbAudioDB.Size = New System.Drawing.Size(80, 17)
         Me.pbAudioDB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -1390,7 +1396,7 @@ Partial Class DVDArt_GUI
         'pbLastFM
         '
         Me.pbLastFM.Image = Global.DVDArt_Plugin.My.Resources.Resources.lastfm
-        Me.pbLastFM.Location = New System.Drawing.Point(600, 819)
+        Me.pbLastFM.Location = New System.Drawing.Point(600, 683)
         Me.pbLastFM.Name = "pbLastFM"
         Me.pbLastFM.Size = New System.Drawing.Size(55, 14)
         Me.pbLastFM.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1401,7 +1407,7 @@ Partial Class DVDArt_GUI
         '
         Me.PictureBox9.BackColor = System.Drawing.Color.Transparent
         Me.PictureBox9.Image = Global.DVDArt_Plugin.My.Resources.Resources.music
-        Me.PictureBox9.Location = New System.Drawing.Point(259, 780)
+        Me.PictureBox9.Location = New System.Drawing.Point(259, 644)
         Me.PictureBox9.Name = "PictureBox9"
         Me.PictureBox9.Size = New System.Drawing.Size(208, 59)
         Me.PictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1411,7 +1417,7 @@ Partial Class DVDArt_GUI
         'pbFTV_Logo3
         '
         Me.pbFTV_Logo3.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo
-        Me.pbFTV_Logo3.Location = New System.Drawing.Point(469, 785)
+        Me.pbFTV_Logo3.Location = New System.Drawing.Point(469, 649)
         Me.pbFTV_Logo3.Name = "pbFTV_Logo3"
         Me.pbFTV_Logo3.Size = New System.Drawing.Size(258, 48)
         Me.pbFTV_Logo3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1426,7 +1432,7 @@ Partial Class DVDArt_GUI
         Me.tbc_music.Location = New System.Drawing.Point(4, 3)
         Me.tbc_music.Name = "tbc_music"
         Me.tbc_music.SelectedIndex = 0
-        Me.tbc_music.Size = New System.Drawing.Size(650, 775)
+        Me.tbc_music.Size = New System.Drawing.Size(650, 639)
         Me.tbc_music.TabIndex = 31
         '
         'tp_artists
@@ -1437,7 +1443,7 @@ Partial Class DVDArt_GUI
         Me.tp_artists.Location = New System.Drawing.Point(4, 22)
         Me.tp_artists.Name = "tp_artists"
         Me.tp_artists.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_artists.Size = New System.Drawing.Size(642, 749)
+        Me.tp_artists.Size = New System.Drawing.Size(642, 613)
         Me.tp_artists.TabIndex = 3
         Me.tp_artists.Text = "Artists with Artwork"
         '
@@ -1452,7 +1458,7 @@ Partial Class DVDArt_GUI
         Me.lv_artist.Location = New System.Drawing.Point(8, 8)
         Me.lv_artist.MultiSelect = False
         Me.lv_artist.Name = "lv_artist"
-        Me.lv_artist.Size = New System.Drawing.Size(340, 735)
+        Me.lv_artist.Size = New System.Drawing.Size(340, 599)
         Me.lv_artist.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_artist.TabIndex = 13
         Me.lv_artist.UseCompatibleStateImageBehavior = False
@@ -1475,7 +1481,7 @@ Partial Class DVDArt_GUI
         Me.tbc_artist.Location = New System.Drawing.Point(352, 8)
         Me.tbc_artist.Name = "tbc_artist"
         Me.tbc_artist.SelectedIndex = 0
-        Me.tbc_artist.Size = New System.Drawing.Size(284, 735)
+        Me.tbc_artist.Size = New System.Drawing.Size(284, 599)
         Me.tbc_artist.TabIndex = 14
         '
         'tp_artist_banner
@@ -1520,7 +1526,7 @@ Partial Class DVDArt_GUI
         Me.lv_artist_banner.Location = New System.Drawing.Point(12, 54)
         Me.lv_artist_banner.MultiSelect = False
         Me.lv_artist_banner.Name = "lv_artist_banner"
-        Me.lv_artist_banner.Size = New System.Drawing.Size(252, 649)
+        Me.lv_artist_banner.Size = New System.Drawing.Size(252, 513)
         Me.lv_artist_banner.TabIndex = 16
         Me.lv_artist_banner.UseCompatibleStateImageBehavior = False
         '
@@ -1538,7 +1544,7 @@ Partial Class DVDArt_GUI
         Me.tp_artist_clearlogo.Controls.Add(Me.lv_artist_clearlogo)
         Me.tp_artist_clearlogo.Location = New System.Drawing.Point(4, 22)
         Me.tp_artist_clearlogo.Name = "tp_artist_clearlogo"
-        Me.tp_artist_clearlogo.Size = New System.Drawing.Size(276, 709)
+        Me.tp_artist_clearlogo.Size = New System.Drawing.Size(276, 573)
         Me.tp_artist_clearlogo.TabIndex = 2
         Me.tp_artist_clearlogo.Text = "ClearLogo"
         '
@@ -1571,7 +1577,7 @@ Partial Class DVDArt_GUI
         Me.lv_artist_clearlogo.Location = New System.Drawing.Point(12, 90)
         Me.lv_artist_clearlogo.MultiSelect = False
         Me.lv_artist_clearlogo.Name = "lv_artist_clearlogo"
-        Me.lv_artist_clearlogo.Size = New System.Drawing.Size(252, 612)
+        Me.lv_artist_clearlogo.Size = New System.Drawing.Size(252, 476)
         Me.lv_artist_clearlogo.TabIndex = 19
         Me.lv_artist_clearlogo.UseCompatibleStateImageBehavior = False
         '
@@ -1583,7 +1589,7 @@ Partial Class DVDArt_GUI
         Me.tp_albums.Location = New System.Drawing.Point(4, 22)
         Me.tp_albums.Name = "tp_albums"
         Me.tp_albums.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_albums.Size = New System.Drawing.Size(642, 749)
+        Me.tp_albums.Size = New System.Drawing.Size(642, 613)
         Me.tp_albums.TabIndex = 0
         Me.tp_albums.Text = "Albums with Artwork"
         Me.tp_albums.ToolTipText = "This tab contails all movies that already have a DVD artwork."
@@ -1599,7 +1605,7 @@ Partial Class DVDArt_GUI
         Me.lv_album.Location = New System.Drawing.Point(8, 8)
         Me.lv_album.MultiSelect = False
         Me.lv_album.Name = "lv_album"
-        Me.lv_album.Size = New System.Drawing.Size(340, 735)
+        Me.lv_album.Size = New System.Drawing.Size(340, 599)
         Me.lv_album.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_album.TabIndex = 11
         Me.lv_album.UseCompatibleStateImageBehavior = False
@@ -1621,7 +1627,7 @@ Partial Class DVDArt_GUI
         Me.tbc_album.Location = New System.Drawing.Point(352, 8)
         Me.tbc_album.Name = "tbc_album"
         Me.tbc_album.SelectedIndex = 0
-        Me.tbc_album.Size = New System.Drawing.Size(284, 735)
+        Me.tbc_album.Size = New System.Drawing.Size(284, 599)
         Me.tbc_album.TabIndex = 12
         '
         'tp_Music_CDArt
@@ -1636,7 +1642,7 @@ Partial Class DVDArt_GUI
         Me.tp_Music_CDArt.Location = New System.Drawing.Point(4, 22)
         Me.tp_Music_CDArt.Name = "tp_Music_CDArt"
         Me.tp_Music_CDArt.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Music_CDArt.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Music_CDArt.Size = New System.Drawing.Size(276, 573)
         Me.tp_Music_CDArt.TabIndex = 0
         Me.tp_Music_CDArt.Text = "CDArt"
         '
@@ -1689,7 +1695,7 @@ Partial Class DVDArt_GUI
         Me.lv_album_cdart.Location = New System.Drawing.Point(12, 215)
         Me.lv_album_cdart.MultiSelect = False
         Me.lv_album_cdart.Name = "lv_album_cdart"
-        Me.lv_album_cdart.Size = New System.Drawing.Size(252, 488)
+        Me.lv_album_cdart.Size = New System.Drawing.Size(252, 352)
         Me.lv_album_cdart.TabIndex = 13
         Me.lv_album_cdart.UseCompatibleStateImageBehavior = False
         '
@@ -1723,7 +1729,7 @@ Partial Class DVDArt_GUI
         Me.lv_music_missing.GridLines = True
         Me.lv_music_missing.Location = New System.Drawing.Point(8, 8)
         Me.lv_music_missing.Name = "lv_music_missing"
-        Me.lv_music_missing.Size = New System.Drawing.Size(628, 735)
+        Me.lv_music_missing.Size = New System.Drawing.Size(628, 599)
         Me.lv_music_missing.SmallImageList = Me.il_state
         Me.lv_music_missing.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lv_music_missing.TabIndex = 10
@@ -1770,7 +1776,7 @@ Partial Class DVDArt_GUI
         Me.tp_Importer.Location = New System.Drawing.Point(4, 22)
         Me.tp_Importer.Name = "tp_Importer"
         Me.tp_Importer.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Importer.Size = New System.Drawing.Size(656, 839)
+        Me.tp_Importer.Size = New System.Drawing.Size(656, 703)
         Me.tp_Importer.TabIndex = 3
         Me.tp_Importer.Text = "Importer"
         '
@@ -1783,7 +1789,7 @@ Partial Class DVDArt_GUI
         Me.lv_import.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_import.Location = New System.Drawing.Point(14, 16)
         Me.lv_import.Name = "lv_import"
-        Me.lv_import.Size = New System.Drawing.Size(628, 792)
+        Me.lv_import.Size = New System.Drawing.Size(628, 656)
         Me.lv_import.StateImageList = Me.il_state
         Me.lv_import.TabIndex = 10
         Me.lv_import.UseCompatibleStateImageBehavior = False
@@ -1806,7 +1812,7 @@ Partial Class DVDArt_GUI
         '
         'b_import
         '
-        Me.b_import.Location = New System.Drawing.Point(521, 813)
+        Me.b_import.Location = New System.Drawing.Point(521, 677)
         Me.b_import.Name = "b_import"
         Me.b_import.Size = New System.Drawing.Size(121, 23)
         Me.b_import.TabIndex = 30
@@ -1817,22 +1823,201 @@ Partial Class DVDArt_GUI
         'tp_Settings
         '
         Me.tp_Settings.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.tp_Settings.Controls.Add(Me.cb_debug)
-        Me.tp_Settings.Controls.Add(Me.gb3)
-        Me.tp_Settings.Controls.Add(Me.gb2)
-        Me.tp_Settings.Controls.Add(Me.gb1)
+        Me.tp_Settings.Controls.Add(Me.tbc_settings)
         Me.tp_Settings.Location = New System.Drawing.Point(4, 22)
         Me.tp_Settings.Name = "tp_Settings"
         Me.tp_Settings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Settings.Size = New System.Drawing.Size(656, 839)
+        Me.tp_Settings.Size = New System.Drawing.Size(656, 703)
         Me.tp_Settings.TabIndex = 2
         Me.tp_Settings.Text = "Settings"
+        '
+        'tbc_settings
+        '
+        Me.tbc_settings.Controls.Add(Me.tp_pluginsettings)
+        Me.tbc_settings.Controls.Add(Me.tp_scrapersettings)
+        Me.tbc_settings.Location = New System.Drawing.Point(7, 7)
+        Me.tbc_settings.Name = "tbc_settings"
+        Me.tbc_settings.SelectedIndex = 0
+        Me.tbc_settings.Size = New System.Drawing.Size(643, 690)
+        Me.tbc_settings.TabIndex = 24
+        '
+        'tp_pluginsettings
+        '
+        Me.tp_pluginsettings.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_pluginsettings.Controls.Add(Me.gb1)
+        Me.tp_pluginsettings.Controls.Add(Me.gb3)
+        Me.tp_pluginsettings.Controls.Add(Me.cb_debug)
+        Me.tp_pluginsettings.Location = New System.Drawing.Point(4, 22)
+        Me.tp_pluginsettings.Name = "tp_pluginsettings"
+        Me.tp_pluginsettings.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_pluginsettings.Size = New System.Drawing.Size(635, 664)
+        Me.tp_pluginsettings.TabIndex = 0
+        Me.tp_pluginsettings.Text = "Plugin Settings"
+        '
+        'gb1
+        '
+        Me.gb1.Controls.Add(Me.cb_backgroundscraper)
+        Me.gb1.Controls.Add(Me.pnl_background)
+        Me.gb1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.gb1.Location = New System.Drawing.Point(25, 150)
+        Me.gb1.Name = "gb1"
+        Me.gb1.Size = New System.Drawing.Size(584, 190)
+        Me.gb1.TabIndex = 20
+        Me.gb1.TabStop = False
+        Me.gb1.Text = " Background scraper settings "
+        '
+        'cb_backgroundscraper
+        '
+        Me.cb_backgroundscraper.AutoSize = True
+        Me.cb_backgroundscraper.CheckAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.cb_backgroundscraper.Location = New System.Drawing.Point(22, 22)
+        Me.cb_backgroundscraper.Name = "cb_backgroundscraper"
+        Me.cb_backgroundscraper.Size = New System.Drawing.Size(205, 20)
+        Me.cb_backgroundscraper.TabIndex = 19
+        Me.cb_backgroundscraper.Text = "Background Scraper Enabled"
+        Me.cb_backgroundscraper.UseVisualStyleBackColor = True
+        '
+        'pnl_background
+        '
+        Me.pnl_background.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.pnl_background.Controls.Add(Me.Label3)
+        Me.pnl_background.Controls.Add(Me.cb_delay)
+        Me.pnl_background.Controls.Add(Me.nud_delay)
+        Me.pnl_background.Controls.Add(Me.cb_missing)
+        Me.pnl_background.Controls.Add(Me.nud_missing)
+        Me.pnl_background.Controls.Add(Me.Label5)
+        Me.pnl_background.Controls.Add(Me.cb_scraping)
+        Me.pnl_background.Controls.Add(Me.Label4)
+        Me.pnl_background.Controls.Add(Me.nud_scraping)
+        Me.pnl_background.Controls.Add(Me.Label2)
+        Me.pnl_background.Controls.Add(Me.mtb_cpu)
+        Me.pnl_background.Location = New System.Drawing.Point(17, 32)
+        Me.pnl_background.Name = "pnl_background"
+        Me.pnl_background.Size = New System.Drawing.Size(550, 145)
+        Me.pnl_background.TabIndex = 21
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(20, 22)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(202, 16)
+        Me.Label3.TabIndex = 29
+        Me.Label3.Text = "on MediaPortal Startup, delay by"
+        '
+        'cb_delay
+        '
+        Me.cb_delay.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_delay.FormattingEnabled = True
+        Me.cb_delay.Items.AddRange(New Object() {"seconds", "minutes", "hours"})
+        Me.cb_delay.Location = New System.Drawing.Point(268, 19)
+        Me.cb_delay.Name = "cb_delay"
+        Me.cb_delay.Size = New System.Drawing.Size(80, 24)
+        Me.cb_delay.TabIndex = 28
+        Me.cb_delay.Text = "minutes"
+        '
+        'nud_delay
+        '
+        Me.nud_delay.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.nud_delay.Location = New System.Drawing.Point(228, 20)
+        Me.nud_delay.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.nud_delay.Name = "nud_delay"
+        Me.nud_delay.Size = New System.Drawing.Size(36, 22)
+        Me.nud_delay.TabIndex = 27
+        Me.nud_delay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.nud_delay.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'cb_missing
+        '
+        Me.cb_missing.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_missing.FormattingEnabled = True
+        Me.cb_missing.Items.AddRange(New Object() {"days", "weeks", "months", "disabled"})
+        Me.cb_missing.Location = New System.Drawing.Point(344, 109)
+        Me.cb_missing.Name = "cb_missing"
+        Me.cb_missing.Size = New System.Drawing.Size(80, 24)
+        Me.cb_missing.TabIndex = 26
+        Me.cb_missing.Text = "disabled"
+        '
+        'nud_missing
+        '
+        Me.nud_missing.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.nud_missing.Location = New System.Drawing.Point(304, 110)
+        Me.nud_missing.Maximum = New Decimal(New Integer() {24, 0, 0, 0})
+        Me.nud_missing.Name = "nud_missing"
+        Me.nud_missing.Size = New System.Drawing.Size(36, 22)
+        Me.nud_missing.TabIndex = 25
+        Me.nud_missing.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(20, 112)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(281, 16)
+        Me.Label5.TabIndex = 24
+        Me.Label5.Text = "automatically re-scrape missing movies every"
+        '
+        'cb_scraping
+        '
+        Me.cb_scraping.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_scraping.FormattingEnabled = True
+        Me.cb_scraping.Items.AddRange(New Object() {"minutes", "hours"})
+        Me.cb_scraping.Location = New System.Drawing.Point(163, 81)
+        Me.cb_scraping.Name = "cb_scraping"
+        Me.cb_scraping.Size = New System.Drawing.Size(80, 24)
+        Me.cb_scraping.TabIndex = 23
+        Me.cb_scraping.Text = "minutes"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(20, 55)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(195, 16)
+        Me.Label4.TabIndex = 21
+        Me.Label4.Text = "scrape when CPU usage below"
+        '
+        'nud_scraping
+        '
+        Me.nud_scraping.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.nud_scraping.Location = New System.Drawing.Point(113, 82)
+        Me.nud_scraping.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.nud_scraping.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.nud_scraping.Name = "nud_scraping"
+        Me.nud_scraping.Size = New System.Drawing.Size(46, 22)
+        Me.nud_scraping.TabIndex = 22
+        Me.nud_scraping.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.nud_scraping.Value = New Decimal(New Integer() {15, 0, 0, 0})
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(20, 84)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(87, 16)
+        Me.Label2.TabIndex = 20
+        Me.Label2.Text = "scrape every"
+        '
+        'mtb_cpu
+        '
+        Me.mtb_cpu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.mtb_cpu.Location = New System.Drawing.Point(217, 52)
+        Me.mtb_cpu.Mask = "00%"
+        Me.mtb_cpu.Name = "mtb_cpu"
+        Me.mtb_cpu.Size = New System.Drawing.Size(34, 22)
+        Me.mtb_cpu.TabIndex = 19
+        Me.mtb_cpu.Text = "25"
+        Me.mtb_cpu.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'gb3
         '
         Me.gb3.Controls.Add(Me.pnl_online)
         Me.gb3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gb3.Location = New System.Drawing.Point(36, 33)
+        Me.gb3.Location = New System.Drawing.Point(25, 36)
         Me.gb3.Name = "gb3"
         Me.gb3.Size = New System.Drawing.Size(584, 97)
         Me.gb3.TabIndex = 22
@@ -1899,6 +2084,27 @@ Partial Class DVDArt_GUI
         Me.cb_autoimport.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.cb_autoimport.UseVisualStyleBackColor = True
         '
+        'cb_debug
+        '
+        Me.cb_debug.AutoSize = True
+        Me.cb_debug.Location = New System.Drawing.Point(517, 13)
+        Me.cb_debug.Name = "cb_debug"
+        Me.cb_debug.Size = New System.Drawing.Size(92, 17)
+        Me.cb_debug.TabIndex = 23
+        Me.cb_debug.Text = "Enable debug"
+        Me.cb_debug.UseVisualStyleBackColor = True
+        '
+        'tp_scrapersettings
+        '
+        Me.tp_scrapersettings.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_scrapersettings.Controls.Add(Me.gb2)
+        Me.tp_scrapersettings.Location = New System.Drawing.Point(4, 22)
+        Me.tp_scrapersettings.Name = "tp_scrapersettings"
+        Me.tp_scrapersettings.Padding = New System.Windows.Forms.Padding(3)
+        Me.tp_scrapersettings.Size = New System.Drawing.Size(635, 664)
+        Me.tp_scrapersettings.TabIndex = 2
+        Me.tp_scrapersettings.Text = "Scraper Settings"
+        '
         'gb2
         '
         Me.gb2.Controls.Add(Me.tbc_scraper)
@@ -1906,7 +2112,7 @@ Partial Class DVDArt_GUI
         Me.gb2.Controls.Add(Me.cb_language)
         Me.gb2.Controls.Add(Me.Label6)
         Me.gb2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gb2.Location = New System.Drawing.Point(36, 324)
+        Me.gb2.Location = New System.Drawing.Point(25, 36)
         Me.gb2.Name = "gb2"
         Me.gb2.Size = New System.Drawing.Size(584, 505)
         Me.gb2.TabIndex = 21
@@ -2470,165 +2676,6 @@ Partial Class DVDArt_GUI
         Me.Label6.TabIndex = 6
         Me.Label6.Text = "Preferred language for Importer"
         '
-        'gb1
-        '
-        Me.gb1.Controls.Add(Me.cb_backgroundscraper)
-        Me.gb1.Controls.Add(Me.pnl_background)
-        Me.gb1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gb1.Location = New System.Drawing.Point(36, 132)
-        Me.gb1.Name = "gb1"
-        Me.gb1.Size = New System.Drawing.Size(584, 190)
-        Me.gb1.TabIndex = 20
-        Me.gb1.TabStop = False
-        Me.gb1.Text = " Background scraper settings "
-        '
-        'cb_backgroundscraper
-        '
-        Me.cb_backgroundscraper.AutoSize = True
-        Me.cb_backgroundscraper.CheckAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.cb_backgroundscraper.Location = New System.Drawing.Point(22, 22)
-        Me.cb_backgroundscraper.Name = "cb_backgroundscraper"
-        Me.cb_backgroundscraper.Size = New System.Drawing.Size(205, 20)
-        Me.cb_backgroundscraper.TabIndex = 19
-        Me.cb_backgroundscraper.Text = "Background Scraper Enabled"
-        Me.cb_backgroundscraper.UseVisualStyleBackColor = True
-        '
-        'pnl_background
-        '
-        Me.pnl_background.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.pnl_background.Controls.Add(Me.Label3)
-        Me.pnl_background.Controls.Add(Me.cb_delay)
-        Me.pnl_background.Controls.Add(Me.nud_delay)
-        Me.pnl_background.Controls.Add(Me.cb_missing)
-        Me.pnl_background.Controls.Add(Me.nud_missing)
-        Me.pnl_background.Controls.Add(Me.Label5)
-        Me.pnl_background.Controls.Add(Me.cb_scraping)
-        Me.pnl_background.Controls.Add(Me.Label4)
-        Me.pnl_background.Controls.Add(Me.nud_scraping)
-        Me.pnl_background.Controls.Add(Me.Label2)
-        Me.pnl_background.Controls.Add(Me.mtb_cpu)
-        Me.pnl_background.Location = New System.Drawing.Point(17, 32)
-        Me.pnl_background.Name = "pnl_background"
-        Me.pnl_background.Size = New System.Drawing.Size(550, 145)
-        Me.pnl_background.TabIndex = 21
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(20, 22)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(202, 16)
-        Me.Label3.TabIndex = 29
-        Me.Label3.Text = "on MediaPortal Startup, delay by"
-        '
-        'cb_delay
-        '
-        Me.cb_delay.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_delay.FormattingEnabled = True
-        Me.cb_delay.Items.AddRange(New Object() {"seconds", "minutes", "hours"})
-        Me.cb_delay.Location = New System.Drawing.Point(268, 19)
-        Me.cb_delay.Name = "cb_delay"
-        Me.cb_delay.Size = New System.Drawing.Size(80, 24)
-        Me.cb_delay.TabIndex = 28
-        Me.cb_delay.Text = "minutes"
-        '
-        'nud_delay
-        '
-        Me.nud_delay.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nud_delay.Location = New System.Drawing.Point(228, 20)
-        Me.nud_delay.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
-        Me.nud_delay.Name = "nud_delay"
-        Me.nud_delay.Size = New System.Drawing.Size(36, 22)
-        Me.nud_delay.TabIndex = 27
-        Me.nud_delay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.nud_delay.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'cb_missing
-        '
-        Me.cb_missing.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_missing.FormattingEnabled = True
-        Me.cb_missing.Items.AddRange(New Object() {"days", "weeks", "months", "disabled"})
-        Me.cb_missing.Location = New System.Drawing.Point(344, 109)
-        Me.cb_missing.Name = "cb_missing"
-        Me.cb_missing.Size = New System.Drawing.Size(80, 24)
-        Me.cb_missing.TabIndex = 26
-        Me.cb_missing.Text = "disabled"
-        '
-        'nud_missing
-        '
-        Me.nud_missing.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nud_missing.Location = New System.Drawing.Point(304, 110)
-        Me.nud_missing.Maximum = New Decimal(New Integer() {24, 0, 0, 0})
-        Me.nud_missing.Name = "nud_missing"
-        Me.nud_missing.Size = New System.Drawing.Size(36, 22)
-        Me.nud_missing.TabIndex = 25
-        Me.nud_missing.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(20, 112)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(281, 16)
-        Me.Label5.TabIndex = 24
-        Me.Label5.Text = "automatically re-scrape missing movies every"
-        '
-        'cb_scraping
-        '
-        Me.cb_scraping.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_scraping.FormattingEnabled = True
-        Me.cb_scraping.Items.AddRange(New Object() {"minutes", "hours"})
-        Me.cb_scraping.Location = New System.Drawing.Point(163, 81)
-        Me.cb_scraping.Name = "cb_scraping"
-        Me.cb_scraping.Size = New System.Drawing.Size(80, 24)
-        Me.cb_scraping.TabIndex = 23
-        Me.cb_scraping.Text = "minutes"
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(20, 55)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(195, 16)
-        Me.Label4.TabIndex = 21
-        Me.Label4.Text = "scrape when CPU usage below"
-        '
-        'nud_scraping
-        '
-        Me.nud_scraping.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nud_scraping.Location = New System.Drawing.Point(113, 82)
-        Me.nud_scraping.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
-        Me.nud_scraping.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.nud_scraping.Name = "nud_scraping"
-        Me.nud_scraping.Size = New System.Drawing.Size(46, 22)
-        Me.nud_scraping.TabIndex = 22
-        Me.nud_scraping.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.nud_scraping.Value = New Decimal(New Integer() {15, 0, 0, 0})
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(20, 84)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(87, 16)
-        Me.Label2.TabIndex = 20
-        Me.Label2.Text = "scrape every"
-        '
-        'mtb_cpu
-        '
-        Me.mtb_cpu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.mtb_cpu.Location = New System.Drawing.Point(217, 52)
-        Me.mtb_cpu.Mask = "00%"
-        Me.mtb_cpu.Name = "mtb_cpu"
-        Me.mtb_cpu.Size = New System.Drawing.Size(34, 22)
-        Me.mtb_cpu.TabIndex = 19
-        Me.mtb_cpu.Text = "25"
-        Me.mtb_cpu.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
         'il_column
         '
         Me.il_column.ColorDepth = System.Windows.Forms.ColorDepth.Depth16Bit
@@ -2666,25 +2713,18 @@ Partial Class DVDArt_GUI
         Me.RescanAllToolStripMenuItem1.Size = New System.Drawing.Size(232, 22)
         Me.RescanAllToolStripMenuItem1.Text = "Rescan all"
         '
-        'cb_debug
-        '
-        Me.cb_debug.AutoSize = True
-        Me.cb_debug.Location = New System.Drawing.Point(528, 13)
-        Me.cb_debug.Name = "cb_debug"
-        Me.cb_debug.Size = New System.Drawing.Size(92, 17)
-        Me.cb_debug.TabIndex = 23
-        Me.cb_debug.Text = "Enable debug"
-        Me.cb_debug.UseVisualStyleBackColor = True
-        '
         'DVDArt_GUI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(688, 898)
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.ClientSize = New System.Drawing.Size(688, 762)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.tbc_main)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "DVDArt_GUI"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "DVDArt "
@@ -2751,11 +2791,21 @@ Partial Class DVDArt_GUI
         Me.tp_artist_album_missing.ResumeLayout(False)
         Me.tp_Importer.ResumeLayout(False)
         Me.tp_Settings.ResumeLayout(False)
-        Me.tp_Settings.PerformLayout()
+        Me.tbc_settings.ResumeLayout(False)
+        Me.tp_pluginsettings.ResumeLayout(False)
+        Me.tp_pluginsettings.PerformLayout()
+        Me.gb1.ResumeLayout(False)
+        Me.gb1.PerformLayout()
+        Me.pnl_background.ResumeLayout(False)
+        Me.pnl_background.PerformLayout()
+        CType(Me.nud_delay, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nud_missing, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nud_scraping, System.ComponentModel.ISupportInitialize).EndInit()
         Me.gb3.ResumeLayout(False)
         Me.pnl_online.ResumeLayout(False)
         Me.pnl_online.PerformLayout()
         CType(Me.nud_downloads, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tp_scrapersettings.ResumeLayout(False)
         Me.gb2.ResumeLayout(False)
         Me.gb2.PerformLayout()
         Me.tbc_scraper.ResumeLayout(False)
@@ -2790,13 +2840,6 @@ Partial Class DVDArt_GUI
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tp_music_path.ResumeLayout(False)
         Me.tp_music_path.PerformLayout()
-        Me.gb1.ResumeLayout(False)
-        Me.gb1.PerformLayout()
-        Me.pnl_background.ResumeLayout(False)
-        Me.pnl_background.PerformLayout()
-        CType(Me.nud_delay, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nud_missing, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nud_scraping, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -3036,5 +3079,8 @@ Partial Class DVDArt_GUI
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents cb_persons As System.Windows.Forms.CheckBox
     Friend WithEvents cb_debug As System.Windows.Forms.CheckBox
+    Friend WithEvents tbc_settings As System.Windows.Forms.TabControl
+    Friend WithEvents tp_pluginsettings As System.Windows.Forms.TabPage
+    Friend WithEvents tp_scrapersettings As System.Windows.Forms.TabPage
 
 End Class

@@ -24,6 +24,7 @@ Partial Class DVDArt_ChangeMBID
     Private Sub InitializeComponent()
         Me.tb_MBID = New System.Windows.Forms.TextBox()
         Me.b_done = New System.Windows.Forms.Button()
+        Me.l_copyright = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'tb_MBID
@@ -43,12 +44,24 @@ Partial Class DVDArt_ChangeMBID
         Me.b_done.Text = "Done"
         Me.b_done.UseVisualStyleBackColor = True
         '
+        'l_copyright
+        '
+        Me.l_copyright.AutoSize = True
+        Me.l_copyright.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.l_copyright.ForeColor = System.Drawing.SystemColors.ActiveCaption
+        Me.l_copyright.Location = New System.Drawing.Point(2, 85)
+        Me.l_copyright.Name = "l_copyright"
+        Me.l_copyright.Size = New System.Drawing.Size(138, 12)
+        Me.l_copyright.TabIndex = 29
+        Me.l_copyright.Text = "Copyright © 2012-2014, m3rcury"
+        '
         'DVDArt_ChangeMBID
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(284, 98)
         Me.Controls.Add(Me.b_done)
+        Me.Controls.Add(Me.l_copyright)
         Me.Controls.Add(Me.tb_MBID)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "DVDArt_ChangeMBID"
@@ -60,4 +73,5 @@ Partial Class DVDArt_ChangeMBID
     End Sub
     Friend WithEvents tb_MBID As System.Windows.Forms.TextBox
     Friend WithEvents b_done As System.Windows.Forms.Button
+    Friend WithEvents l_copyright As System.Windows.Forms.Label
 End Class

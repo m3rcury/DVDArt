@@ -103,6 +103,10 @@ DVDArt_Plugin
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
+</member><member name="P:DVDArt_Plugin.My.Resources.Resources.hd_3d">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
 </member><member name="P:DVDArt_Plugin.My.Resources.Resources.lastfm">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -172,6 +176,10 @@ DVDArt_Plugin
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member><member name="P:DVDArt_Plugin.My.Resources.Resources.sd">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member><member name="P:DVDArt_Plugin.My.Resources.Resources.sd_3d">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
