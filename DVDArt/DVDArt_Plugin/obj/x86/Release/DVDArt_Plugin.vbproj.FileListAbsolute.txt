@@ -21,7 +21,6 @@ E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj
 E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
 E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
 E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
-E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\System.Data.SQLite.dll
 E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbprojResolveAssemblyReference.cache
 E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
 E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources

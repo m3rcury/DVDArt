@@ -69,13 +69,13 @@ Partial Class DVDArt_CoverArt
         'l_copyright
         '
         Me.l_copyright.AutoSize = True
-        Me.l_copyright.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.l_copyright.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.l_copyright.ForeColor = System.Drawing.SystemColors.ActiveCaption
         Me.l_copyright.Location = New System.Drawing.Point(2, 527)
         Me.l_copyright.Name = "l_copyright"
-        Me.l_copyright.Size = New System.Drawing.Size(133, 13)
+        Me.l_copyright.Size = New System.Drawing.Size(138, 12)
         Me.l_copyright.TabIndex = 25
-        Me.l_copyright.Text = "Copyright © 2012, m3rcury"
+        Me.l_copyright.Text = "Copyright © 2012-2014, m3rcury"
         '
         'b_done
         '

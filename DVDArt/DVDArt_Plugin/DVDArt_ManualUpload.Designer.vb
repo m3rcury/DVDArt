@@ -142,9 +142,9 @@ Partial Class DVDArt_ManualUpload
         Me.Label4.ForeColor = System.Drawing.SystemColors.ActiveCaption
         Me.Label4.Location = New System.Drawing.Point(2, 261)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(133, 13)
+        Me.Label4.Size = New System.Drawing.Size(160, 13)
         Me.Label4.TabIndex = 25
-        Me.Label4.Text = "Copyright © 2012, m3rcury"
+        Me.Label4.Text = "Copyright © 2012-2014, m3rcury"
         '
         'cb_logos
         '

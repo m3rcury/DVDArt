@@ -100,32 +100,35 @@ Public Class DVDArt_Common
         If Not IO.File.Exists(database & p_Databases("movingpictures")) Then Return Nothing
 
         Dim movielist() As Movies = Nothing
-        Dim x As Integer = -1
-        Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
-        Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
+        Try
+            Dim x As Integer = -1
+            Dim SQLconnect As New SQLiteConnection()
+            Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+            Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT imdb_id, title, backdropfullpath, coverfullpath FROM movie_info WHERE imdb_id IS NOT NULL and title IS NOT NULL ORDER BY sortby"
-        SQLreader = SQLcommand.ExecuteReader()
+            SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
 
-        While SQLreader.Read()
+            SQLconnect.Open()
+            SQLcommand.CommandText = "SELECT imdb_id, title, backdropfullpath, coverfullpath FROM movie_info WHERE imdb_id IS NOT NULL and title IS NOT NULL ORDER BY sortby"
+            SQLreader = SQLcommand.ExecuteReader()
 
-            If Trim(SQLreader(0)) <> "" Then
-                x += 1
-                ReDim Preserve movielist(x)
-                movielist(x).imdb_id = SQLreader(0)
-                movielist(x).name = SQLreader(1)
-                movielist(x).backdrop = SQLreader(2)
-                movielist(x).cover = SQLreader(3)
-            End If
+            While SQLreader.Read()
 
-        End While
+                If Trim(SQLreader(0)) <> "" Then
+                    x += 1
+                    ReDim Preserve movielist(x)
+                    movielist(x).imdb_id = SQLreader(0)
+                    movielist(x).name = SQLreader(1)
+                    movielist(x).backdrop = SQLreader(2)
+                    movielist(x).cover = SQLreader(3)
+                End If
 
-        SQLconnect.Close()
+            End While
+
+            SQLconnect.Close()
+        Catch ex As Exception
+        End Try
 
         Return movielist
 
@@ -138,7 +141,11 @@ Public Class DVDArt_Common
         Dim x As Integer = -1
         Dim dataExport As AntMovieCatalog = New AntMovieCatalog()
 
-        If movielist IsNot Nothing Then x = UBound(movielist)
+        If movielist Is Nothing Then
+            ReDim movielist(0)
+        Else
+            x = UBound(movielist)
+        End If
 
         Dim lookupbyIMDB = movielist.ToLookup(Function(p) p.imdb_id)
 
@@ -222,18 +229,21 @@ Public Class DVDArt_Common
 
         Dim x As Integer = -1
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
 
-        If movielist IsNot Nothing Then x = UBound(movielist)
+        If movielist Is Nothing Then
+            ReDim movielist(0)
+        Else
+            x = UBound(movielist)
+        End If
 
         Dim lookupbyIMDB = movielist.ToLookup(Function(p) p.imdb_id)
 
         SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("myvideos") & ";Read Only=True;"
 
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT IMDBID, strTitle, strFanartURL, strPictureURL FROM movieinfo WHERE IMDBID IS NOT NULL and strTitle IS NOT NULL ORDER BY strSortTitle"
+        SQLcommand.CommandText = "SELECT IMDBID, strTitle, strFanartURL, strPictureURL FROM movieinfo WHERE IMDBID IS NOT NULL and IMDBID <> 'unknown' and strTitle IS NOT NULL ORDER BY strSortTitle"
         SQLreader = SQLcommand.ExecuteReader()
 
         While SQLreader.Read()
@@ -272,13 +282,12 @@ Public Class DVDArt_Common
         Dim serielist() As Series = Nothing
         Dim x As Integer = -1
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
 
         SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("tvseries") & ";Read Only=True;"
 
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT id, pretty_name FROM online_series WHERE id IS NOT NULL and pretty_name IS NOT NULL ORDER BY sortname"
         SQLreader = SQLcommand.ExecuteReader()
 
@@ -304,39 +313,42 @@ Public Class DVDArt_Common
         If Not IO.File.Exists(database & p_Databases("movingpictures")) Then Return Nothing
 
         Dim personlist As New SortedList
-        Dim persons As Array
-        Dim x As Integer = -1
-        Dim y As Integer
-        Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
-        Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
+        Try
+            Dim persons As Array
+            Dim x As Integer = -1
+            Dim y As Integer
+            Dim SQLconnect As New SQLiteConnection()
+            Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+            Dim SQLreader As SQLiteDataReader
 
-        SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT directors||writers||actors, imdb_id FROM movie_info WHERE directors||writers||actors IS NOT NULL AND imdb_id IS NOT NULL"
-        SQLreader = SQLcommand.ExecuteReader()
+            SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
 
-        While SQLreader.Read()
+            SQLconnect.Open()
+            SQLcommand.CommandText = "SELECT directors||writers||actors, imdb_id FROM movie_info WHERE directors||writers||actors IS NOT NULL AND imdb_id IS NOT NULL"
+            SQLreader = SQLcommand.ExecuteReader()
 
-            If Trim(SQLreader(0)) <> "" Then
+            While SQLreader.Read()
 
-                persons = Split(Mid(SQLreader(0), 2, Len(SQLreader(0)) - 2).Replace("||", "|"), "|")
+                If Trim(SQLreader(0)) <> "" Then
 
-                For y = 0 To UBound(persons)
+                    persons = Split(Mid(SQLreader(0), 2, Len(SQLreader(0)) - 2).Replace("||", "|"), "|")
 
-                    If Not String.IsNullOrEmpty(Trim(persons(y))) Then
-                        If Not personlist.ContainsKey(persons(y)) Then personlist.Add(persons(y), SQLreader(1))
-                    End If
+                    For y = 0 To UBound(persons)
 
-                Next
+                        If Not String.IsNullOrEmpty(Trim(persons(y))) Then
+                            If Not personlist.ContainsKey(persons(y)) Then personlist.Add(persons(y), SQLreader(1))
+                        End If
 
-            End If
+                    Next
 
-        End While
+                End If
 
-        SQLconnect.Close()
+            End While
+
+            SQLconnect.Close()
+        Catch ex As Exception
+        End Try
 
         Return personlist
 
@@ -410,7 +422,7 @@ Public Class DVDArt_Common
         Dim x As Integer = -1
         Dim y As Integer
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
 
         If personlist IsNot Nothing Then x = personlist.Count - 1
@@ -418,7 +430,6 @@ Public Class DVDArt_Common
         SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("myvideos") & ";Read Only=True;"
 
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT strDirector||REPLACE(strCast, CHAR(10), '|'), IMDBID FROM movieinfo WHERE strDirector||REPLACE(strCast, CHAR(10), '|') IS NOT NULL AND IMDBID IS NOT NULL"
         SQLreader = SQLcommand.ExecuteReader()
 
@@ -451,12 +462,11 @@ Public Class DVDArt_Common
         Dim MBID As String = Nothing
 
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
 
         SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("dvdart") & ";Read Only=True;"
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "SELECT MBID FROM processed_artist WHERE LOWER(artist) = """ & LCase(artist) & """"
         SQLreader = SQLcommand.ExecuteReader(CommandBehavior.SingleRow)
 
@@ -965,22 +975,50 @@ Public Class DVDArt_Common
         Return s.Contains("null}")
     End Function
 
-    Public Shared Function getMovingPicturesImagePath(ByVal database As String, ByVal imdb_id As String, ByVal field As String) As String
+    Public Shared Function getImagePath(ByVal database As String, ByVal imdb_id As String, ByVal field As String) As String
 
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
+        Dim imagepath As String = String.Empty
 
-        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
-        SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "SELECT " & field & "fullpath FROM movie_info WHERE imdb_id = '" & imdb_id & "'"
-        SQLreader = SQLcommand.ExecuteReader()
-        SQLreader.Read()
+        If IO.File.Exists(database & p_Databases("movingpictures")) Then
+            Try
+                SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
+                SQLconnect.Open()
+                SQLcommand.CommandText = "SELECT " & field & "fullpath FROM movie_info WHERE imdb_id = '" & imdb_id & "'"
+                SQLreader = SQLcommand.ExecuteReader()
+                SQLreader.Read()
 
-        Dim imagepath As String = SQLreader(0)
+                imagepath = SQLreader(0)
+            Catch ex As Exception
+                imagepath = String.Empty
+            End Try
 
-        SQLconnect.Close()
+            SQLconnect.Close()
+        End If
+
+        If IO.File.Exists(database & p_Databases("myvideos")) And imagepath = String.Empty Then
+            Try
+                SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("myvideos") & ";Read Only=True;"
+                SQLconnect.Open()
+
+                If field = "backdrop" Then
+                    SQLcommand.CommandText = "SELECT strFanartURL FROM movieinfo WHERE IMDBID = '" & imdb_id & "'"
+                ElseIf field = "cover" Then
+                    SQLcommand.CommandText = "SELECT strPictureURL FROM movieinfo WHERE IMDBID = '" & imdb_id & "'"
+                End If
+
+                SQLreader = SQLcommand.ExecuteReader()
+                SQLreader.Read()
+
+                imagepath = SQLreader(0)
+            Catch ex As Exception
+                imagepath = String.Empty
+            End Try
+
+            SQLconnect.Close()
+        End If
 
         Return imagepath
 
@@ -1082,7 +1120,7 @@ Public Class DVDArt_Common
 
     End Sub
 
-    Public Shared Function import(ByVal database As String, ByVal thumbs As String, ByVal id As String, ByVal title As String, ByVal lang As String, ByVal type As String, ByVal personpath As String, ByVal checked As Array) As Array
+    Public Shared Function import(ByVal database As String, ByVal thumbs As String, ByVal id As String, ByVal title As String, ByVal lang As String, ByVal type As String, ByVal personpath As String, ByVal checked As Array, Optional ByVal backdrop As String = Nothing, Optional ByVal cover As String = Nothing) As Array
 
         Dim y As Integer
         Dim filenotexist(4) As Boolean
@@ -1096,9 +1134,6 @@ Public Class DVDArt_Common
         logStats("DVDArt: downloading artwork for " & type & " - """ & title & """", "LOG")
 
         If type = "movie" Then
-
-            Dim backdrop As String = getMovingPicturesImagePath(database, id, "backdrop")
-            Dim cover As String = getMovingPicturesImagePath(database, id, "cover")
 
             For y = 0 To 4
                 If y < 3 Then
@@ -1123,7 +1158,7 @@ Public Class DVDArt_Common
             Next
 
             SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_movies (imdb_id) VALUES('" & id & "')"
-            
+
         ElseIf type = "series" Then
 
             For y = 1 To 2
@@ -1138,7 +1173,10 @@ Public Class DVDArt_Common
 
             SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_series (thetvdb_id) VALUES('" & id & "')"
 
-        ElseIf type = "artist" Then
+        ElseIf Left(type, 6) = "artist" Then
+
+            If title = String.Empty Then title = LCase(Right(type, Len(type) - 7).Replace(" ", "-"))
+            type = Left(type, 6)
 
             If id = "" Then id = get_Artist_MBID(title)
 
@@ -1154,10 +1192,10 @@ Public Class DVDArt_Common
 
             SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_artist (artist, MBID) VALUES('" & title.Replace("'", "''") & "','" & id & "')"
 
-        ElseIf Microsoft.VisualBasic.Left(type, 5) = "music" Then
+        ElseIf Left(type, 5) = "music" Then
 
-            Dim artist = LCase(Microsoft.VisualBasic.Right(type, Len(type) - 6).Replace(" ", "-"))
-            type = Microsoft.VisualBasic.Left(type, 5)
+            Dim artist = LCase(Right(type, Len(type) - 6).Replace(" ", "-"))
+            type = Left(type, 5)
 
             If id = "" Then id = get_MBID(database, title, artist)
 
@@ -1541,23 +1579,31 @@ Public Class DVDArt_Common
         If _logos Then
 
             Dim SQLconnect As New SQLiteConnection()
-            Dim SQLcommand As SQLiteCommand
+            Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
             Dim SQLreader As SQLiteDataReader
 
-            SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
-            SQLconnect.Open()
-            SQLcommand = SQLconnect.CreateCommand
-            SQLcommand.CommandText = "SELECT l.videoresolution, m.certification, m.studios FROM local_media l, movie_info m, local_media__movie_info lm WHERE lm.movie_info_id = m.id AND l.id = lm.local_media_id AND m.imdb_id = """ & imagename & """"
+            If IO.File.Exists(database & p_Databases("movingpictures")) Then
+                SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
+                SQLconnect.Open()
+                SQLcommand.CommandText = "SELECT l.videoresolution, m.certification, m.studios, l.is3d FROM local_media l, movie_info m, local_media__movie_info lm WHERE lm.movie_info_id = m.id AND l.id = lm.local_media_id AND m.imdb_id = '" & imagename & "'"
+            ElseIf IO.File.Exists(database & p_Databases("myvideos")) Then
+                SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("myvideos") & ";Read Only=True;"
+                SQLconnect.Open()
+                SQLcommand.CommandText = "SELECT i.videoResolution, m.mpaa, m.studios, '0' FROM movieinfo m, files f, filesmediainfo i WHERE m.idMovie = f.idMovie AND f.idFile = i.idFile AND m.IMDBID = '" & imagename & "'"
+            End If
+
             SQLreader = SQLcommand.ExecuteReader(CommandBehavior.SingleRow)
             SQLreader.Read()
 
             Dim videoresolution As String = "sd"
             Dim certification As String = Nothing
             Dim studios() As String = Nothing
+            Dim is3d As Boolean = False
 
             If Not IsDBNull(SQLreader(0)) Then videoresolution = LCase(SQLreader(0))
             If Not IsDBNull(SQLreader(1)) Then certification = LCase(SQLreader(1))
             If Not IsDBNull(SQLreader(2)) Then studios = Split(LCase(SQLreader(2).replace(" ", "_")), "|")
+            If Not IsDBNull(SQLreader(3)) Then is3d = SQLreader(3)
 
             SQLreader.Close()
 
@@ -1565,11 +1611,21 @@ Public Class DVDArt_Common
             Dim image As Image = Nothing
 
             If videoresolution = "720p" Or videoresolution = "1080p" Or videoresolution = "1080i" Or videoresolution = "hd" Then
-                videoresolution = "hd"
-                image = New Bitmap(My.Resources.hd)
+                If Not is3d Then
+                    videoresolution = "hd"
+                    image = New Bitmap(My.Resources.hd)
+                Else
+                    videoresolution = "hd_3d"
+                    image = New Bitmap(My.Resources.hd_3d)
+                End If
             ElseIf videoresolution = "240" Or videoresolution = "480" Or videoresolution = "540" Or videoresolution = "576" Or videoresolution = "dvd" Or videoresolution = "sd" Then
-                videoresolution = "sd"
-                image = New Bitmap(My.Resources.sd)
+                If Not is3d Then
+                    videoresolution = "sd"
+                    image = New Bitmap(My.Resources.sd)
+                Else
+                    videoresolution = "sd_3d"
+                    image = New Bitmap(My.Resources.sd_3d)
+                End If
             End If
 
             tempfile = _temp & "\" & videoresolution & ".png"
@@ -1766,7 +1822,7 @@ Public Class DVDArt_Common
     Public Shared Function FieldExist(ByVal table As String, ByVal fields() As String) As Array
 
         Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
         Dim SQLreader As SQLiteDataReader
         Dim columns() As String = Nothing
         Dim exists() As Boolean
@@ -1774,7 +1830,6 @@ Public Class DVDArt_Common
 
         SQLconnect.ConnectionString = "Data Source=" & Config.GetFile(Config.Dir.Database, "dvdart.db3") & ";Read Only=True;"
         SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "PRAGMA table_info (" & table & ")"
         SQLreader = SQLcommand.ExecuteReader()
 
@@ -1825,15 +1880,13 @@ Public Class DVDArt_Common
 
         Dim value As String = Nothing
 
-        If FileSystem.FileExists(database & p_Databases("movingpictures")) Then
-
+        Try
             Dim SQLconnect As New SQLiteConnection()
-            Dim SQLcommand As SQLiteCommand
+            Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
             Dim SQLreader As SQLiteDataReader
 
             SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
             SQLconnect.Open()
-            SQLcommand = SQLconnect.CreateCommand
             SQLcommand.CommandText = "SELECT value FROM settings WHERE key = '" & key & "'"
             SQLreader = SQLcommand.ExecuteReader()
             SQLreader.Read()
@@ -1845,8 +1898,8 @@ Public Class DVDArt_Common
             End If
 
             SQLconnect.Close()
-
-        End If
+        Catch ex As Exception
+        End Try
 
         Return value
 
@@ -1854,21 +1907,25 @@ Public Class DVDArt_Common
 
     Public Shared Sub updateMovingPicturesDB(ByVal database As String, ByVal field As String, ByVal key As String, ByVal value As String)
 
-        Dim SQLconnect As New SQLiteConnection()
-        Dim SQLcommand As SQLiteCommand
+        If Not IO.File.Exists(database & p_Databases("movingpictures")) Then Exit Sub
 
-        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";"
-        SQLconnect.Open()
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "UPDATE movie_info SET " & field & "fullpath = '" & value & "' WHERE imdb_id = '" & key & "'"
-        SQLcommand.ExecuteNonQuery()
+        Try
+            Dim SQLconnect As New SQLiteConnection()
+            Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
 
-        If field = "cover" Then
-            SQLcommand.CommandText = "UPDATE movie_info SET alternatecovers = alternatecovers||'" & value & "|' WHERE imdb_id = '" & key & "'"
+            SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";"
+            SQLconnect.Open()
+            SQLcommand.CommandText = "UPDATE movie_info SET " & field & "fullpath = '" & value & "' WHERE imdb_id = '" & key & "'"
             SQLcommand.ExecuteNonQuery()
-        End If
 
-        SQLconnect.Close()
+            If field = "cover" Then
+                SQLcommand.CommandText = "UPDATE movie_info SET alternatecovers = alternatecovers||'" & value & "|' WHERE imdb_id = '" & key & "'"
+                SQLcommand.ExecuteNonQuery()
+            End If
+
+            SQLconnect.Close()
+        Catch ex As Exception
+        End Try
 
     End Sub
 
@@ -1883,7 +1940,7 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.2.3"
+        _version = "v1.0.2.4"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 
@@ -1908,13 +1965,14 @@ Public Class DVDArt_Common
 
     End Sub
 
-    Public Shared Sub Initialize(ByVal database As String, ByVal thumbs As String, ByVal Movies As String, ByVal Series As String, ByVal Music As String)
+    Public Shared Sub Initialize(ByVal database As String, ByVal thumbs As String, ByVal Movies As String, ByVal Series As String, ByVal Music As String, ByVal Person As String)
 
         logStats("DVDArt: Initialization in progress.", "LOG")
 
-        logStats("DVDArt: Movies artwork path - " & Movies, "LOG")
-        logStats("DVDArt: Series artwork path - " & Series, "LOG")
-        logStats("DVDArt: Music artwork path  - " & Music, "LOG")
+        logStats("DVDArt: Movies artwork path  - " & Movies, "LOG")
+        logStats("DVDArt: Series artwork path  - " & Series, "LOG")
+        logStats("DVDArt: Music artwork path   - " & Music, "LOG")
+        logStats("DVDArt: Person artwork path  - " & Person, "LOG")
 
         Movies = Right(Movies, Len(Movies) - Len(thumbs))
         Series = Right(Series, Len(Series) - Len(thumbs))
@@ -1927,10 +1985,19 @@ Public Class DVDArt_Common
         folder(0, 1, 1) = Movies & "\ClearArt\Thumbs\"
         folder(0, 2, 0) = Movies & "\ClearLogo\FullSize\"
         folder(0, 2, 1) = Movies & "\ClearLogo\Thumbs\"
-        folder(0, 3, 0) = readMovingPicturesDB(database, thumbs, "backdrop_folder")
-        folder(0, 3, 1) = readMovingPicturesDB(database, thumbs, "backdrop_thumbs_folder")
-        folder(0, 4, 0) = readMovingPicturesDB(database, thumbs, "cover_art_folder")
-        folder(0, 4, 1) = readMovingPicturesDB(database, thumbs, "cover_thumbs_folder")
+
+        If IO.File.Exists(database & p_Databases("movingpictures")) Then
+            folder(0, 3, 0) = readMovingPicturesDB(database, thumbs, "backdrop_folder")
+            folder(0, 3, 1) = readMovingPicturesDB(database, thumbs, "backdrop_thumbs_folder")
+            folder(0, 4, 0) = readMovingPicturesDB(database, thumbs, "cover_art_folder")
+            folder(0, 4, 1) = readMovingPicturesDB(database, thumbs, "cover_thumbs_folder")
+        ElseIf IO.File.Exists(database & p_Databases("myvideos")) Then
+            folder(0, 3, 0) = thumbs & "\Videos\Backdrop\Full\"
+            folder(0, 3, 1) = thumbs & "\Videos\Backdrop\Thumbs\"
+            folder(0, 4, 0) = thumbs & "\Vidoes\Covers\Full\"
+            folder(0, 4, 1) = thumbs & "\Vidoes\Covers\Thumbs\"
+        End If
+
         folder(1, 0, 0) = Nothing
         folder(1, 0, 1) = Nothing
         folder(1, 1, 0) = Series & "\ClearArt\FullSize\"
@@ -1954,6 +2021,8 @@ Public Class DVDArt_Common
 
         'create thumb folder structure
         Create_Folder_Structure(database, thumbs)
+
+        If Not IO.Directory.Exists(Person) Then IO.Directory.CreateDirectory(Person)
 
         'extract dvdart.png from resources to temporary folder
         Dim png As String = _temp & "\dvdart.png"
