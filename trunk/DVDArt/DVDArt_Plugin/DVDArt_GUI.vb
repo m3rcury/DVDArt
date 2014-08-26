@@ -212,12 +212,14 @@ Public Class DVDArt_GUI
                         backdrop = lv_import.Items.Item(x).SubItems.Item(3).Text
                         cover = lv_import.Items.Item(x).SubItems.Item(4).Text
 
-                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "movie", personpath, checked, backdrop, cover)
+                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "movies", personpath, checked, backdrop, cover)
 
                         For y = 0 To 4
 
                             If downloaded(y) Then
-                                lv_import.Items(x).StateImageIndex = 1
+                                If Not added Then
+                                    If Not addedmissing Then lv_import.Items(x).StateImageIndex = 4 Else lv_import.Items(x).StateImageIndex = 1
+                                End If
 
                                 added = added Or (lv_movies.FindItemWithText(lv_import.Items.Item(x).SubItems.Item(0).Text) IsNot Nothing)
 
@@ -229,9 +231,7 @@ Public Class DVDArt_GUI
                                     added = True
                                 End If
                             Else
-                                If Not added Then
-                                    lv_import.Items(x).StateImageIndex = 2
-                                End If
+                                If Not added Then lv_import.Items(x).StateImageIndex = 2 Else lv_import.Items(x).StateImageIndex = 1
 
                                 If Not addedmissing Then
                                     Try
@@ -287,12 +287,14 @@ Public Class DVDArt_GUI
 
                     ElseIf lv_import.Items.Item(x).SubItems.Item(2).Text = "Series" Then
 
-                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "series", personpath, checked)
+                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "tv", personpath, checked)
 
                         For y = 1 To 2
 
                             If downloaded(y) Then
-                                lv_import.Items(x).StateImageIndex = 1
+                                If Not added Then
+                                    If Not addedmissing Then lv_import.Items(x).StateImageIndex = 4 Else lv_import.Items(x).StateImageIndex = 1
+                                End If
 
                                 added = added Or (lv_series.FindItemWithText(lv_import.Items.Item(x).SubItems.Item(0).Text) IsNot Nothing)
 
@@ -302,9 +304,7 @@ Public Class DVDArt_GUI
                                     added = True
                                 End If
                             Else
-                                If Not added Then
-                                    lv_import.Items(x).StateImageIndex = 2
-                                End If
+                                If Not added Then lv_import.Items(x).StateImageIndex = 2 Else lv_import.Items(x).StateImageIndex = 1
 
                                 If Not addedmissing Then
                                     Try
@@ -361,22 +361,18 @@ Public Class DVDArt_GUI
 
                         MBID = DVDArt_Common.get_Artist_MBID(lv_import.Items.Item(x).SubItems.Item(0).Text)
 
-                        If MBID <> Nothing Then
+                        lv_import.Items.Item(x).SubItems.Item(1).Text = MBID
 
-                            lv_import.Items.Item(x).SubItems.Item(1).Text = MBID
+                        If MBID = Nothing Then MBID = "Not found"
 
-                            downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, Nothing, _lang, "artist|" & lv_import.Items.Item(x).SubItems.Item(0).Text, personpath, checked)
-
-                        Else
-                            downloaded = {False, False, False, False, False}
-                            lv_import.Items.Item(x).SubItems.Item(1).Text = Nothing
-                        End If
+                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, Nothing, _lang, "music|" & lv_import.Items.Item(x).SubItems.Item(0).Text, personpath, checked)
 
                         For y = 0 To 2
 
                             If downloaded(y) Then
-
-                                lv_import.Items(x).StateImageIndex = 1
+                                If Not added Then
+                                    If Not addedmissing Then lv_import.Items(x).StateImageIndex = 4 Else lv_import.Items(x).StateImageIndex = 1
+                                End If
 
                                 added = added Or (lv_album.FindItemWithText(lv_import.Items.Item(x).SubItems.Item(0).Text) IsNot Nothing)
 
@@ -386,9 +382,7 @@ Public Class DVDArt_GUI
                                     added = True
                                 End If
                             Else
-                                If Not added Then
-                                    lv_import.Items(x).StateImageIndex = 2
-                                End If
+                                If Not added Then lv_import.Items(x).StateImageIndex = 2 Else lv_import.Items(x).StateImageIndex = 1
 
                                 If Not addedmissing Then
                                     Try
@@ -449,21 +443,18 @@ Public Class DVDArt_GUI
 
                         MBID = DVDArt_Common.get_MBID(database, lv_import.Items.Item(x).SubItems.Item(0).Text, lv_import.Items.Item(x).SubItems.Item(3).Text)
 
-                        If MBID <> Nothing Then
+                        lv_import.Items.Item(x).SubItems.Item(1).Text = MBID
 
-                            lv_import.Items.Item(x).SubItems.Item(1).Text = MBID
+                        If MBID = Nothing Then MBID = "Not found"
 
-                            downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, Nothing, _lang, "music|" & lv_import.Items.Item(x).SubItems.Item(0).Text, personpath, checked)
-                        Else
-                            downloaded = {False, False, False, False, False}
-                            lv_import.Items.Item(x).SubItems.Item(1).Text = Nothing
-                        End If
+                        downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "music/albums|" & lv_import.Items.Item(x).SubItems.Item(3).Text, personpath, checked)
 
                         For y = 0 To 2
 
                             If downloaded(y) Then
-
-                                lv_import.Items(x).StateImageIndex = 1
+                                If Not added Then
+                                    If Not addedmissing Then lv_import.Items(x).StateImageIndex = 4 Else lv_import.Items(x).StateImageIndex = 1
+                                End If
 
                                 added = added Or (lv_album.FindItemWithText(lv_import.Items.Item(x).SubItems.Item(0).Text) IsNot Nothing)
 
@@ -473,9 +464,7 @@ Public Class DVDArt_GUI
                                     added = True
                                 End If
                             Else
-                                If Not added Then
-                                    lv_import.Items(x).StateImageIndex = 2
-                                End If
+                                If Not added Then lv_import.Items(x).StateImageIndex = 2 Else lv_import.Items(x).StateImageIndex = 1
 
                                 If Not addedmissing Then
                                     Try
@@ -539,7 +528,7 @@ Public Class DVDArt_GUI
                         downloaded = DVDArt_Common.import(database, thumbs, Nothing, person, _lang, "person", personpath, checked)
 
                         If IO.File.Exists(personpath & Utils.MakeFileName(person) & ".png") Then
-                            lv_import.Items(x).StateImageIndex = 1
+                            lv_import.Items(x).StateImageIndex = 4
                             li_person = lv_person.Items.Add(person)
                         Else
                             lv_import.Items(x).StateImageIndex = 2
@@ -549,7 +538,7 @@ Public Class DVDArt_GUI
                     End If
 
                     Try
-                        lv_import.Items(l_import_index(x)).EnsureVisible()
+                        lv_import.Items(x).EnsureVisible()
                     Catch ex As Exception
                     End Try
 
@@ -584,7 +573,7 @@ Public Class DVDArt_GUI
                     addedmissing = False
                     lvi = Nothing
 
-                    If type = "movie" Then
+                    If type = "movies" Then
 
                         backdrop = DVDArt_Common.getImagePath(database, id, "backdrop")
                         cover = DVDArt_Common.getImagePath(database, id, "cover")
@@ -594,7 +583,9 @@ Public Class DVDArt_GUI
                         For y = 0 To 4
 
                             If downloaded(y) Then
-                                lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                                If Not added Then
+                                    If Not addedmissing Then lv_import.Items(l_import_index(x)).StateImageIndex = 4 Else lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                                End If
 
                                 added = added Or (lv_movies.FindItemWithText(title) IsNot Nothing)
 
@@ -606,9 +597,7 @@ Public Class DVDArt_GUI
                                     added = True
                                 End If
                             Else
-                                If Not added Then
-                                    lv_import.Items(l_import_index(x)).StateImageIndex = 2
-                                End If
+                                If Not added Then lv_import.Items(l_import_index(x)).StateImageIndex = 2 Else lv_import.Items(l_import_index(x)).StateImageIndex = 1
 
                                 If Not addedmissing Then
                                     Try
@@ -655,14 +644,16 @@ Public Class DVDArt_GUI
 
                         Next
 
-                    ElseIf type = "series" Then
+                    ElseIf type = "tv" Then
 
                         downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type, personpath, checked)
 
                         For y = 1 To 2
 
                             If downloaded(y) Then
-                                lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                                If Not added Then
+                                    If Not addedmissing Then lv_import.Items(l_import_index(x)).StateImageIndex = 4 Else lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                                End If
 
                                 added = added Or (lv_series.FindItemWithText(title) IsNot Nothing)
 
@@ -672,9 +663,7 @@ Public Class DVDArt_GUI
                                     added = True
                                 End If
                             Else
-                                If Not added Then
-                                    lv_import.Items(l_import_index(x)).StateImageIndex = 2
-                                End If
+                                If Not added Then lv_import.Items(l_import_index(x)).StateImageIndex = 2 Else lv_import.Items(l_import_index(x)).StateImageIndex = 1
 
                                 If Not addedmissing Then
                                     Try
@@ -721,20 +710,23 @@ Public Class DVDArt_GUI
 
                         Next
 
-                    ElseIf type = "artist" Then
+                    ElseIf type = "music" Then
 
                         If id = "" Then
                             id = DVDArt_Common.get_Artist_MBID(title)
                             lv_import.Items(l_import_index(x)).SubItems.Item(1).Text = id
                         End If
 
+                        If id = Nothing Then MBID = "Not found"
+
                         downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type & "|" & title, personpath, checked)
 
                         For y = 0 To 2
 
                             If downloaded(y) Then
-
-                                lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                                If Not added Then
+                                    If Not addedmissing Then lv_import.Items(l_import_index(x)).StateImageIndex = 4 Else lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                                End If
 
                                 added = added Or (lv_artist.FindItemWithText(title, True, 0, False) IsNot Nothing)
 
@@ -744,9 +736,7 @@ Public Class DVDArt_GUI
                                     added = True
                                 End If
                             Else
-                                If Not added Then
-                                    lv_import.Items(l_import_index(x)).StateImageIndex = 2
-                                End If
+                                If Not added Then lv_import.Items(l_import_index(x)).StateImageIndex = 2 Else lv_import.Items(l_import_index(x)).StateImageIndex = 1
 
                                 If Not addedmissing Then
                                     Try
@@ -797,15 +787,16 @@ Public Class DVDArt_GUI
 
                         Next
 
-                    ElseIf Microsoft.VisualBasic.Left(type, 5) = "music" Then
+                    ElseIf Microsoft.VisualBasic.Left(type, 12) = "music/albums" Then
 
                         downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type & "|" & title, personpath, checked)
 
                         For y = 0 To 2
 
                             If downloaded(y) Then
-
-                                lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                                If Not added Then
+                                    If Not addedmissing Then lv_import.Items(l_import_index(x)).StateImageIndex = 4 Else lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                                End If
 
                                 added = added Or (lv_album.FindItemWithText(title, False, 0, False) IsNot Nothing)
 
@@ -815,9 +806,7 @@ Public Class DVDArt_GUI
                                     added = True
                                 End If
                             Else
-                                If Not added Then
-                                    lv_import.Items(l_import_index(x)).StateImageIndex = 2
-                                End If
+                                If Not added Then lv_import.Items(l_import_index(x)).StateImageIndex = 2 Else lv_import.Items(l_import_index(x)).StateImageIndex = 1
 
                                 If Not addedmissing Then
                                     Try
@@ -873,7 +862,7 @@ Public Class DVDArt_GUI
                         downloaded = DVDArt_Common.import(database, thumbs, Nothing, title, _lang, type, personpath, checked)
 
                         If IO.File.Exists(personpath & Utils.MakeFileName(title) & ".png") Then
-                            lv_import.Items(l_import_index(x)).StateImageIndex = 1
+                            lv_import.Items(l_import_index(x)).StateImageIndex = 4
                             li_person = lv_person.Items.Add(title)
                         Else
                             lv_import.Items(l_import_index(x)).StateImageIndex = 2
@@ -920,7 +909,7 @@ Public Class DVDArt_GUI
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("movingpictures") & ";Read Only=True;"
         SQLconnect.Open()
 
-        If mode = "movie" Then
+        If mode = "movies" Then
             count = lv_movies.SelectedItems.Count - 1
         Else
             count = lv_movies_missing.SelectedItems.Count - 1
@@ -928,7 +917,7 @@ Public Class DVDArt_GUI
 
         For x = 0 To count
 
-            If mode = "movie" Then
+            If mode = "movies" Then
                 movie_name = lv_movies.SelectedItems(x).SubItems.Item(0).Text
                 imdb_id = lv_movies.SelectedItems(x).SubItems.Item(1).Text
             Else
@@ -1003,7 +992,7 @@ Public Class DVDArt_GUI
                 li_import = lv_import.Items.Add(lv_artist.Items(x).SubItems.Item(0).Text)
                 li_import.SubItems.Add(new_MBID)
                 li_import.SubItems.Add("Music")
-                l_import_queue.Add(new_MBID & "|" & lv_artist.Items(x).SubItems.Item(0).Text & "|artist")
+                l_import_queue.Add(new_MBID & "|" & lv_artist.Items(x).SubItems.Item(0).Text & "|music")
                 l_import_index.Add(lv_import.Items.Count - 1)
             End If
         Next
@@ -1014,7 +1003,7 @@ Public Class DVDArt_GUI
                 li_import = lv_import.Items.Add(lv_album.Items(x).SubItems.Item(0).Text)
                 li_import.SubItems.Add(new_MBID)
                 li_import.SubItems.Add("Music")
-                l_import_queue.Add(new_MBID & "|" & lv_album.Items(x).SubItems.Item(0).Text & "|music|" & lv_album.Items(x).SubItems.Item(2).Text)
+                l_import_queue.Add(new_MBID & "|" & lv_album.Items(x).SubItems.Item(0).Text & "|music/albums|" & lv_album.Items(x).SubItems.Item(2).Text)
                 l_import_index.Add(lv_import.Items.Count - 1)
             End If
         Next
@@ -1027,9 +1016,9 @@ Public Class DVDArt_GUI
                 li_import.SubItems.Add("Music")
 
                 If lv_music_missing.Items.Item(x).SubItems.Item(1).Text <> "" Then
-                    l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|music|" & lv_music_missing.Items.Item(x).SubItems.Item(4).Text)
+                    l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|music/albums|" & lv_music_missing.Items.Item(x).SubItems.Item(4).Text)
                 Else
-                    l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|artist")
+                    l_import_queue.Add(lv_music_missing.Items.Item(x).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(x).SubItems.Item(0).Text & "|music")
                 End If
 
                 l_import_index.Add(lv_import.Items.Count - 1)
@@ -1071,15 +1060,15 @@ Public Class DVDArt_GUI
 
             Dim jsonresponse As String
 
-            If Microsoft.VisualBasic.Left(type, 5) <> "music" Then
-                jsonresponse = DVDArt_Common.JSON_request(id, type, "2")
+            If Microsoft.VisualBasic.Left(type, 12) <> "music/albums" Then
+                jsonresponse = DVDArt_Common.JSON_request(id, type)
             Else
-                jsonresponse = DVDArt_Common.JSON_request(id, "artist", "2")
+                jsonresponse = DVDArt_Common.JSON_request(id, "music")
             End If
 
             If jsonresponse <> "null" Then
 
-                If Microsoft.VisualBasic.Left(type, 5) <> "music" Then
+                If Microsoft.VisualBasic.Left(type, 12) <> "music/albums" Then
                     details = DVDArt_Common.parse(jsonresponse, type, id, _lang)
                 Else
                     details = DVDArt_Common.parse_music(jsonresponse, LCase(Microsoft.VisualBasic.Right(type, Len(type) - 6).Replace(" ", "-")))
@@ -1097,58 +1086,58 @@ Public Class DVDArt_GUI
 
                 For x = 0 To max_download
 
-                    If ((cb_DVDArt_movies.Checked And type = "movie") Or (cb_CDArt_music.Checked And Microsoft.VisualBasic.Left(type, 5) = "music")) And details(0, x) <> Nothing Then
+                    If ((cb_DVDArt_movies.Checked And type = "movies") Or (cb_CDArt_music.Checked And Microsoft.VisualBasic.Left(type, 12) = "music/albums")) And details(0, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
-                        ImageInBytes = WebClient.DownloadData(details(0, x) & "/preview")
+                        ImageInBytes = WebClient.DownloadData(details(0, x).Replace("/fanart/", "/preview/"))
                         stream = New System.IO.MemoryStream(ImageInBytes)
                         il_dvdart.Images.Add(imagekey, Image.FromStream(stream))
-                        If type = "movie" Then
+                        If type = "movies" Then
                             lv_movie_dvdart.Items.Add(details(1, x), imagekey)
-                        ElseIf Microsoft.VisualBasic.Left(type, 5) = "music" Then
+                        ElseIf Microsoft.VisualBasic.Left(type, 12) = "music/albums" Then
                             lv_album_cdart.Items.Add(details(1, x), imagekey)
                         End If
                         lv_url_dvdart.Items.Add(details(0, x), imagekey)
                     End If
 
-                    If ((cb_ClearArt_movies.Checked And type = "movie") Or (cb_ClearArt_series.Checked And type = "series") Or (cb_Banner_artist.Checked And type = "artist")) And details(2, x) <> Nothing Then
+                    If ((cb_ClearArt_movies.Checked And type = "movies") Or (cb_ClearArt_series.Checked And type = "tv") Or (cb_Banner_artist.Checked And type = "music")) And details(2, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
-                        ImageInBytes = WebClient.DownloadData(details(2, x) & "/preview")
+                        ImageInBytes = WebClient.DownloadData(details(2, x).Replace("/fanart/", "/preview/"))
                         stream = New System.IO.MemoryStream(ImageInBytes)
-                        If type = "movie" Then
+                        If type = "movies" Then
                             il_clearart.Images.Add(imagekey, Image.FromStream(stream))
                             lv_movie_clearart.Items.Add(details(3, x), imagekey)
-                        ElseIf type = "series" Then
+                        ElseIf type = "tv" Then
                             il_clearart.Images.Add(imagekey, Image.FromStream(stream))
                             lv_serie_clearart.Items.Add(details(3, x), imagekey)
-                        ElseIf type = "artist" Then
+                        ElseIf type = "music" Then
                             il_banner.Images.Add(imagekey, Image.FromStream(stream))
                             lv_artist_banner.Items.Add(details(3, x), imagekey)
                         End If
                         lv_url_clearart.Items.Add(details(2, x), imagekey)
                     End If
 
-                    If ((cb_ClearLogo_movies.Checked And type = "movie") Or (cb_ClearLogo_series.Checked And type = "series") Or (cb_ClearLogo_artist.Checked And type = "artist")) And details(4, x) <> Nothing Then
+                    If ((cb_ClearLogo_movies.Checked And type = "movies") Or (cb_ClearLogo_series.Checked And type = "tv") Or (cb_ClearLogo_artist.Checked And type = "music")) And details(4, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
-                        ImageInBytes = WebClient.DownloadData(details(4, x) & "/preview")
+                        ImageInBytes = WebClient.DownloadData(details(4, x).Replace("/fanart/", "/preview/"))
                         stream = New System.IO.MemoryStream(ImageInBytes)
                         il_clearlogo.Images.Add(imagekey, Image.FromStream(stream))
-                        If type = "movie" Then
+                        If type = "movies" Then
                             lv_movie_clearlogo.Items.Add(details(5, x), imagekey)
-                        ElseIf type = "series" Then
+                        ElseIf type = "tv" Then
                             lv_serie_clearlogo.Items.Add(details(5, x), imagekey)
-                        ElseIf type = "artist" Then
+                        ElseIf type = "music" Then
                             lv_artist_clearlogo.Items.Add(details(5, x), imagekey)
                         End If
                         lv_url_clearlogo.Items.Add(details(4, x), imagekey)
                     End If
 
-                    If cb_Backdrop_movies.Checked And type = "movie" And details(6, x) <> Nothing Then
+                    If cb_Backdrop_movies.Checked And type = "movies" And details(6, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
 
                         If InStr(details(6, x), "/w1920/") > 0 Then
                             ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/w1920/", "/w150/"))
                         Else
-                            ImageInBytes = WebClient.DownloadData(details(6, x) & "/preview")
+                            ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/fanart/", "/preview/"))
                         End If
 
                         stream = New System.IO.MemoryStream(ImageInBytes)
@@ -1157,13 +1146,13 @@ Public Class DVDArt_GUI
                         lv_url_backdrop.Items.Add(details(6, x), imagekey)
                     End If
 
-                    If cb_Cover_movies.Checked And type = "movie" And details(8, x) <> Nothing Then
+                    If cb_Cover_movies.Checked And type = "movies" And details(8, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
 
                         If InStr(details(8, x), "/w1920/") > 0 Then
                             ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/w1920/", "/w150/"))
                         Else
-                            ImageInBytes = WebClient.DownloadData(details(8, x) & "/preview")
+                            ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/fanart/", "/preview/"))
                         End If
 
                         stream = New System.IO.MemoryStream(ImageInBytes)
@@ -1185,7 +1174,7 @@ Public Class DVDArt_GUI
 
                 If (checked(0, x) Or checked(1, x) Or checked(2, x)) And url(x) <> Nothing Then
 
-                    If type = "movie" Then
+                    If type = "movies" Then
                         If x < 3 Then
                             fullpath = thumbs & DVDArt_Common.folder(0, x, 0) & id & ".png"
                             thumbpath = thumbs & DVDArt_Common.folder(0, x, 1) & id & ".png"
@@ -1193,15 +1182,15 @@ Public Class DVDArt_GUI
                             fullpath = thumbs & DVDArt_Common.folder(0, x, 0) & id & ".jpg"
                             thumbpath = thumbs & DVDArt_Common.folder(0, x, 1) & id & ".jpg"
                         End If
-                    ElseIf type = "series" Then
+                    ElseIf type = "tv" Then
                         If x = 0 Or x > 2 Then Continue For
                         fullpath = thumbs & DVDArt_Common.folder(1, x, 0) & id & ".png"
                         thumbpath = thumbs & DVDArt_Common.folder(1, x, 1) & id & ".png"
-                    ElseIf type = "artist" Or type = "album" Then
+                    ElseIf type = "music" Or type = "album" Then
                         If x = 0 Or x > 2 Then Continue For
                         fullpath = thumbs & DVDArt_Common.folder(2, x, 0) & id & ".png"
                         thumbpath = thumbs & DVDArt_Common.folder(2, x, 1) & id & ".png"
-                    ElseIf type = "music" Then
+                    ElseIf type = "music/albums" Then
                         If x <> 0 Then Continue For
                         fullpath = thumbs & DVDArt_Common.folder(2, x, 0) & id & ".png"
                         thumbpath = thumbs & DVDArt_Common.folder(2, x, 1) & id & ".png"
@@ -1214,7 +1203,7 @@ Public Class DVDArt_GUI
                             parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/")
                         End If
                     Else
-                        parm = thumbpath & "|" & url(x) & "/preview"
+                        parm = thumbpath & "|" & url(x).Replace("/fanart/", "/preview/")
                     End If
 
                     Do
@@ -1550,7 +1539,7 @@ Public Class DVDArt_GUI
                     li_import.SubItems.Add(mymovies(i).cover)
                     l_new_movies.Add(mymovies(i).imdb_id)
                     If cb_autoimport.Checked = False Then
-                        l_import_queue.Add(mymovies(i).imdb_id & "|" & mymovies(i).name & "|movie")
+                        l_import_queue.Add(mymovies(i).imdb_id & "|" & mymovies(i).name & "|movies")
                         l_import_index.Add(lv_import.Items.Count - 1)
                     End If
                 End If
@@ -1564,10 +1553,6 @@ Public Class DVDArt_GUI
         Next
 
         If x = 0 Then ReDim Preserve imdb_id_in_mp(0)
-
-        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
-            FTV_api_connector(Nothing, Nothing, "movie", "import")
-        End If
 
         ' remove imdb ids from dvdart that no longer exist in movingpictures
 
@@ -1589,6 +1574,7 @@ Public Class DVDArt_GUI
         End While
 
         SQLconnect.Close()
+        SQLconnect.Dispose()
 
         DVDArt_Common.logStats("DVArt: Loading Movie List complete.", "DEBUG")
 
@@ -1636,10 +1622,6 @@ Public Class DVDArt_GUI
             End If
 
         Next
-
-        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
-            FTV_api_connector(Nothing, Nothing, "person", "import")
-        End If
 
         DVDArt_Common.logStats("DVArt: Loading Persons List complete.", "DEBUG")
 
@@ -1785,7 +1767,7 @@ Public Class DVDArt_GUI
                     li_import.SubItems.Add(myseries(i).thetvdb_id)
                     li_import.SubItems.Add("Series")
                     If cb_autoimport.Checked = False Then
-                        l_import_queue.Add(myseries(i).thetvdb_id & "|" & myseries(i).name & "|series")
+                        l_import_queue.Add(myseries(i).thetvdb_id & "|" & myseries(i).name & "|tv")
                         l_import_index.Add(lv_import.Items.Count - 1)
                     End If
                 End If
@@ -1799,10 +1781,6 @@ Public Class DVDArt_GUI
         Next
 
         If x = 0 Then ReDim Preserve thetvdb_id_in_tv(0)
-
-        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
-            FTV_api_connector(Nothing, Nothing, "series", "import")
-        End If
 
         ' remove theTVDB ids from dvdart that no longer exist in TVSeries
 
@@ -1824,6 +1802,7 @@ Public Class DVDArt_GUI
         End While
 
         SQLconnect.Close()
+        SQLconnect.Dispose()
 
         DVDArt_Common.logStats("DVArt: Loading Series List complete.", "DEBUG")
 
@@ -1990,7 +1969,7 @@ Public Class DVDArt_GUI
                         li_import.SubItems.Add("*** searching MBID ***")
                         li_import.SubItems.Add("Artist")
                         If cb_autoimport.Checked = False Then
-                            l_import_queue.Add("|" & SQLreader(0) & "|artist")
+                            l_import_queue.Add("|" & SQLreader(0) & "|music")
                             l_import_index.Add(lv_import.Items.Count - 1)
                         End If
                     End If
@@ -2005,10 +1984,6 @@ Public Class DVDArt_GUI
         If x = 0 Then ReDim Preserve artist(0)
 
         SQLconnect.Close()
-
-        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
-            FTV_api_connector(Nothing, Nothing, "artist", "import")
-        End If
 
         Try
             ' remove artists from dvdart that no longer exist in music
@@ -2033,6 +2008,7 @@ Public Class DVDArt_GUI
         End Try
 
         SQLconnect.Close()
+        SQLconnect.Dispose()
 
         DVDArt_Common.logStats("DVArt: Loading Artist List complete.", "DEBUG")
 
@@ -2208,10 +2184,6 @@ Public Class DVDArt_GUI
 
         SQLconnect.Close()
 
-        If lv_import.Items.Count > 0 And cb_autoimport.Checked Then
-            FTV_api_connector(Nothing, Nothing, "music", "import")
-        End If
-
         ' remove albums and artists from dvdart that no longer exist in music
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
@@ -2232,6 +2204,7 @@ Public Class DVDArt_GUI
         End While
 
         SQLconnect.Close()
+        SQLconnect.Dispose()
 
         DVDArt_Common.logStats("DVArt: Loading Album List complete.", "DEBUG")
 
@@ -2287,7 +2260,7 @@ Public Class DVDArt_GUI
             url = {pb_movie_dvdart.Tag, pb_movie_clearart.Tag, pb_movie_clearlogo.Tag, pb_movie_backdrop.Tag, pb_movie_cover.Tag}
 
             If url(0) <> Nothing Or url(1) <> Nothing Or url(2) <> Nothing Or url(3) <> Nothing Or url(4) <> Nothing Then
-                FTV_api_connector(current_imdb_id, url, "movie", "selected")
+                FTV_api_connector(current_imdb_id, url, "movies", "selected")
             End If
 
             current_imdb_id = lv_movies.FocusedItem.SubItems.Item(1).Text
@@ -2411,7 +2384,7 @@ Public Class DVDArt_GUI
             url = {Nothing, pb_serie_clearart.Tag, pb_serie_clearlogo.Tag}
 
             If url(1) <> Nothing Or url(2) <> Nothing Then
-                FTV_api_connector(current_thetvdb_id, url, "series", "selected")
+                FTV_api_connector(current_thetvdb_id, url, "tv", "selected")
             End If
 
             current_thetvdb_id = lv_series.FocusedItem.SubItems.Item(1).Text
@@ -2459,7 +2432,7 @@ Public Class DVDArt_GUI
             url = {Nothing, pb_artist_banner.Tag, pb_artist_clearlogo.Tag}
 
             If url(1) <> Nothing Or url(2) <> Nothing Then
-                FTV_api_connector(current_artist, url, "artist", "selected")
+                FTV_api_connector(current_artist, url, "music", "selected")
             End If
 
             current_artist = lv_artist.FocusedItem.SubItems.Item(0).Text
@@ -2584,16 +2557,16 @@ Public Class DVDArt_GUI
 
             If lv_movies.SelectedItems.Count > 0 Then
                 If e.ClickedItem.Text = "Refresh artwork from online" Then
-                    FTV_api_connector(lv_movies.SelectedItems(0).SubItems.Item(1).Text, Nothing, "movie", "preview")
+                    FTV_api_connector(lv_movies.SelectedItems(0).SubItems.Item(1).Text, Nothing, "movies", "preview")
                 ElseIf e.ClickedItem.Text = "Manually Upload Artwork" Then
                     Dim title As String = lv_movies.SelectedItems(0).SubItems(0).Text
                     Dim imdb_id As String = lv_movies.SelectedItems(0).SubItems.Item(1).Text
-                    Dim upload As New DVDArt_ManualUpload(imdb_id, title, "movie")
+                    Dim upload As New DVDArt_ManualUpload(imdb_id, title, "movies")
                     upload.ShowDialog()
                     current_imdb_id = Nothing
                     lv_movies_SelectedIndexChanged(sender, e)
                 ElseIf e.ClickedItem.Text = "Select/Edit Cover Art for DVD Art" Then
-                    use_coverart("movie")
+                    use_coverart("movies")
                     current_imdb_id = Nothing
                     lv_movies_SelectedIndexChanged(sender, e)
                 End If
@@ -2605,11 +2578,11 @@ Public Class DVDArt_GUI
 
             If lv_series.SelectedItems.Count > 0 Then
                 If e.ClickedItem.Text = "Refresh artwork from online" Then
-                    FTV_api_connector(lv_series.SelectedItems(0).SubItems.Item(1).Text, Nothing, "series", "preview")
+                    FTV_api_connector(lv_series.SelectedItems(0).SubItems.Item(1).Text, Nothing, "tv", "preview")
                 ElseIf e.ClickedItem.Text = "Manually Upload Artwork" Then
                     Dim title As String = lv_series.SelectedItems(0).SubItems(0).Text
                     Dim thetvdb_id As String = lv_series.SelectedItems(0).SubItems.Item(1).Text
-                    Dim upload As New DVDArt_ManualUpload(thetvdb_id, title, "series")
+                    Dim upload As New DVDArt_ManualUpload(thetvdb_id, title, "tv")
                     upload.ShowDialog()
                     current_thetvdb_id = Nothing
                     lv_series_SelectedIndexChanged(sender, e)
@@ -2622,10 +2595,10 @@ Public Class DVDArt_GUI
 
             If lv_artist.SelectedItems.Count > 0 Then
                 If e.ClickedItem.Text = "Refresh artwork from online" Then
-                    FTV_api_connector(lv_artist.SelectedItems(0).SubItems.Item(1).Text, Nothing, "artist", "preview")
+                    FTV_api_connector(lv_artist.SelectedItems(0).SubItems.Item(1).Text, Nothing, "music", "preview")
                 ElseIf e.ClickedItem.Text = "Manually Upload Artwork" Then
                     Dim title As String = lv_artist.SelectedItems(0).SubItems(0).Text
-                    Dim upload As New DVDArt_ManualUpload(title, title, "artist")
+                    Dim upload As New DVDArt_ManualUpload(title, title, "music")
                     upload.ShowDialog()
                     current_artist = Nothing
                     lv_artist_SelectedIndexChanged(sender, e)
@@ -2645,10 +2618,10 @@ Public Class DVDArt_GUI
 
             If lv_album.SelectedItems.Count > 0 Then
                 If e.ClickedItem.Text = "Refresh artwork from online" Then
-                    FTV_api_connector(lv_album.SelectedItems(0).SubItems.Item(1).Text, Nothing, "music|" & lv_album.SelectedItems(0).SubItems.Item(0).Text, "preview")
+                    FTV_api_connector(lv_album.SelectedItems(0).SubItems.Item(1).Text, Nothing, "music/albums|" & lv_album.SelectedItems(0).SubItems.Item(0).Text, "preview")
                 ElseIf e.ClickedItem.Text = "Manually Upload Artwork" Then
                     Dim title As String = lv_album.SelectedItems(0).SubItems(0).Text
-                    Dim upload As New DVDArt_ManualUpload(title, title, "music")
+                    Dim upload As New DVDArt_ManualUpload(title, title, "music/albums")
                     upload.ShowDialog()
                     current_album = Nothing
                     lv_album_SelectedIndexChanged(sender, e)
@@ -2678,7 +2651,7 @@ Public Class DVDArt_GUI
                         li_import = lv_import.Items.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text)
                         li_import.SubItems.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(lv_movies_missing.Columns.IndexOf(m_IMDb_id)).Text)
                         li_import.SubItems.Add("Movie")
-                        l_import_queue.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(lv_movies_missing.Columns.IndexOf(m_IMDb_id)).Text & "|" & lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text & "|movie")
+                        l_import_queue.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(lv_movies_missing.Columns.IndexOf(m_IMDb_id)).Text & "|" & lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text & "|movies")
                         l_import_index.Add(lv_import.Items.Count - 1)
                     Next
 
@@ -2687,7 +2660,7 @@ Public Class DVDArt_GUI
                     Next
 
                     If Not bw_import.IsBusy Then
-                        FTV_api_connector("queue", Nothing, "movie", "import")
+                        FTV_api_connector("queue", Nothing, "movies", "import")
                     End If
                 Else
                     MsgBox("Please select a movie.", MsgBoxStyle.Critical, Nothing)
@@ -2697,13 +2670,13 @@ Public Class DVDArt_GUI
                     li_import = lv_import.Items.Add(lv_movies_missing.Items.Item(0).SubItems(0).Text)
                     li_import.SubItems.Add(lv_movies_missing.Items.Item(0).SubItems(lv_movies_missing.Columns.IndexOf(m_IMDb_id)).Text)
                     li_import.SubItems.Add("Movie")
-                    l_import_queue.Add(lv_movies_missing.Items.Item(0).SubItems(lv_movies_missing.Columns.IndexOf(m_IMDb_id)).Text & "|" & lv_movies_missing.Items.Item(0).SubItems(0).Text & "|movie")
+                    l_import_queue.Add(lv_movies_missing.Items.Item(0).SubItems(lv_movies_missing.Columns.IndexOf(m_IMDb_id)).Text & "|" & lv_movies_missing.Items.Item(0).SubItems(0).Text & "|movies")
                     l_import_index.Add(lv_import.Items.Count - 1)
                     lv_movies_missing.Items.RemoveAt(0)
                 Loop
 
                 If Not bw_import.IsBusy Then
-                    FTV_api_connector("queue", Nothing, "movie", "import")
+                    FTV_api_connector("queue", Nothing, "movies", "import")
                 End If
             ElseIf e.ClickedItem.Text = "Manually Upload Artwork" Then
                 For x As Integer = 0 To (lv_movies_missing.SelectedItems.Count - 1)
@@ -2711,7 +2684,7 @@ Public Class DVDArt_GUI
                     If lv_movies_missing.SelectedItems.Count > 0 Then
                         Dim title As String = lv_movies_missing.SelectedItems(x).SubItems(0).Text
                         Dim imdb_id As String = lv_movies_missing.SelectedItems(x).SubItems.Item(lv_movies_missing.Columns.IndexOf(m_IMDb_id)).Text
-                        Dim upload As New DVDArt_ManualUpload(imdb_id, title, "movie")
+                        Dim upload As New DVDArt_ManualUpload(imdb_id, title, "movies")
                         upload.ShowDialog()
 
                         If FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png") Or _
@@ -2721,7 +2694,7 @@ Public Class DVDArt_GUI
                             li_import = lv_import.Items.Add(title)
                             li_import.SubItems.Add(imdb_id)
                             li_import.SubItems.Add("Movie")
-                            l_import_queue.Add(imdb_id & "|" & title & "|movie")
+                            l_import_queue.Add(imdb_id & "|" & title & "|movies")
                             l_import_index.Add(lv_import.Items.Count - 1)
 
                             If lv_movies.FindItemWithText(title) Is Nothing Then
@@ -2758,7 +2731,7 @@ Public Class DVDArt_GUI
                         li_import = lv_import.Items.Add(lv_series_missing.SelectedItems(x).SubItems.Item(0).Text)
                         li_import.SubItems.Add(lv_series_missing.SelectedItems(x).SubItems.Item(3).Text)
                         li_import.SubItems.Add("Series")
-                        l_import_queue.Add(lv_series_missing.SelectedItems(x).SubItems.Item(3).Text & "|" & lv_series_missing.SelectedItems(x).SubItems.Item(0).Text & "|series")
+                        l_import_queue.Add(lv_series_missing.SelectedItems(x).SubItems.Item(3).Text & "|" & lv_series_missing.SelectedItems(x).SubItems.Item(0).Text & "|tv")
                         l_import_index.Add(lv_import.Items.Count - 1)
                     Next
 
@@ -2767,7 +2740,7 @@ Public Class DVDArt_GUI
                     Next
 
                     If Not bw_import.IsBusy Then
-                        FTV_api_connector("queue", Nothing, "series", "import")
+                        FTV_api_connector("queue", Nothing, "tv", "import")
                     End If
                 Else
                     MsgBox("Please select a series.", MsgBoxStyle.Critical, Nothing)
@@ -2777,13 +2750,13 @@ Public Class DVDArt_GUI
                     li_import = lv_import.Items.Add(lv_series_missing.Items.Item(0).SubItems(0).Text)
                     li_import.SubItems.Add(lv_series_missing.Items.Item(0).SubItems(3).Text)
                     li_import.SubItems.Add("Series")
-                    l_import_queue.Add(lv_series_missing.Items.Item(0).SubItems(3).Text & "|" & lv_series_missing.Items.Item(0).SubItems(0).Text & "|series")
+                    l_import_queue.Add(lv_series_missing.Items.Item(0).SubItems(3).Text & "|" & lv_series_missing.Items.Item(0).SubItems(0).Text & "|tv")
                     l_import_index.Add(lv_import.Items.Count - 1)
                     lv_series_missing.Items.RemoveAt(0)
                 Loop
 
                 If Not bw_import.IsBusy Then
-                    FTV_api_connector("queue", Nothing, "series", "import")
+                    FTV_api_connector("queue", Nothing, "tv", "import")
                 End If
             ElseIf e.ClickedItem.Text = "Manually Upload Artwork" Then
                 For x As Integer = 0 To (lv_series_missing.SelectedItems.Count - 1)
@@ -2791,7 +2764,7 @@ Public Class DVDArt_GUI
                     If lv_series_missing.SelectedItems.Count > 0 Then
                         Dim title As String = lv_series_missing.SelectedItems(x).SubItems(0).Text
                         Dim thetvdb_id As String = lv_series_missing.SelectedItems(x).SubItems.Item(3).Text
-                        Dim upload As New DVDArt_ManualUpload(thetvdb_id, title, "series")
+                        Dim upload As New DVDArt_ManualUpload(thetvdb_id, title, "tv")
                         upload.ShowDialog()
 
                         If FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, 1, 1) & thetvdb_id & ".png") Or _
@@ -2800,7 +2773,7 @@ Public Class DVDArt_GUI
                             li_import = lv_import.Items.Add(title)
                             li_import.SubItems.Add(thetvdb_id)
                             li_import.SubItems.Add("Series")
-                            l_import_queue.Add(thetvdb_id & "|" & title & "|series")
+                            l_import_queue.Add(thetvdb_id & "|" & title & "|tv")
                             l_import_index.Add(lv_import.Items.Count - 1)
 
                             If lv_series.FindItemWithText(title) Is Nothing Then
@@ -2829,9 +2802,9 @@ Public Class DVDArt_GUI
                         li_import.SubItems.Add("Music")
 
                         If lv_music_missing.SelectedItems(x).SubItems.Item(1).Text <> "" Then
-                            type = "music"
+                            type = "music/albums"
                         Else
-                            type = "artist"
+                            type = "music"
                         End If
 
                         l_import_queue.Add(lv_music_missing.SelectedItems(x).SubItems.Item(4).Text & "|" & lv_music_missing.SelectedItems(x).SubItems.Item(0).Text & "|" & type)
@@ -2855,9 +2828,9 @@ Public Class DVDArt_GUI
                     li_import.SubItems.Add("Music")
 
                     If lv_music_missing.Items.Item(0).SubItems.Item(1).Text <> "" Then
-                        l_import_queue.Add(lv_music_missing.Items.Item(0).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(0).SubItems.Item(0).Text & "|music|" & lv_music_missing.Items.Item(0).SubItems.Item(4).Text)
+                        l_import_queue.Add(lv_music_missing.Items.Item(0).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(0).SubItems.Item(0).Text & "|music/albums|" & lv_music_missing.Items.Item(0).SubItems.Item(4).Text)
                     Else
-                        l_import_queue.Add(lv_music_missing.Items.Item(0).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(0).SubItems.Item(0).Text & "|artist")
+                        l_import_queue.Add(lv_music_missing.Items.Item(0).SubItems.Item(4).Text & "|" & lv_music_missing.Items.Item(0).SubItems.Item(0).Text & "|music")
                     End If
 
                     l_import_index.Add(lv_import.Items.Count - 1)
@@ -2865,7 +2838,7 @@ Public Class DVDArt_GUI
                 Loop
 
                 If Not bw_import.IsBusy Then
-                    FTV_api_connector("queue", Nothing, "music", "import")
+                    FTV_api_connector("queue", Nothing, "music/albums", "import")
                 End If
             ElseIf e.ClickedItem.Text = "Manually Upload Artwork" Then
                 For x As Integer = 0 To (lv_music_missing.SelectedItems.Count - 1)
@@ -2874,10 +2847,10 @@ Public Class DVDArt_GUI
                         Dim title As String = lv_music_missing.SelectedItems(x).SubItems(0).Text
 
                         If lv_music_missing.SelectedItems(x).SubItems.Item(1).Text <> "" Then
-                            Dim upload As New DVDArt_ManualUpload(title, title, "music")
+                            Dim upload As New DVDArt_ManualUpload(title, title, "music/albums")
                             upload.ShowDialog()
                         Else
-                            Dim upload As New DVDArt_ManualUpload(title, title, "artist")
+                            Dim upload As New DVDArt_ManualUpload(title, title, "music")
                             upload.ShowDialog()
                         End If
 
@@ -3016,7 +2989,7 @@ Public Class DVDArt_GUI
                 Next
 
                 If Not bw_import.IsBusy Then
-                    FTV_api_connector("queue", Nothing, "movie", "import")
+                    FTV_api_connector("queue", Nothing, "movies", "import")
                 End If
             End If
 
@@ -3038,7 +3011,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "movie"
+        tbc_main.Tag = "movies"
 
     End Sub
 
@@ -3054,7 +3027,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "movie"
+        tbc_main.Tag = "movies"
 
     End Sub
 
@@ -3070,7 +3043,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "movie"
+        tbc_main.Tag = "movies"
 
     End Sub
 
@@ -3086,7 +3059,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "movie"
+        tbc_main.Tag = "movies"
 
     End Sub
 
@@ -3102,7 +3075,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "movie"
+        tbc_main.Tag = "movies"
 
     End Sub
 
@@ -3118,7 +3091,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "series"
+        tbc_main.Tag = "tv"
 
     End Sub
 
@@ -3134,7 +3107,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "series"
+        tbc_main.Tag = "tv"
 
     End Sub
 
@@ -3150,7 +3123,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "artist"
+        tbc_main.Tag = "music"
 
     End Sub
 
@@ -3166,7 +3139,7 @@ Public Class DVDArt_GUI
 
         Next
 
-        tbc_main.Tag = "artist"
+        tbc_main.Tag = "music"
 
     End Sub
 
@@ -3205,6 +3178,7 @@ Public Class DVDArt_GUI
             XMLwriter.SetValue("Settings", "missing", nud_missing.Value)
             XMLwriter.SetValue("Settings", "missing value", cb_missing.Text)
             XMLwriter.SetValueAsBool("Settings", "debug", cb_debug.Checked)
+            XMLwriter.SetValue("Settings", "personal API key", tb_personalapikey.Text)
             XMLwriter.SetValue("Scraper", "language", DVDArt_Common.langcode(Array.IndexOf(DVDArt_Common.lang, cb_language.Text)))
             XMLwriter.SetValueAsBool("Scraper Movies", "dvdart", cb_DVDArt_movies.Checked)
             XMLwriter.SetValueAsBool("Scraper Movies", "clearart", cb_ClearArt_movies.Checked)
@@ -3248,9 +3222,9 @@ Public Class DVDArt_GUI
             nud_missing.Value = XMLreader.GetValueAsInt("Settings", "missing", 0)
             cb_missing.Text = XMLreader.GetValueAsString("Settings", "missing value", "disabled")
             cb_debug.Checked = XMLreader.GetValueAsBool("Settings", "debug", False)
+            tb_personalapikey.Text = XMLreader.GetValueAsString("Settings", "personal API key", Nothing)
             _lang = XMLreader.GetValueAsString("Scraper", "language", "##")
             template_type = XMLreader.GetValueAsInt("Scraper Movies", "template", 1)
-
             cb_DVDArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "dvdart", False)
             cb_ClearArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearart", False)
             cb_ClearLogo_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
@@ -3283,6 +3257,10 @@ Public Class DVDArt_GUI
         personpath = tb_person_path.Text & "\"
         personchecked = cb_persons.Checked
 
+    End Sub
+
+    Private Sub b_save_Click(sender As Object, e As EventArgs) Handles b_save1.Click, b_save2.Click
+        setSettings()
     End Sub
 
     Private Sub cb_autoimport_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_autoimport.CheckedChanged
@@ -3731,11 +3709,11 @@ Public Class DVDArt_GUI
 
             If tbc_main.Tag <> Nothing Then
 
-                If tbc_main.Tag = "movie" Then
+                If tbc_main.Tag = "movies" Then
                     url = {pb_movie_dvdart.Tag, pb_movie_clearart.Tag, pb_movie_clearlogo.Tag, pb_movie_backdrop.Tag, pb_movie_cover.Tag}
-                ElseIf tbc_main.Tag = "series" Then
+                ElseIf tbc_main.Tag = "tv" Then
                     url = {Nothing, pb_serie_clearart.Tag, pb_serie_clearlogo.Tag, Nothing, Nothing}
-                ElseIf tbc_main.Tag = "artist" Then
+                ElseIf tbc_main.Tag = "music" Then
                     url = {Nothing, pb_artist_banner.Tag, pb_artist_clearlogo.Tag, Nothing, Nothing}
                 ElseIf tbc_main.Tag = "album" Then
                     url = {pb_album_cdart.Tag, Nothing, Nothing, Nothing, Nothing}
@@ -3815,6 +3793,7 @@ Public Class DVDArt_GUI
             il_state.Images.Add(My.Resources.tick)
             il_state.Images.Add(My.Resources.cross)
             il_state.Images.Add(My.Resources.na)
+            il_state.Images.Add(My.Resources.tick_2)
 
             'initialize column header images
             il_column.Images.Add(My.Resources.sort_none)
@@ -3840,6 +3819,9 @@ Public Class DVDArt_GUI
             LoadMovieList()
             loadPersonList()
             LoadMusicList()
+
+            'start the import process
+            If lv_import.Items.Count > 0 And cb_autoimport.Checked Then FTV_api_connector(Nothing, Nothing, Nothing, "import")
 
             'close splashscreen
             splash.Close()

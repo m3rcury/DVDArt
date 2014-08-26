@@ -4,10 +4,11 @@ Imports MediaPortal.Configuration
 Imports MediaPortal.GUI.Library
 Imports MediaPortal.Util
 
-Imports System.Data.SQLite
 Imports System.ComponentModel
+Imports System.Data.SQLite
 Imports System.IO
 Imports System.Text
+Imports System.Threading
 Imports System.Reflection
 
 Imports MyFilmsPlugin.DataBase
@@ -32,6 +33,7 @@ Public Class DVDArt_Common
     Public Shared _temp As String = Environ("temp")
 
     Dim debug As Boolean
+    Public Shared timeout As Integer = 5000
 
     Public Shared ReadOnly Property p_Databases(ByVal item As String) As String
         Get
@@ -64,6 +66,16 @@ Public Class DVDArt_Common
         End Get
     End Property
 
+    Public Shared ReadOnly Property p_personalAPIkey As String
+        Get
+            Dim key As String
+            Using XMLreader As MediaPortal.Profile.Settings = New MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "DVDArt_Plugin.xml"))
+                key = XMLreader.GetValueAsString("Settings", "personal API key", Nothing)
+            End Using
+            Return key
+        End Get
+    End Property
+
     Public Shared Sub wait(ByVal milliseconds As Long)
         System.Threading.Thread.Sleep(milliseconds)
     End Sub
@@ -84,6 +96,8 @@ Public Class DVDArt_Common
 
         If msgtype = "LOG" Then msgtype = "INFO"
 
+        msgtype = Left(msgtype & "  ", 5)
+
         Dim info() As Byte = New System.Text.UTF8Encoding(True).GetBytes(DateTime.Now & " - [" & msgtype & "] " & message & vbCrLf)
 
         Try
@@ -101,15 +115,16 @@ Public Class DVDArt_Common
 
         Dim movielist() As Movies = Nothing
 
+        Dim x As Integer = -1
+        Dim SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+        Dim SQLreader As SQLiteDataReader
+
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
+
+        SQLconnect.Open()
+
         Try
-            Dim x As Integer = -1
-            Dim SQLconnect As New SQLiteConnection()
-            Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
-            Dim SQLreader As SQLiteDataReader
-
-            SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
-
-            SQLconnect.Open()
             SQLcommand.CommandText = "SELECT imdb_id, title, backdropfullpath, coverfullpath FROM movie_info WHERE imdb_id IS NOT NULL and title IS NOT NULL ORDER BY sortby"
             SQLreader = SQLcommand.ExecuteReader()
 
@@ -126,9 +141,11 @@ Public Class DVDArt_Common
 
             End While
 
-            SQLconnect.Close()
         Catch ex As Exception
+            logStats("DVDArt: " & ex.Message, "ERROR")
         End Try
+
+        SQLconnect.Close()
 
         Return movielist
 
@@ -314,17 +331,18 @@ Public Class DVDArt_Common
 
         Dim personlist As New SortedList
 
+        Dim persons As Array
+        Dim x As Integer = -1
+        Dim y As Integer
+        Dim SQLconnect As New SQLiteConnection()
+        Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+        Dim SQLreader As SQLiteDataReader
+
+        SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
+
+        SQLconnect.Open()
+
         Try
-            Dim persons As Array
-            Dim x As Integer = -1
-            Dim y As Integer
-            Dim SQLconnect As New SQLiteConnection()
-            Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
-            Dim SQLreader As SQLiteDataReader
-
-            SQLconnect.ConnectionString = "Data Source=" & database & p_Databases("movingpictures") & ";Read Only=True;"
-
-            SQLconnect.Open()
             SQLcommand.CommandText = "SELECT directors||writers||actors, imdb_id FROM movie_info WHERE directors||writers||actors IS NOT NULL AND imdb_id IS NOT NULL"
             SQLreader = SQLcommand.ExecuteReader()
 
@@ -346,9 +364,11 @@ Public Class DVDArt_Common
 
             End While
 
-            SQLconnect.Close()
         Catch ex As Exception
+            logStats("DVDArt: " & ex.Message, "ERROR")
         End Try
+
+        SQLconnect.Close()
 
         Return personlist
 
@@ -470,13 +490,16 @@ Public Class DVDArt_Common
         SQLcommand.CommandText = "SELECT MBID FROM processed_artist WHERE LOWER(artist) = """ & LCase(artist) & """"
         SQLreader = SQLcommand.ExecuteReader(CommandBehavior.SingleRow)
 
-        MBID = SQLreader(0)
+        Try
+            MBID = SQLreader(0)
+        Catch ex As Exception
+        End Try
 
         SQLconnect.Close()
 
-        If MBID = Nothing Then MBID = Last_fm(artist, "artist")
-        If MBID = Nothing Then MBID = theAudioDB(artist, "artist")
-        If MBID = Nothing Then MBID = MusicBrainz(artist, "artist")
+        If MBID = Nothing Then MBID = Last_fm(artist, "music")
+        If MBID = Nothing Then MBID = theAudioDB(artist, "music")
+        If MBID = Nothing Then MBID = MusicBrainz(artist, "music")
 
         Return MBID
 
@@ -486,10 +509,10 @@ Public Class DVDArt_Common
 
         Dim MBID As String = Nothing
 
-        MBID = Last_fm(artist, "artist")
+        MBID = Last_fm(artist, "music")
 
-        If MBID = Nothing Then MBID = theAudioDB(artist, "artist")
-        If MBID = Nothing Then MBID = MusicBrainz(artist, "artist")
+        If MBID = Nothing Then MBID = theAudioDB(artist, "music")
+        If MBID = Nothing Then MBID = MusicBrainz(artist, "music")
 
         Return MBID
 
@@ -497,13 +520,11 @@ Public Class DVDArt_Common
 
     Public Shared Function Last_fm(ByVal artist As String, ByVal mode As String, Optional ByVal search As String = Nothing) As String
 
-        Dim WebClient As New System.Net.WebClient
         Dim startp, endp, len As Integer
-        Dim Lastfm_XML As String
         Dim url As String = Nothing
         Dim MBID As String = Nothing
 
-        If mode = "artist" Then
+        If mode = "music" Then
             url = Uri.EscapeUriString("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" & artist & "&lang=en&autocorrect=1&api_key=80c3a2a37a2b6666b38c107759645e48&format=json")
         ElseIf mode = "track" Then
             url = Uri.EscapeUriString("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&autocorrect=1&api_key=80c3a2a37a2b6666b38c107759645e48&artist=" & artist & "&track=" & search.Replace(" ", "%20") & "&format=json")
@@ -515,12 +536,21 @@ Public Class DVDArt_Common
 
         Try
 
-            Lastfm_XML = WebClient.DownloadString(url)
+            Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
+            WebClient.Accept = "application/json"
+            WebClient.Timeout = timeout
+
+            Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
+            Dim receiveStream As Stream = response.GetResponseStream()
+            Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
+            Dim Lastfm_XML As String = readStream.ReadToEnd()
+            response.Close()
+            readStream.Close()
 
             ' if a match is found
             If Not Lastfm_XML.Contains("error") Then
 
-                If mode = "artist" Or mode = "album" Then
+                If mode = "music" Or mode = "album" Then
                     startp = InStr(Lastfm_XML, "mbid"":") + 7
                 ElseIf mode = "track" Then
                     startp = InStr(Lastfm_XML, "title"":")
@@ -550,13 +580,11 @@ Public Class DVDArt_Common
 
     Public Shared Function theAudioDB(ByVal artist As String, ByVal mode As String, Optional ByVal search As String = Nothing) As String
 
-        Dim WebClient As New System.Net.WebClient
         Dim startp, endp, len As Integer
-        Dim theAudioDB_XML As String
         Dim url As String = Nothing
         Dim MBID As String = Nothing
 
-        If mode = "artist" Then
+        If mode = "music" Then
             url = Uri.EscapeUriString("http://www.theaudiodb.com/api/v1/json/58424d43204d6564696120/search.php?s=" & artist)
         ElseIf mode = "track" Then
             url = Uri.EscapeUriString("http://www.theaudiodb.com/api/v1/json/58424d43204d6564696120/search.php?s=" & artist & "&t=" & search)
@@ -568,7 +596,16 @@ Public Class DVDArt_Common
 
         Try
 
-            theAudioDB_XML = WebClient.DownloadString(url)
+            Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
+            WebClient.Accept = "application/json"
+            WebClient.Timeout = timeout
+
+            Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
+            Dim receiveStream As Stream = response.GetResponseStream()
+            Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
+            Dim theAudioDB_XML As String = readStream.ReadToEnd()
+            response.Close()
+            readStream.Close()
 
             ' if a match is found
             If Not theAudioDB_XML.Contains(":null}") Then
@@ -598,13 +635,11 @@ Public Class DVDArt_Common
 
     Public Shared Function MusicBrainz(ByVal artist As String, ByVal mode As String, Optional ByVal track As String = Nothing) As String
 
-        Dim WebClient As New System.Net.WebClient
         Dim startp, endp, len As Integer
-        Dim MBz_XML As String
         Dim url As String = Nothing
         Dim MBID As String = Nothing
 
-        If mode = "artist" Then
+        If mode = "music" Then
             url = Uri.EscapeUriString("http://www.musicbrainz.org/ws/2/artist/?query=" & artist)
         ElseIf mode = "track" Then
             url = Uri.EscapeUriString("http://www.musicbrainz.org/ws/2/release?artist=" & artist)
@@ -616,10 +651,19 @@ Public Class DVDArt_Common
 
         Try
 
-            MBz_XML = WebClient.DownloadString(url)
+            Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
+            WebClient.Accept = "application/json"
+            WebClient.Timeout = timeout
+
+            Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
+            Dim receiveStream As Stream = response.GetResponseStream()
+            Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
+            Dim MBz_XML As String = readStream.ReadToEnd()
+            response.Close()
+            readStream.Close()
 
             ' if a match is found
-            If mode = "artist" Then
+            If mode = "music" Then
 
                 If MBz_XML.Contains("ext:score=""100""") Then
                     startp = InStr(MBz_XML, "<artist id=") + 12
@@ -667,13 +711,13 @@ Public Class DVDArt_Common
 
         logStats("DVDArt: " & type & " JSON parsing for " & id & " started.", "LOG")
 
-        If type = "movie" Then
+        If type = "movies" Then
             keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """backdrops"":", "posters"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebackground"":", "movieposter"":"}
-        ElseIf type = "series" Then
+        ElseIf type = "tv" Then
             keyword = {"""hdtvlogo"":", """hdclearart"":", "**n/a**", "**n/a**", "**n/a**", """clearart"":", """clearlogo"":", "**n/a**", "**n/a**"}
-        ElseIf type = "artist" Then
-            keyword = {"""hdmusiclogo"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**", """musicbanner"":", """musiclogo"":", "**n/a**", "**n/a**"}
         ElseIf type = "music" Then
+            keyword = {"""hdmusiclogo"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**", """musicbanner"":", """musiclogo"":", "**n/a**", "**n/a**"}
+        ElseIf type = "music/albums" Then
             keyword = {"**n/a**", "**n/a**", "**n/a**", "**n/a**", """cdart"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**"}
         End If
 
@@ -823,7 +867,7 @@ Public Class DVDArt_Common
 
                 For y = 1 To UBound(details, 1) Step 2
 
-                    If InStr(details(y, x), "LANG:" & language) > 0 Or InStr(details(y, x), "LANG:EN") > 0 Or (details(y - 1, x) <> Nothing And details(y, x) = Nothing) Then
+                    If InStr(details(y, x), "LANG:" & language) > 0 Or InStr(details(y, x), "LANG:EN") > 0 Or InStr(details(y, x), "LANG:00") > 0 Or (details(y - 1, x) <> Nothing And details(y, x) = Nothing) Then
 
                         If size_array Then
                             j += 1
@@ -910,24 +954,42 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Function JSON_request(ByVal id As String, ByVal type As String, ByVal nbrimages As String) As String
+    Public Shared Function JSON_request(ByVal id As String, ByVal type As String) As String
 
-        Dim downloaded As String = Fanart_tv(id, type, nbrimages)
+        Dim downloaded As String = Fanart_tv(id, type)
 
-        If type = "movie" Then downloaded += theMovieDB(id)
+        If type = "movies" Then downloaded += theMovieDB(id)
 
         Return downloaded
 
     End Function
 
-    Public Shared Function Fanart_tv(ByVal id As String, ByVal type As String, ByVal nbrimages As String) As String
+    Public Shared Function Fanart_tv(ByVal id As String, ByVal type As String) As String
 
-        Dim WebClient As New System.Net.WebClient
         Dim apikey As String = "bfd6e4e0d4e71237f784b70fc43f8269"
+        Dim personalAPIkey As String = p_personalAPIkey
 
-        Dim url As String = "http://fanart.tv/webservice/" & type & "/" & apikey & "/" & id & "/json/all/1/" & nbrimages
+        'Dim url As String = "http://api.fanart.tv/webservice/" & type & "/" & apikey & "/" & id & "/json/all/1/" & nbrimages
+        Dim url As String = "http://webservice.fanart.tv/v3/" & type & "/" & id & "?api_key=" & apikey
 
-        Return WebClient.DownloadString(url)
+        If personalAPIkey <> Nothing Then url = url & "&client_key=" & personalAPIkey
+
+        Try
+            Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
+            WebClient.Accept = "application/json"
+            WebClient.Timeout = timeout
+
+            Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
+            Dim receiveStream As Stream = response.GetResponseStream()
+            Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
+            Dim downstring As String = readStream.ReadToEnd()
+            response.Close()
+            readStream.Close()
+
+            Return downstring.Replace(" ", String.Empty).Replace(vbLf, String.Empty)
+        Catch ex As Exception
+            Return "null"
+        End Try
 
     End Function
 
@@ -939,6 +1001,7 @@ Public Class DVDArt_Common
 
         Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
         WebClient.Accept = "application/json"
+        WebClient.Timeout = timeout
 
         Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
         Dim receiveStream As Stream = response.GetResponseStream()
@@ -959,6 +1022,7 @@ Public Class DVDArt_Common
 
         Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
         WebClient.Accept = "application/json"
+        WebClient.Timeout = timeout
 
         Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
         Dim receiveStream As Stream = response.GetResponseStream()
@@ -1133,7 +1197,7 @@ Public Class DVDArt_Common
 
         logStats("DVDArt: downloading artwork for " & type & " - """ & title & """", "LOG")
 
-        If type = "movie" Then
+        If type = "movies" Then
 
             For y = 0 To 4
                 If y < 3 Then
@@ -1159,7 +1223,7 @@ Public Class DVDArt_Common
 
             SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_movies (imdb_id) VALUES('" & id & "')"
 
-        ElseIf type = "series" Then
+        ElseIf type = "tv" Then
 
             For y = 1 To 2
                 filenotexist(y) = checked(1, y) And Not IO.File.Exists(thumbs & folder(1, y, 1) & id & ".png")
@@ -1173,43 +1237,71 @@ Public Class DVDArt_Common
 
             SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_series (thetvdb_id) VALUES('" & id & "')"
 
-        ElseIf Left(type, 6) = "artist" Then
+        ElseIf Left(type, 12) = "music/albums" Then
 
-            If title = String.Empty Then title = LCase(Right(type, Len(type) - 7).Replace(" ", "-"))
-            type = Left(type, 6)
+            Dim artist = LCase(Right(type, Len(type) - 13).Replace(" ", "-"))
+            type = Left(type, 12)
 
-            If id = "" Then id = get_Artist_MBID(title)
+            If title IsNot Nothing Then
 
-            For y = 0 To 2
-                filenotexist(y) = checked(2, y) And y <> 0 And Not IO.File.Exists(thumbs & folder(2, y, 1) & title & ".png")
-            Next
+                Select Case id
 
-            downloaded = download(thumbs, folder, id, False, filenotexist, type & "|" & title)
+                    Case ""
+                        id = get_MBID(database, title, artist)
 
-            For y = 0 To 2
-                downloaded(y) = checked(2, y) And (downloaded(y) Or IO.File.Exists(thumbs & folder(2, y, 1) & title & ".png"))
-            Next
+                    Case "Not found"
+                        id = Nothing
 
-            SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_artist (artist, MBID) VALUES('" & title.Replace("'", "''") & "','" & id & "')"
+                End Select
+
+                If id IsNot Nothing Then
+
+                    For y = 0 To 2
+                        filenotexist(y) = checked(2, y) And y = 0 And Not IO.File.Exists(thumbs & folder(2, y, 1) & title & ".png")
+                    Next
+
+                    downloaded = download(thumbs, folder, id, False, filenotexist, type & "|" & title)
+
+                    For y = 0 To 2
+                        downloaded(y) = checked(2, y) And (downloaded(y) Or IO.File.Exists(thumbs & folder(2, y, 1) & title & ".png"))
+                    Next
+
+                End If
+
+                SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_music (album, MBID) VALUES('" & title.Replace("'", "''") & "','" & id & "')"
+
+            End If
 
         ElseIf Left(type, 5) = "music" Then
 
-            Dim artist = LCase(Right(type, Len(type) - 6).Replace(" ", "-"))
+            If title = String.Empty Then title = LCase(Right(type, Len(type) - 6))
             type = Left(type, 5)
 
-            If id = "" Then id = get_MBID(database, title, artist)
+            Select Case id
 
-            For y = 0 To 2
-                filenotexist(y) = checked(2, y) And y = 0 And Not IO.File.Exists(thumbs & folder(2, y, 1) & title & ".png")
-            Next
+                Case ""
+                    id = get_Artist_MBID(title)
 
-            downloaded = download(thumbs, folder, id, False, filenotexist, type & "|" & title)
+                Case "Not found"
+                    id = Nothing
 
-            For y = 0 To 2
-                downloaded(y) = checked(2, y) And (downloaded(y) Or IO.File.Exists(thumbs & folder(2, y, 1) & title & ".png"))
-            Next
+            End Select
 
-            SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_music (album, MBID) VALUES('" & title.Replace("'", "''") & "','" & id & "')"
+            If id IsNot Nothing Then
+
+                For y = 0 To 2
+                    filenotexist(y) = checked(2, y) And y <> 0 And Not IO.File.Exists(thumbs & folder(2, y, 1) & title & ".png")
+                Next
+
+                downloaded = download(thumbs, folder, id, False, filenotexist, type & "|" & title)
+
+                For y = 0 To 2
+                    downloaded(y) = checked(2, y) And (downloaded(y) Or IO.File.Exists(thumbs & folder(2, y, 1) & title & ".png"))
+                Next
+
+            End If
+
+            SQLcommand.CommandText = "INSERT OR IGNORE INTO processed_artist (artist, MBID) VALUES('" & title.Replace("'", "''") & "','" & id & "')"
 
         ElseIf type = "person" Then
 
@@ -1245,6 +1337,40 @@ Public Class DVDArt_Common
 
     End Function
 
+    Public Shared Function downloadimage(ByVal url As String) As Image
+
+        Dim tmpImage As Image = Nothing
+
+        Try
+
+            ' Open a connection
+            Dim HttpWebRequest As System.Net.HttpWebRequest = CType(System.Net.HttpWebRequest.Create(url), System.Net.HttpWebRequest)
+
+            HttpWebRequest.AllowWriteStreamBuffering = True
+            HttpWebRequest.Timeout = timeout * 2
+
+            ' Request response:
+            Dim WebResponse As System.Net.WebResponse = HttpWebRequest.GetResponse()
+
+            ' Open data stream:
+            Dim _WebStream As System.IO.Stream = WebResponse.GetResponseStream()
+
+            ' convert webstream to image
+            tmpImage = Image.FromStream(_WebStream)
+
+            ' Cleanup
+            WebResponse.Close()
+            WebResponse.Close()
+
+        Catch Exception As Exception
+            Return Nothing
+
+        End Try
+
+        Return tmpImage
+
+    End Function
+
     Public Shared Sub bw_download_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork, bw_download6.DoWork, bw_download7.DoWork, bw_download8.DoWork, bw_download9.DoWork
 
         Try
@@ -1257,7 +1383,6 @@ Public Class DVDArt_Common
             Dim endp As Integer
             Dim factor As Decimal = 1
             Dim shrink As Boolean = False
-            Dim WebClient As New System.Net.WebClient
 
             endp = InStr(parm, "|shrink")
 
@@ -1272,14 +1397,9 @@ Public Class DVDArt_Common
 
             'download image and if not preview, reduce size to 500x500
 
-            If url <> String.Empty And url <> "/preview" Then
-                Dim image As Image
-                Dim ImageInBytes() As Byte
-                Dim stream As System.IO.MemoryStream
-                Dim imagekey As String = Guid.NewGuid().ToString()
-                ImageInBytes = WebClient.DownloadData(url)
-                stream = New System.IO.MemoryStream(ImageInBytes)
-                image = image.FromStream(stream)
+            If url <> String.Empty Then
+
+                Dim image As Image = downloadimage(url)
 
                 If shrink Then factor = 500 / image.Size.Height
 
@@ -1291,7 +1411,7 @@ Public Class DVDArt_Common
 
                 Dim info As New IO.FileInfo(path)
 
-                If info.Extension = ".jpg" And (InStr(url, "/preview") = 0 Or InStr(url, "/w1920/") > 0) Then
+                If info.Extension = ".jpg" And (InStr(url, "/preview/") = 0 Or InStr(url, "/w1920/") > 0) Then
 
                     reduceSize(path, info.Length)
 
@@ -1322,6 +1442,10 @@ Public Class DVDArt_Common
 
     End Sub
 
+    Public Shared Sub bw_download_completed(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) Handles bw_download0.RunWorkerCompleted, bw_download1.RunWorkerCompleted, bw_download2.RunWorkerCompleted, bw_download3.RunWorkerCompleted, bw_download4.RunWorkerCompleted, bw_download5.RunWorkerCompleted, bw_download6.RunWorkerCompleted, bw_download7.RunWorkerCompleted, bw_download8.RunWorkerCompleted, bw_download9.RunWorkerCompleted
+        Application.DoEvents()
+    End Sub
+
     Public Shared Function download(ByVal thumbs As String, ByVal folder(,,) As String, ByVal id As String, ByVal overwrite As Boolean, _
                                     ByVal try2download As Array, ByVal type As String, Optional ByVal language As String = "##") As Array
 
@@ -1343,19 +1467,11 @@ Public Class DVDArt_Common
                 type = Left(type, y - 1)
             End If
 
-            If type <> "music" Then
-                If language = "##" Then
-                    jsonresponse = JSON_request(id, type, "1")
-                Else
-                    jsonresponse = JSON_request(id, type, "2")
-                End If
-            Else
-                jsonresponse = JSON_request(id, "artist", "2")
-            End If
+            jsonresponse = JSON_request(id, type)
 
             If jsonresponse <> "null" Then
 
-                If Left(type, 5) <> "music" Then
+                If Left(type, 12) <> "music/albums" Then
                     url = parse(jsonresponse, type, id, language)
                 Else
                     url = parse_music(jsonresponse, LCase(title.Replace(" ", "-")))
@@ -1363,7 +1479,7 @@ Public Class DVDArt_Common
 
                 For y = 0 To 4
 
-                    If type = "movie" Then
+                    If type = "movies" Then
                         If y < 3 Then
                             fullpath = thumbs & folder(0, y, 0) & id & ".png"
                             thumbpath = thumbs & folder(0, y, 1) & id & ".png"
@@ -1371,15 +1487,15 @@ Public Class DVDArt_Common
                             fullpath = thumbs & folder(0, y, 0) & id & ".jpg"
                             thumbpath = thumbs & folder(0, y, 1) & id & ".jpg"
                         End If
-                    ElseIf type = "series" Then
+                    ElseIf type = "tv" Then
                         If y = 0 Or y > 2 Then Continue For
                         fullpath = thumbs & folder(1, y, 0) & id & ".png"
                         thumbpath = thumbs & folder(1, y, 1) & id & ".png"
-                    ElseIf type = "artist" Then
+                    ElseIf type = "music" Then
                         If y = 0 Or y > 2 Then Continue For
                         fullpath = thumbs & folder(2, y, 0) & title & ".png"
                         thumbpath = thumbs & folder(2, y, 1) & title & ".png"
-                    ElseIf Left(type, 5) = "music" Then
+                    ElseIf Left(type, 12) = "music/albums" Then
                         If y <> 0 Then Continue For
                         fullpath = thumbs & folder(2, y, 0) & title & ".png"
                         thumbpath = thumbs & folder(2, y, 1) & title & ".png"
@@ -1394,7 +1510,7 @@ Public Class DVDArt_Common
                                 parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w" & _coversize & "/")
                             End If
                         Else
-                            parm = thumbpath & "|" & url(y * 2, 0) & "/preview"
+                            parm = thumbpath & "|" & url(y * 2, 0).Replace("/fanart/", "/preview/")
                         End If
 
                         found(y) = True
@@ -1402,22 +1518,27 @@ Public Class DVDArt_Common
                         Do
                             If Not bw_download0.IsBusy Then
                                 bw_download0.WorkerSupportsCancellation = True
+                                bw_download0.WorkerReportsProgress = True
                                 bw_download0.RunWorkerAsync(parm)
                                 Exit Do
                             ElseIf Not bw_download2.IsBusy Then
                                 bw_download2.WorkerSupportsCancellation = True
+                                bw_download2.WorkerReportsProgress = True
                                 bw_download2.RunWorkerAsync(parm)
                                 Exit Do
                             ElseIf Not bw_download4.IsBusy Then
                                 bw_download4.WorkerSupportsCancellation = True
+                                bw_download4.WorkerReportsProgress = True
                                 bw_download4.RunWorkerAsync(parm)
                                 Exit Do
                             ElseIf Not bw_download6.IsBusy Then
                                 bw_download6.WorkerSupportsCancellation = True
+                                bw_download6.WorkerReportsProgress = True
                                 bw_download6.RunWorkerAsync(parm)
                                 Exit Do
                             ElseIf Not bw_download8.IsBusy Then
                                 bw_download8.WorkerSupportsCancellation = True
+                                bw_download8.WorkerReportsProgress = True
                                 bw_download8.RunWorkerAsync(parm)
                                 Exit Do
                             Else
@@ -1436,22 +1557,27 @@ Public Class DVDArt_Common
                         Do
                             If Not bw_download1.IsBusy Then
                                 bw_download1.WorkerSupportsCancellation = True
+                                bw_download1.WorkerReportsProgress = True
                                 bw_download1.RunWorkerAsync(parm)
                                 Exit Do
                             ElseIf Not bw_download3.IsBusy Then
                                 bw_download3.WorkerSupportsCancellation = True
+                                bw_download3.WorkerReportsProgress = True
                                 bw_download3.RunWorkerAsync(parm)
                                 Exit Do
                             ElseIf Not bw_download5.IsBusy Then
                                 bw_download5.WorkerSupportsCancellation = True
+                                bw_download5.WorkerReportsProgress = True
                                 bw_download5.RunWorkerAsync(parm)
                                 Exit Do
                             ElseIf Not bw_download7.IsBusy Then
                                 bw_download7.WorkerSupportsCancellation = True
+                                bw_download7.WorkerReportsProgress = True
                                 bw_download7.RunWorkerAsync(parm)
                                 Exit Do
                             ElseIf Not bw_download9.IsBusy Then
                                 bw_download9.WorkerSupportsCancellation = True
+                                bw_download9.WorkerReportsProgress = True
                                 bw_download9.RunWorkerAsync(parm)
                                 Exit Do
                             Else
@@ -1503,7 +1629,6 @@ Public Class DVDArt_Common
             Dim image As Image
             Dim ImageInBytes() As Byte
             Dim stream As System.IO.MemoryStream
-            Dim imagekey As String = Guid.NewGuid().ToString()
             ImageInBytes = FileSystem.ReadAllBytes(path)
             stream = New System.IO.MemoryStream(ImageInBytes)
             image = image.FromStream(stream)
@@ -1940,7 +2065,7 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.2.4"
+        _version = "v1.0.2.7"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 

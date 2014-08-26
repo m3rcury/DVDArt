@@ -46,44 +46,44 @@ Public Class DVDArt_ManualUpload
             Me.Refresh()
 
             'change labels depending of type
-            If _type = "artist" Then
+            If _type = "music" Then
                 l_clearart.Text = "Banner"
             ElseIf _type = "person" Then
                 l_clearart.Text = "Photo"
             End If
 
-            If _type = "music" Then
+            If _type = "music/albums" Then
                 l_dvdart.Text = "CD Art"
             End If
 
             'enable DVD add-ons
-            cb_title.Visible = (_type = "movie")
-            cb_logos.Visible = (_type = "movie")
-            b_change_layout.Visible = (_type = "movie")
+            cb_title.Visible = (_type = "movies")
+            cb_logos.Visible = (_type = "movies")
+            b_change_layout.Visible = (_type = "movies")
 
             'enable fields according to selection in setting
-            l_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
-            tb_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
-            b_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
-            b_preview_dvdart.Enabled = (DVDArt_GUI.checked(0, 0) And _type = "movie") Or (DVDArt_GUI.checked(2, 0) And _type = "music")
+            l_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movies") Or (DVDArt_GUI.checked(2, 0) And _type = "music/albums")
+            tb_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movies") Or (DVDArt_GUI.checked(2, 0) And _type = "music/albums")
+            b_dvdart.Visible = (DVDArt_GUI.checked(0, 0) And _type = "movies") Or (DVDArt_GUI.checked(2, 0) And _type = "music/albums")
+            b_preview_dvdart.Enabled = (DVDArt_GUI.checked(0, 0) And _type = "movies") Or (DVDArt_GUI.checked(2, 0) And _type = "music/albums")
 
-            l_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist") Or (DVDArt_GUI.personchecked And _type = "person")
-            tb_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist") Or (DVDArt_GUI.personchecked And _type = "person")
-            b_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist") Or (DVDArt_GUI.personchecked And _type = "person")
-            b_preview_clearart.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist") Or (DVDArt_GUI.personchecked And _type = "person")
+            l_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movies") Or (DVDArt_GUI.checked(1, 1) And _type = "tv") Or (DVDArt_GUI.checked(2, 1) And _type = "music") Or (DVDArt_GUI.personchecked And _type = "person")
+            tb_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movies") Or (DVDArt_GUI.checked(1, 1) And _type = "tv") Or (DVDArt_GUI.checked(2, 1) And _type = "music") Or (DVDArt_GUI.personchecked And _type = "person")
+            b_clearart.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movies") Or (DVDArt_GUI.checked(1, 1) And _type = "tv") Or (DVDArt_GUI.checked(2, 1) And _type = "music") Or (DVDArt_GUI.personchecked And _type = "person")
+            b_preview_clearart.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movies") Or (DVDArt_GUI.checked(1, 1) And _type = "tv") Or (DVDArt_GUI.checked(2, 1) And _type = "music") Or (DVDArt_GUI.personchecked And _type = "person")
 
-            l_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
-            tb_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
-            b_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
-            b_preview_clearlogo.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movie") Or (DVDArt_GUI.checked(1, 1) And _type = "series") Or (DVDArt_GUI.checked(2, 1) And _type = "artist")
+            l_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movies") Or (DVDArt_GUI.checked(1, 1) And _type = "tv") Or (DVDArt_GUI.checked(2, 1) And _type = "music")
+            tb_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movies") Or (DVDArt_GUI.checked(1, 1) And _type = "tv") Or (DVDArt_GUI.checked(2, 1) And _type = "music")
+            b_clearlogo.Visible = (DVDArt_GUI.checked(0, 1) And _type = "movies") Or (DVDArt_GUI.checked(1, 1) And _type = "tv") Or (DVDArt_GUI.checked(2, 1) And _type = "music")
+            b_preview_clearlogo.Enabled = (DVDArt_GUI.checked(0, 1) And _type = "movies") Or (DVDArt_GUI.checked(1, 1) And _type = "tv") Or (DVDArt_GUI.checked(2, 1) And _type = "music")
 
-            l_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movie")
-            tb_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movie")
-            b_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movie")
-            b_preview_backdrop.Enabled = (DVDArt_GUI.checked(0, 3) And _type = "movie")
+            l_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movies")
+            tb_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movies")
+            b_backdrop.Visible = (DVDArt_GUI.checked(0, 3) And _type = "movies")
+            b_preview_backdrop.Enabled = (DVDArt_GUI.checked(0, 3) And _type = "movies")
 
             'centre upload button
-            If _type <> "movie" Then
+            If _type <> "movies" Then
                 b_upload.Left = (Me.ClientSize.Width / 2) - (b_upload.Width / 2)
             End If
 
@@ -189,7 +189,7 @@ Public Class DVDArt_ManualUpload
 
         Select Case _type
 
-            Case "artist", "person"
+            Case "music", "person"
                 Dim preview As New DVDArt_Preview(tb_clearart.Text, False)
                 preview.Show()
 
@@ -233,7 +233,7 @@ Public Class DVDArt_ManualUpload
                 FileIO.FileSystem.RenameFile(file, IO.Path.GetFileName(tb_dvdart.Text))
             End If
 
-            If _type = "music" Then type = "cdart" Else type = "dvdart"
+            If _type = "music/albums" Then type = "cdart" Else type = "dvdart"
 
             DVDArt_Common.create_CoverArt(tb_dvdart.Text, _imagename, _title, cb_title.SelectedIndex, cb_logos.Checked, this_template_type, True, file, type)
 
@@ -245,7 +245,7 @@ Public Class DVDArt_ManualUpload
 
         Select Case _type
 
-            Case "artist"
+            Case "music"
                 If Check_Image(tb_clearart.Text, 1000, 185) Then
                     b_process_clearart.Visible = False
                     b_preview_clearart.Visible = True
@@ -360,7 +360,7 @@ Public Class DVDArt_ManualUpload
 
             _imagename = Utils.MakeFileName(_imagename)
 
-            If _type = "music" Then
+            If _type = "music/albums" Then
                 fullsize = thumbs & DVDArt_Common.folder(2, 0, 0) & _imagename & ".png"
                 thumb = thumbs & DVDArt_Common.folder(2, 0, 1) & _imagename & ".png"
             Else
@@ -382,7 +382,7 @@ Public Class DVDArt_ManualUpload
             If Not _process(1) Then b_process_clearart_Click(sender, e)
 
             Select Case _type
-                Case "artist", "person"
+                Case "music", "person"
                     file = tb_clearart.Text
 
                 Case Else
@@ -396,10 +396,10 @@ Public Class DVDArt_ManualUpload
 
             _imagename = Utils.MakeFileName(_imagename)
 
-            If _type = "artist" Then
+            If _type = "music" Then
                 fullsize = thumbs & DVDArt_Common.folder(2, 1, 0) & _imagename & ".png"
                 thumb = thumbs & DVDArt_Common.folder(2, 1, 1) & _imagename & ".png"
-            ElseIf _type = "series" Then
+            ElseIf _type = "tv" Then
                 fullsize = thumbs & DVDArt_Common.folder(1, 1, 0) & _imagename & ".png"
                 thumb = thumbs & DVDArt_Common.folder(1, 1, 1) & _imagename & ".png"
             ElseIf _type = "person" Then
@@ -415,7 +415,7 @@ Public Class DVDArt_ManualUpload
 
             If thumb <> Nothing Then
                 'resize to thumb size and copy to Thumbs folder
-                If _type <> "artist" Then
+                If _type <> "music" Then
                     DVDArt_Common.Resize(file, 200, 112, True)
                 Else
                     DVDArt_Common.Resize(file, 200, 37, True)
@@ -442,10 +442,10 @@ Public Class DVDArt_ManualUpload
                 _imagename = _imagename.Replace(c, "_")
             Next
 
-            If _type = "artist" Then
+            If _type = "music" Then
                 fullsize = thumbs & DVDArt_Common.folder(2, 2, 0) & _imagename & ".png"
                 thumb = thumbs & DVDArt_Common.folder(2, 2, 1) & _imagename & ".png"
-            ElseIf _type = "series" Then
+            ElseIf _type = "tv" Then
                 fullsize = thumbs & DVDArt_Common.folder(1, 2, 0) & _imagename & ".png"
                 thumb = thumbs & DVDArt_Common.folder(1, 2, 1) & _imagename & ".png"
             Else
