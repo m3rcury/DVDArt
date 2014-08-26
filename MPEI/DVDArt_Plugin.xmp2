@@ -264,29 +264,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>2</Build>
-      <Revision>4</Revision>
+      <Revision>7</Revision>
     </Version>
     <ExtensionDescription>This plugin scans your MovingPictures, MyFilms, MyVideos, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art, Banners, Actor, Writer and Director images from the fanart.tv and themoviedb.org websites where applicable.</ExtensionDescription>
-    <VersionDescription>A scraper that srapes fanart.tv for DVD cover art, Clear Art, Clear Logo, CD cover art and Banners of you movie collection in MovingPictures, series collection in TVSeries and music collection.
-
-The scraper now also has a settings tab where you set its behaviour, select what to scrape and choose preferred language for the Importer.  You can also set default DVDArt layout for manually created DVDArt.
-
-You have also the possibility to upload images manually and images can be of any type.  The plugin will try to add the required transparency.
-
-The plugin can be set to rescrape movies and series which originally were missing any of the artwork just in case new ones were loaded.
-
-Added Music CD Art, Banner and Clearlogo functionality.
-
-Added move backdrop and cover functionality.
-
-Added Actor, Writer and Director image scraping functionality.
-
-.NET 4 version
-
-Now caters for MyVideos as well.</VersionDescription>
+    <VersionDescription>This version allows input of fanart.tv Personal API keys which offer access to more recent artwork when utilised.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2014-02-24T23:39:41</ReleaseDate>
+    <ReleaseDate>2014-08-26T23:39:41</ReleaseDate>
     <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures, tvseries, music, actors, writers, directors, myfilms</Tags>
     <Location>E:\Software\MediaPortal\DVDArt_Plugin\[Name]-v[Version].mpe1</Location>
     <Params>
@@ -362,21 +346,21 @@ Now caters for MyVideos as well.</VersionDescription>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{6b5c8f04-0235-430d-a65e-ccd39b902677}-DVDArt_Plugin.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{901b8eb4-4170-4a84-8707-52e5318d4984}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{a2991df2-a6d3-42b9-a76f-23d675f4bdee}-DVDArt_Plugin_logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{95a2cec3-b0a4-447f-b239-3ceeeb573037}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{1383fbd6-d069-4ae2-a665-7db58c480cbe}-MP_Packaging.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{97b14284-bbda-4619-8ebc-65aedec9322a}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

@@ -100,6 +100,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="tagnetlib">
+      <HintPath>..\..\EmbedID3AlbumArt\tagnetlib\bin\Release\tagnetlib.dll</HintPath>
+    </Reference>
     <Reference Include="Utils, Version=1.2.100.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
@@ -145,6 +148,7 @@
     <Compile Include="DVDArt_ManualUpload.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="DVDArt_MP3.vb" />
     <Compile Include="DVDArt_Plugin.vb" />
     <Compile Include="DVDArt_Preview.Designer.vb">
       <DependentUpon>DVDArt_Preview.vb</DependentUpon>
@@ -267,6 +271,7 @@
     <None Include="Resources\template_1_disabled.png" />
     <Content Include="Resources\template_2_disabled.png" />
     <None Include="Resources\theAudioDB.png" />
+    <None Include="Resources\tick_2.png" />
     <Content Include="Resources\tvseries.png" />
     <Content Include="Resources\upload.png" />
     <None Include="Resources\compress.png" />

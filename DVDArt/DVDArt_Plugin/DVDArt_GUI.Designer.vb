@@ -181,6 +181,9 @@ Partial Class DVDArt_GUI
         Me.tp_Settings = New System.Windows.Forms.TabPage()
         Me.tbc_settings = New System.Windows.Forms.TabControl()
         Me.tp_pluginsettings = New System.Windows.Forms.TabPage()
+        Me.b_save1 = New System.Windows.Forms.Button()
+        Me.gb4 = New System.Windows.Forms.GroupBox()
+        Me.tb_personalapikey = New System.Windows.Forms.TextBox()
         Me.gb1 = New System.Windows.Forms.GroupBox()
         Me.cb_backgroundscraper = New System.Windows.Forms.CheckBox()
         Me.pnl_background = New System.Windows.Forms.Panel()
@@ -262,6 +265,7 @@ Partial Class DVDArt_GUI
         Me.MUploadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SendToImporterToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RescanAllToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.b_save2 = New System.Windows.Forms.Button()
         Me.cms_found.SuspendLayout()
         Me.cms_import.SuspendLayout()
         Me.cms_missing.SuspendLayout()
@@ -322,6 +326,7 @@ Partial Class DVDArt_GUI
         Me.tp_Settings.SuspendLayout()
         Me.tbc_settings.SuspendLayout()
         Me.tp_pluginsettings.SuspendLayout()
+        Me.gb4.SuspendLayout()
         Me.gb1.SuspendLayout()
         Me.pnl_background.SuspendLayout()
         CType(Me.nud_delay, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -917,7 +922,7 @@ Partial Class DVDArt_GUI
         Me.tp_movies_missing.Location = New System.Drawing.Point(4, 22)
         Me.tp_movies_missing.Name = "tp_movies_missing"
         Me.tp_movies_missing.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_movies_missing.Size = New System.Drawing.Size(642, 749)
+        Me.tp_movies_missing.Size = New System.Drawing.Size(642, 613)
         Me.tp_movies_missing.TabIndex = 2
         Me.tp_movies_missing.Text = "Movies missing Artwork"
         '
@@ -978,7 +983,7 @@ Partial Class DVDArt_GUI
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(642, 749)
+        Me.TabPage1.Size = New System.Drawing.Size(642, 613)
         Me.TabPage1.TabIndex = 3
         Me.TabPage1.Text = "Actors/Writers/Directors with Picture"
         '
@@ -1208,7 +1213,7 @@ Partial Class DVDArt_GUI
         Me.tp_Serie_ClearArt.Location = New System.Drawing.Point(4, 22)
         Me.tp_Serie_ClearArt.Name = "tp_Serie_ClearArt"
         Me.tp_Serie_ClearArt.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_Serie_ClearArt.Size = New System.Drawing.Size(276, 709)
+        Me.tp_Serie_ClearArt.Size = New System.Drawing.Size(276, 573)
         Me.tp_Serie_ClearArt.TabIndex = 1
         Me.tp_Serie_ClearArt.Text = "ClearArt"
         '
@@ -1493,7 +1498,7 @@ Partial Class DVDArt_GUI
         Me.tp_artist_banner.Location = New System.Drawing.Point(4, 22)
         Me.tp_artist_banner.Name = "tp_artist_banner"
         Me.tp_artist_banner.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_artist_banner.Size = New System.Drawing.Size(276, 709)
+        Me.tp_artist_banner.Size = New System.Drawing.Size(276, 573)
         Me.tp_artist_banner.TabIndex = 4
         Me.tp_artist_banner.Text = "Banner"
         '
@@ -1716,7 +1721,7 @@ Partial Class DVDArt_GUI
         Me.tp_artist_album_missing.Location = New System.Drawing.Point(4, 22)
         Me.tp_artist_album_missing.Name = "tp_artist_album_missing"
         Me.tp_artist_album_missing.Padding = New System.Windows.Forms.Padding(3)
-        Me.tp_artist_album_missing.Size = New System.Drawing.Size(642, 749)
+        Me.tp_artist_album_missing.Size = New System.Drawing.Size(642, 613)
         Me.tp_artist_album_missing.TabIndex = 2
         Me.tp_artist_album_missing.Text = "Artists/Albums missing Artwork"
         '
@@ -1844,6 +1849,8 @@ Partial Class DVDArt_GUI
         'tp_pluginsettings
         '
         Me.tp_pluginsettings.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_pluginsettings.Controls.Add(Me.b_save1)
+        Me.tp_pluginsettings.Controls.Add(Me.gb4)
         Me.tp_pluginsettings.Controls.Add(Me.gb1)
         Me.tp_pluginsettings.Controls.Add(Me.gb3)
         Me.tp_pluginsettings.Controls.Add(Me.cb_debug)
@@ -1853,6 +1860,35 @@ Partial Class DVDArt_GUI
         Me.tp_pluginsettings.Size = New System.Drawing.Size(635, 664)
         Me.tp_pluginsettings.TabIndex = 0
         Me.tp_pluginsettings.Text = "Plugin Settings"
+        '
+        'b_save1
+        '
+        Me.b_save1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.b_save1.Location = New System.Drawing.Point(280, 631)
+        Me.b_save1.Name = "b_save1"
+        Me.b_save1.Size = New System.Drawing.Size(75, 23)
+        Me.b_save1.TabIndex = 24
+        Me.b_save1.Text = "Save"
+        Me.b_save1.UseVisualStyleBackColor = True
+        '
+        'gb4
+        '
+        Me.gb4.Controls.Add(Me.tb_personalapikey)
+        Me.gb4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.gb4.Location = New System.Drawing.Point(25, 365)
+        Me.gb4.Name = "gb4"
+        Me.gb4.Size = New System.Drawing.Size(584, 73)
+        Me.gb4.TabIndex = 23
+        Me.gb4.TabStop = False
+        Me.gb4.Text = " Personal Fanart.tv API key"
+        '
+        'tb_personalapikey
+        '
+        Me.tb_personalapikey.Location = New System.Drawing.Point(136, 30)
+        Me.tb_personalapikey.Name = "tb_personalapikey"
+        Me.tb_personalapikey.Size = New System.Drawing.Size(313, 22)
+        Me.tb_personalapikey.TabIndex = 4
+        Me.tb_personalapikey.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'gb1
         '
@@ -2097,6 +2133,7 @@ Partial Class DVDArt_GUI
         'tp_scrapersettings
         '
         Me.tp_scrapersettings.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_scrapersettings.Controls.Add(Me.b_save2)
         Me.tp_scrapersettings.Controls.Add(Me.gb2)
         Me.tp_scrapersettings.Location = New System.Drawing.Point(4, 22)
         Me.tp_scrapersettings.Name = "tp_scrapersettings"
@@ -2713,6 +2750,16 @@ Partial Class DVDArt_GUI
         Me.RescanAllToolStripMenuItem1.Size = New System.Drawing.Size(232, 22)
         Me.RescanAllToolStripMenuItem1.Text = "Rescan all"
         '
+        'b_save2
+        '
+        Me.b_save2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.b_save2.Location = New System.Drawing.Point(280, 631)
+        Me.b_save2.Name = "b_save2"
+        Me.b_save2.Size = New System.Drawing.Size(75, 23)
+        Me.b_save2.TabIndex = 25
+        Me.b_save2.Text = "Save"
+        Me.b_save2.UseVisualStyleBackColor = True
+        '
         'DVDArt_GUI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2794,6 +2841,8 @@ Partial Class DVDArt_GUI
         Me.tbc_settings.ResumeLayout(False)
         Me.tp_pluginsettings.ResumeLayout(False)
         Me.tp_pluginsettings.PerformLayout()
+        Me.gb4.ResumeLayout(False)
+        Me.gb4.PerformLayout()
         Me.gb1.ResumeLayout(False)
         Me.gb1.PerformLayout()
         Me.pnl_background.ResumeLayout(False)
@@ -3082,5 +3131,9 @@ Partial Class DVDArt_GUI
     Friend WithEvents tbc_settings As System.Windows.Forms.TabControl
     Friend WithEvents tp_pluginsettings As System.Windows.Forms.TabPage
     Friend WithEvents tp_scrapersettings As System.Windows.Forms.TabPage
+    Friend WithEvents gb4 As System.Windows.Forms.GroupBox
+    Friend WithEvents tb_personalapikey As System.Windows.Forms.TextBox
+    Friend WithEvents b_save1 As System.Windows.Forms.Button
+    Friend WithEvents b_save2 As System.Windows.Forms.Button
 
 End Class
