@@ -56,20 +56,40 @@ In order to facilitate skin file modding, a number of property fields have been 
  In a skin file, this can be used as follows:
  {{{
 <!-- m3rcury - ClearLogo -->
-      <control>
-        <description>Clear Logo</description>        
-        <type>image</type>
-        <id>0</id>
-        <posX>1000</posX>
-        <posY>300</posY>
-        <width>194</width>
+    <control>
+      <description>Clear Logo</description>        
+      <type>image</type>
+      <id>0</id>
+      <posX>1000</posX>
+      <posY>300</posY>
+      <width>194</width>
         <height>75</height>
-        <keepaspectratio>yes</keepaspectratio>
-        <texture>#MovingPictures.ClearLogo\#MovingPictures.SelectedMovie.imdb_id.png</texture>
-        <visible>!control.isvisible(50)+!control.isvisible(51)+!control.hasfocus(667)</visible>
-        <animation effect="fade" time="250" delay="0">VisibleChange</animation>
-     </control>
+      <keepaspectratio>yes</keepaspectratio>
+      <texture>#MovingPictures.ClearLogo\#MovingPictures.SelectedMovie.imdb_id.png</texture>
+      <visible>!control.isvisible(50)+!control.isvisible(51)+!control.hasfocus(667)</visible>
+      <animation effect="fade" time="250" delay="0">VisibleChange</animation>
+    </control>
 <!-- m3rcury - ClearLogo -->
+}}}
+
+  * *#MovingPictures.Banner*
+ This property holds the folder under which full size Banner images are stored.  By default, this resolves to *_thumbspath_\MovingPictures\Banner\FullSize*
+
+ In a skin file, this can be used as follows:
+ {{{
+<!-- m3rcury - Banner -->
+    <control>
+      <description>Movie Banner</description>
+      <type>image</type>
+      <id>98</id>
+      <posX>1175</posX>
+      <posY>700</posY>
+      <width>500</width>
+      <keepaspectratio>yes</keepaspectratio>
+      <texture>#MovingPictures.Banner\#MovingPictures.SelectedMovie.imdb_id.png</texture>
+      <visible>string.contains(#Play.Current.Thumb,MovingPictures)</visible>
+    </control>
+<!-- m3rcury - Banner -->
 }}}
 
   * *#Person.Thumb*
