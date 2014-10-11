@@ -1,5 +1,8 @@
 =Settings=
 
+==Global Settings==
+http://dvdart.googlecode.com/svn/wiki/screens/Settings.jpg
+
 ==Movie Settings==
 ===Select which artwork to scrape===
 http://dvdart.googlecode.com/svn/wiki/screens/Settings_movies_1.jpg
@@ -37,6 +40,9 @@ http://dvdart.googlecode.com/svn/wiki/screens/movies_2.jpg
 
 ===Clear Logo===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_3.jpg
+
+===Banners===
+http://dvdart.googlecode.com/svn/wiki/screens/movies_6.jpg
 
 ===Backdrop===
 http://dvdart.googlecode.com/svn/wiki/screens/movies_4.jpg
@@ -120,3 +126,7 @@ http://dvdart.googlecode.com/svn/wiki/screens/music_manual_upload_2.jpg
 
 ==You can change the MBID of either an artist or an album==
 http://dvdart.googlecode.com/svn/wiki/screens/music_change_mbid.jpg
+
+
+==About==
+http://dvdart.googlecode.com/svn/wiki/screens/dvdart_about.jpg
