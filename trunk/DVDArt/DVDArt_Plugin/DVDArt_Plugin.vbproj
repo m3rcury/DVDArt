@@ -240,6 +240,8 @@
     <None Include="Resources\armageddon_backdrop.jpg" />
     <None Include="Resources\armageddon_cover.jpg" />
     <None Include="Resources\sd_3d.png" />
+    <None Include="Resources\btn_donateCC_LG.gif" />
+    <Content Include="Resources\armageddon_banner.jpg" />
     <Content Include="Resources\cdart.png" />
     <Content Include="Resources\cdart_mask.png" />
     <Content Include="Resources\convert.png" />

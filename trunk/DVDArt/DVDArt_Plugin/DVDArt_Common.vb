@@ -28,12 +28,14 @@ Public Class DVDArt_Common
         Dim name As String
     End Structure
 
-    Public Shared _version, folder(2, 4, 1), lang(4), langcode(4), _coversize As String
+    Public Shared _version, folder(2, 5, 1), lang(4), langcode(4), _coversize As String
     Public Shared WithEvents bw_download0, bw_download1, bw_download2, bw_download3, bw_download4, bw_download5, bw_download6, bw_download7, bw_download8, bw_download9 As New BackgroundWorker
     Public Shared _temp As String = Environ("temp")
+    Public Shared timeout As Integer = 5000
+
+    Private Shared maxsize As Integer
 
     Dim debug As Boolean
-    Public Shared timeout As Integer = 5000
 
     Public Shared ReadOnly Property p_Databases(ByVal item As String) As String
         Get
@@ -705,20 +707,20 @@ Public Class DVDArt_Common
         Dim parseHD_c As String = Nothing
         Dim parse_bd As String = Nothing
         Dim parse_ps As String = Nothing
-        Dim details(9, 0), returndetails(9, 0), parsestring(4), keyword(8) As String
-        Dim starting(4), startHD_l, startHD_c, start_bd, start_ps, startp, endp, len, x, y, i, j As Integer
+        Dim details(11, 0), parsestring(5), keyword(9) As String
+        Dim starting(5), startHD_l, startHD_c, start_bd, start_ps, startp, endp, len, x, y, i, j As Integer
         Dim invalidimage As String = "http://assets.fanart.tv/fanart/movies/0/movieposter/-5278db34067a7.jpg"
 
         logStats("DVDArt: " & type & " JSON parsing for " & id & " started.", "LOG")
 
         If type = "movies" Then
-            keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """backdrops"":", "posters"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebackground"":", "movieposter"":"}
+            keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """backdrops"":", "posters"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebanner"":", """moviebackground"":", "movieposter"":"}
         ElseIf type = "tv" Then
-            keyword = {"""hdtvlogo"":", """hdclearart"":", "**n/a**", "**n/a**", "**n/a**", """clearart"":", """clearlogo"":", "**n/a**", "**n/a**"}
+            keyword = {"""hdtvlogo"":", """hdclearart"":", "**n/a**", "**n/a**", "**n/a**", """clearart"":", """clearlogo"":", "**n/a**", "**n/a**", "**n/a**"}
         ElseIf type = "music" Then
-            keyword = {"""hdmusiclogo"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**", """musicbanner"":", """musiclogo"":", "**n/a**", "**n/a**"}
+            keyword = {"""hdmusiclogo"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**", """musicbanner"":", """musiclogo"":", "**n/a**", "**n/a**", "**n/a**"}
         ElseIf type = "music/albums" Then
-            keyword = {"**n/a**", "**n/a**", "**n/a**", "**n/a**", """cdart"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**"}
+            keyword = {"**n/a**", "**n/a**", "**n/a**", "**n/a**", """cdart"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**", "**n/a**"}
         End If
 
         ' check if there are HD logos and if yes, store in a temporary variable to later on merge with movielogos
@@ -761,23 +763,23 @@ Public Class DVDArt_Common
         ' if there are HD images, merge with SD images
 
         If startHD_l > 0 Then
-            parsestring(2) = Trim(parsestring(2)) & parseHD_l.Replace(keyword(0), keyword(6))
+            parsestring(2) = parseHD_l.Replace(keyword(0), keyword(6)) & Trim(parsestring(2))
             If starting(2) = 0 Then starting(2) = startHD_l
         End If
 
         If startHD_c > 0 Then
-            parsestring(1) = Trim(parsestring(1)) & parseHD_c.Replace(keyword(1), keyword(5))
+            parsestring(1) = parseHD_c.Replace(keyword(1), keyword(5)) & Trim(parsestring(1))
             If starting(1) = 0 Then starting(1) = startHD_c
         End If
 
         If start_bd > 0 Then
-            parsestring(3) = Trim(parsestring(3)) & parse_bd.Replace(keyword(2), keyword(7))
-            If starting(3) = 0 Then starting(3) = start_bd
+            parsestring(4) = parse_bd.Replace(keyword(2), keyword(8)) & Trim(parsestring(4))
+            If starting(4) = 0 Then starting(4) = start_bd
         End If
 
         If start_ps > 0 Then
-            parsestring(4) = Trim(parsestring(4)) & parse_ps.Replace(keyword(3), keyword(8))
-            If starting(4) = 0 Then starting(4) = start_ps
+            parsestring(5) = parse_ps.Replace(keyword(3), keyword(9)) & Trim(parsestring(5))
+            If starting(5) = 0 Then starting(5) = start_ps
         End If
 
         For i = 0 To starting.Count - 1
@@ -800,7 +802,7 @@ Public Class DVDArt_Common
 
                         If startp > 0 Then
 
-                            If x >= y Then ReDim Preserve details(9, x)
+                            If x >= y Then ReDim Preserve details(11, x)
 
                             startp += 6
                             endp = InStr(startp, parsestring(i), """,")
@@ -854,6 +856,8 @@ Public Class DVDArt_Common
             End If
 
         Next
+
+        Dim returndetails(UBound(details, 1), 0)
 
         If language <> "##" Then
 
@@ -1187,8 +1191,8 @@ Public Class DVDArt_Common
     Public Shared Function import(ByVal database As String, ByVal thumbs As String, ByVal id As String, ByVal title As String, ByVal lang As String, ByVal type As String, ByVal personpath As String, ByVal checked As Array, Optional ByVal backdrop As String = Nothing, Optional ByVal cover As String = Nothing) As Array
 
         Dim y As Integer
-        Dim filenotexist(4) As Boolean
-        Dim downloaded(4) As Boolean
+        Dim filenotexist(5) As Boolean
+        Dim downloaded(5) As Boolean
 
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
@@ -1199,24 +1203,24 @@ Public Class DVDArt_Common
 
         If type = "movies" Then
 
-            For y = 0 To 4
-                If y < 3 Then
+            For y = 0 To UBound(downloaded)
+                If y < UBound(downloaded) - 1 Then
                     filenotexist(y) = checked(0, y) And Not IO.File.Exists(thumbs & folder(0, y, 1) & id & ".png")
-                ElseIf y = 3 Then
+                ElseIf y = UBound(downloaded) - 1 Then
                     filenotexist(y) = checked(0, y) And Not IO.File.Exists(backdrop)
-                ElseIf y = 4 Then
+                ElseIf y = UBound(downloaded) Then
                     filenotexist(y) = checked(0, y) And Not IO.File.Exists(cover)
                 End If
             Next
 
             downloaded = download(thumbs, folder, id, False, filenotexist, type, lang)
 
-            For y = 0 To 4
-                If y < 3 Then
+            For y = 0 To UBound(downloaded)
+                If y < UBound(downloaded) - 1 Then
                     downloaded(y) = checked(0, y) And (downloaded(y) Or IO.File.Exists(thumbs & folder(0, y, 1) & id & ".png"))
-                ElseIf y = 3 Then
+                ElseIf y = UBound(downloaded) - 1 Then
                     downloaded(y) = checked(0, y) And (downloaded(y) Or IO.File.Exists(backdrop))
-                ElseIf y = 4 Then
+                ElseIf y = UBound(downloaded) Then
                     downloaded(y) = checked(0, y) And (downloaded(y) Or IO.File.Exists(cover))
                 End If
             Next
@@ -1381,7 +1385,7 @@ Public Class DVDArt_Common
 
             Dim url, path As String
             Dim endp As Integer
-            Dim factor As Decimal = 1
+            Dim factor As Double = 1
             Dim shrink As Boolean = False
 
             endp = InStr(parm, "|shrink")
@@ -1395,13 +1399,17 @@ Public Class DVDArt_Common
             path = Left(parm, endp - 1)
             url = Right(parm, Microsoft.VisualBasic.Len(parm) - endp)
 
-            'download image and if not preview, reduce size to 500x500
+            'download image and if set to shrink, reduce size accordingly
 
             If url <> String.Empty Then
 
                 Dim image As Image = downloadimage(url)
 
-                If shrink Then factor = 500 / image.Size.Height
+                If InStr(path, "\DVDArt\") Then
+                    If shrink Then factor = 500 / image.Size.Height
+                ElseIf InStr(path, folder(0, 4, 1)) Then
+                    factor = _coversize / image.Size.Width
+                End If
 
                 image = New Bitmap(image, New Size(image.Size.Width * factor, image.Size.Height * factor))
                 image.Save(path)
@@ -1432,7 +1440,7 @@ Public Class DVDArt_Common
 
             End If
 
-            logStats("DVDArt: download thread complete for [" & parm & "]", "DEBUG")
+                logStats("DVDArt: download thread complete for [" & parm & "]", "DEBUG")
 
         Catch ex As Exception
             logStats("DVDArt: Error downloading with exception " & ex.Message, "ERROR")
@@ -1450,7 +1458,7 @@ Public Class DVDArt_Common
                                     ByVal try2download As Array, ByVal type As String, Optional ByVal language As String = "##") As Array
 
         Dim url(9, 0) As String
-        Dim found(4) As Boolean
+        Dim found(5) As Boolean
         Dim parm As Object = Nothing
         Dim y As Integer
 
@@ -1477,10 +1485,10 @@ Public Class DVDArt_Common
                     url = parse_music(jsonresponse, LCase(title.Replace(" ", "-")))
                 End If
 
-                For y = 0 To 4
+                For y = 0 To UBound(found)
 
                     If type = "movies" Then
-                        If y < 3 Then
+                        If y < UBound(found) - 1 Then
                             fullpath = thumbs & folder(0, y, 0) & id & ".png"
                             thumbpath = thumbs & folder(0, y, 1) & id & ".png"
                         Else
@@ -1504,9 +1512,9 @@ Public Class DVDArt_Common
                     If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
 
                         If InStr(url(y * 2, 0), "/w1920/") > 0 Then
-                            If y = 3 Then
+                            If y = UBound(found) - 1 Then
                                 parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w300/")
-                            ElseIf y = 4 Then
+                            ElseIf y = UBound(found) Then
                                 parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w" & _coversize & "/")
                             End If
                         Else
@@ -1614,8 +1622,9 @@ Public Class DVDArt_Common
 
     Public Shared Sub reduceSize(ByVal path As String, ByVal size As Integer)
 
-        If size > 1048576 Then
-            Dim ratio As Integer = 100 - (1048576 / size) * 100
+        If size > maxsize Then
+            Dim factor As Integer = (maxsize / size) * 100
+            Dim ratio As Integer = 100 - (10 - (factor / 10))
             Dim params() As String = {"-quality", ratio.ToString}
             Convert(path, path, params)
         End If
@@ -1989,7 +1998,7 @@ Public Class DVDArt_Common
 
         For x = 0 To 2
             If db_exist(x) Then
-                For y = 0 To 2
+                For y = 0 To 5
                     For z = 0 To 1
                         If folder(x, y, z) IsNot Nothing Then
                             If Not IO.Directory.Exists(thumbs & folder(x, y, z)) Then IO.Directory.CreateDirectory(thumbs & folder(x, y, z))
@@ -2065,12 +2074,15 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.2.7"
+        _version = "v1.0.2.8"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 
-        'set cover size
-        _coversize = "600"
+        'set cover size width to 680pixels
+        _coversize = "680"
+
+        'set cover file size to 950Kb
+        maxsize = 950 * 1024
 
         'initialize language array
         lang = {"English", "Deutsch", "Française", "Italiano", "русский", "Any"}
@@ -2110,17 +2122,19 @@ Public Class DVDArt_Common
         folder(0, 1, 1) = Movies & "\ClearArt\Thumbs\"
         folder(0, 2, 0) = Movies & "\ClearLogo\FullSize\"
         folder(0, 2, 1) = Movies & "\ClearLogo\Thumbs\"
+        folder(0, 3, 0) = Movies & "\Banner\FullSize\"
+        folder(0, 3, 1) = Movies & "\Banner\Thumbs\"
 
         If IO.File.Exists(database & p_Databases("movingpictures")) Then
-            folder(0, 3, 0) = readMovingPicturesDB(database, thumbs, "backdrop_folder")
-            folder(0, 3, 1) = readMovingPicturesDB(database, thumbs, "backdrop_thumbs_folder")
-            folder(0, 4, 0) = readMovingPicturesDB(database, thumbs, "cover_art_folder")
-            folder(0, 4, 1) = readMovingPicturesDB(database, thumbs, "cover_thumbs_folder")
+            folder(0, 4, 0) = readMovingPicturesDB(database, thumbs, "backdrop_folder")
+            folder(0, 4, 1) = readMovingPicturesDB(database, thumbs, "backdrop_thumbs_folder")
+            folder(0, 5, 0) = readMovingPicturesDB(database, thumbs, "cover_art_folder")
+            folder(0, 5, 1) = readMovingPicturesDB(database, thumbs, "cover_thumbs_folder")
         ElseIf IO.File.Exists(database & p_Databases("myvideos")) Then
-            folder(0, 3, 0) = thumbs & "\Videos\Backdrop\Full\"
-            folder(0, 3, 1) = thumbs & "\Videos\Backdrop\Thumbs\"
-            folder(0, 4, 0) = thumbs & "\Vidoes\Covers\Full\"
-            folder(0, 4, 1) = thumbs & "\Vidoes\Covers\Thumbs\"
+            folder(0, 4, 0) = thumbs & "\Videos\Backdrop\Full\"
+            folder(0, 4, 1) = thumbs & "\Videos\Backdrop\Thumbs\"
+            folder(0, 5, 0) = thumbs & "\Videos\Covers\Full\"
+            folder(0, 5, 1) = thumbs & "\Videos\Covers\Thumbs\"
         End If
 
         folder(1, 0, 0) = Nothing
@@ -2133,6 +2147,8 @@ Public Class DVDArt_Common
         folder(1, 3, 1) = Nothing
         folder(1, 4, 0) = Nothing
         folder(1, 4, 1) = Nothing
+        folder(1, 5, 0) = Nothing
+        folder(1, 5, 1) = Nothing
         folder(2, 0, 0) = Music & "\CDArt\FullSize\"
         folder(2, 0, 1) = Music & "\CDArt\Thumbs\"
         folder(2, 1, 0) = Music & "\Banner\FullSize\"
@@ -2143,6 +2159,8 @@ Public Class DVDArt_Common
         folder(2, 3, 1) = Nothing
         folder(2, 4, 0) = Nothing
         folder(2, 4, 1) = Nothing
+        folder(2, 5, 0) = Nothing
+        folder(2, 5, 1) = Nothing
 
         'create thumb folder structure
         Create_Folder_Structure(database, thumbs)

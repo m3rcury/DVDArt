@@ -31,6 +31,10 @@ DVDArt_Plugin
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
+</member><member name="P:DVDArt_Plugin.My.Resources.Resources.armageddon_banner">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
 </member><member name="P:DVDArt_Plugin.My.Resources.Resources.armageddon_clearart">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -48,6 +52,10 @@ DVDArt_Plugin
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member><member name="P:DVDArt_Plugin.My.Resources.Resources.arrow">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member><member name="P:DVDArt_Plugin.My.Resources.Resources.btn_donateCC_LG">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
