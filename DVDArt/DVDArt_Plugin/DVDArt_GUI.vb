@@ -16,7 +16,7 @@ Imports MyFilmsPlugin.MyFilms.Utils
 
 Public Class DVDArt_GUI
 
-    Public Shared checked(2, 4) As Boolean
+    Public Shared checked(2, 5) As Boolean
     Public Shared template_type As Integer
     Public Shared personchecked As Boolean
 
@@ -29,7 +29,7 @@ Public Class DVDArt_GUI
     Private l_import_queue As New List(Of String)
     Private l_import_index As New List(Of Integer)
     Private lvwColumnSorter = New ListViewColumnSorter()
-    Private lv_url_dvdart, lv_url_clearart, lv_url_clearlogo, lv_url_backdrop, lv_url_cover As New ListView
+    Private lv_url_dvdart, lv_url_clearart, lv_url_clearlogo, lv_url_banner, lv_url_backdrop, lv_url_cover As New ListView
     Private li_movies, li_person, li_series, li_artist, li_album, li_import, li_missing As New ListViewItem
 
     <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Auto)> _
@@ -214,7 +214,7 @@ Public Class DVDArt_GUI
 
                         downloaded = DVDArt_Common.import(database, thumbs, lv_import.Items.Item(x).SubItems.Item(1).Text, lv_import.Items.Item(x).SubItems.Item(0).Text, _lang, "movies", personpath, checked, backdrop, cover)
 
-                        For y = 0 To 4
+                        For y = 0 To UBound(downloaded)
 
                             If downloaded(y) Then
                                 If Not added Then
@@ -580,7 +580,7 @@ Public Class DVDArt_GUI
 
                         downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type, personpath, checked, backdrop, cover)
 
-                        For y = 0 To 4
+                        For y = 0 To UBound(downloaded)
 
                             If downloaded(y) Then
                                 If Not added Then
@@ -1051,7 +1051,7 @@ Public Class DVDArt_GUI
         Me.Cursor = Cursors.WaitCursor
 
         Dim x As Integer
-        Dim details(9, 0) As String
+        Dim details As Array = Nothing
         Dim WebClient As New System.Net.WebClient
 
         x = 0
@@ -1131,34 +1131,44 @@ Public Class DVDArt_GUI
                         lv_url_clearlogo.Items.Add(details(4, x), imagekey)
                     End If
 
-                    If cb_Backdrop_movies.Checked And type = "movies" And details(6, x) <> Nothing Then
+                    If cb_Banner_movies.Checked And type = "movies" And details(6, x) <> Nothing Then
+                        Dim imagekey As String = Guid.NewGuid().ToString()
+                        ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/fanart/", "/preview/"))
+                        stream = New System.IO.MemoryStream(ImageInBytes)
+                        il_banner.Images.Add(imagekey, Image.FromStream(stream))
+                        lv_movie_banner.Items.Add(details(7, x), imagekey)
+                    
+                        lv_url_banner.Items.Add(details(6, x), imagekey)
+                    End If
+
+                    If cb_Backdrop_movies.Checked And type = "movies" And details(8, x) <> Nothing Then
                         Dim imagekey As String = Guid.NewGuid().ToString()
 
                         If InStr(details(6, x), "/w1920/") > 0 Then
-                            ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/w1920/", "/w150/"))
-                        Else
-                            ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/fanart/", "/preview/"))
-                        End If
-
-                        stream = New System.IO.MemoryStream(ImageInBytes)
-                        il_backdrop.Images.Add(imagekey, Image.FromStream(stream))
-                        lv_movie_backdrop.Items.Add(details(7, x), imagekey)
-                        lv_url_backdrop.Items.Add(details(6, x), imagekey)
-                    End If
-
-                    If cb_Cover_movies.Checked And type = "movies" And details(8, x) <> Nothing Then
-                        Dim imagekey As String = Guid.NewGuid().ToString()
-
-                        If InStr(details(8, x), "/w1920/") > 0 Then
                             ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/w1920/", "/w150/"))
                         Else
                             ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/fanart/", "/preview/"))
                         End If
 
                         stream = New System.IO.MemoryStream(ImageInBytes)
+                        il_backdrop.Images.Add(imagekey, Image.FromStream(stream))
+                        lv_movie_backdrop.Items.Add(details(9, x), imagekey)
+                        lv_url_backdrop.Items.Add(details(8, x), imagekey)
+                    End If
+
+                    If cb_Cover_movies.Checked And type = "movies" And details(10, x) <> Nothing Then
+                        Dim imagekey As String = Guid.NewGuid().ToString()
+
+                        If InStr(details(8, x), "/w1920/") > 0 Then
+                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/w1920/", "/w150/"))
+                        Else
+                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/fanart/", "/preview/"))
+                        End If
+
+                        stream = New System.IO.MemoryStream(ImageInBytes)
                         il_cover.Images.Add(imagekey, Image.FromStream(stream))
-                        lv_movie_cover.Items.Add(details(9, x), imagekey)
-                        lv_url_cover.Items.Add(details(8, x), imagekey)
+                        lv_movie_cover.Items.Add(details(11, x), imagekey)
+                        lv_url_cover.Items.Add(details(10, x), imagekey)
                     End If
 
                 Next
@@ -1170,12 +1180,12 @@ Public Class DVDArt_GUI
             Dim fullpath As String = Nothing
             Dim thumbpath As String = Nothing
 
-            For x = 0 To 4
+            For x = 0 To 5
 
                 If (checked(0, x) Or checked(1, x) Or checked(2, x)) And url(x) <> Nothing Then
 
                     If type = "movies" Then
-                        If x < 3 Then
+                        If x < 4 Then
                             fullpath = thumbs & DVDArt_Common.folder(0, x, 0) & id & ".png"
                             thumbpath = thumbs & DVDArt_Common.folder(0, x, 1) & id & ".png"
                         Else
@@ -1197,11 +1207,13 @@ Public Class DVDArt_GUI
                     End If
 
                     If InStr(url(x), "/w1920/") > 0 Then
-                        If x = 3 Then
+                        If x = 4 Then
                             parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w300/")
-                        ElseIf x = 4 Then
+                        ElseIf x = 5 Then
                             parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/")
                         End If
+                    ElseIf x = 5 Then
+                        parm = thumbpath & "|" & url(x)
                     Else
                         parm = thumbpath & "|" & url(x).Replace("/fanart/", "/preview/")
                     End If
@@ -1234,7 +1246,7 @@ Public Class DVDArt_GUI
 
                     If x = 0 Then
                         parm = fullpath & "|" & url(x) & "|shrink"
-                    ElseIf x = 4 Then
+                    ElseIf x = 5 Then
                         parm = fullpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/")
                     Else
                         parm = fullpath & "|" & url(x)
@@ -1288,6 +1300,7 @@ Public Class DVDArt_GUI
         tbc_movies.TabPages.Remove(tp_Movie_DVDArt)
         tbc_movies.TabPages.Remove(tp_Movie_ClearArt)
         tbc_movies.TabPages.Remove(tp_Movie_ClearLogo)
+        tbc_movies.TabPages.Remove(tp_Movie_Banner)
         tbc_movies.TabPages.Remove(tp_Movie_Backdrop)
         tbc_movies.TabPages.Remove(tp_Movie_Cover)
         tbc_series.TabPages.Remove(tp_Serie_ClearArt)
@@ -1473,11 +1486,11 @@ Public Class DVDArt_GUI
                     missing = False
 
                     For y = 0 To UBound(checked, 2)
-                        If y < 3 Then
+                        If y < 4 Then
                             fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & mymovies(i).imdb_id & ".png")
-                        ElseIf y = 3 Then
-                            fileexist(y) = mymovies(i).backdrop <> String.Empty
                         ElseIf y = 4 Then
+                            fileexist(y) = mymovies(i).backdrop <> String.Empty
+                        ElseIf y = 5 Then
                             fileexist(y) = mymovies(i).cover <> String.Empty
                         End If
                         If Not found Then found = checked(0, y) And fileexist(y)
@@ -2224,6 +2237,7 @@ Public Class DVDArt_GUI
         lv_artist_clearlogo.Items.Clear()
         lv_movie_clearart.Items.Clear()
         lv_movie_clearlogo.Items.Clear()
+        lv_movie_banner.Items.Clear()
         lv_movie_dvdart.Items.Clear()
         lv_movie_backdrop.Items.Clear()
         lv_movie_cover.Items.Clear()
@@ -2232,6 +2246,7 @@ Public Class DVDArt_GUI
 
         lv_url_clearart.Items.Clear()
         lv_url_clearlogo.Items.Clear()
+        lv_url_banner.Items.Clear()
         lv_url_dvdart.Items.Clear()
         lv_url_backdrop.Items.Clear()
         lv_url_cover.Items.Clear()
@@ -2253,26 +2268,26 @@ Public Class DVDArt_GUI
             If current_imdb_id = lv_movies.FocusedItem.SubItems.Item(1).Text Then Exit Sub
 
             Dim thumbpath As String = Nothing
-            Dim url(4) As String
+            Dim url(5) As String
 
             clearLists()
 
-            url = {pb_movie_dvdart.Tag, pb_movie_clearart.Tag, pb_movie_clearlogo.Tag, pb_movie_backdrop.Tag, pb_movie_cover.Tag}
+            url = {pb_movie_dvdart.Tag, pb_movie_clearart.Tag, pb_movie_clearlogo.Tag, pb_movie_banner.Tag, pb_movie_backdrop.Tag, pb_movie_cover.Tag}
 
-            If url(0) <> Nothing Or url(1) <> Nothing Or url(2) <> Nothing Or url(3) <> Nothing Or url(4) <> Nothing Then
+            If url(0) <> Nothing Or url(1) <> Nothing Or url(2) <> Nothing Or url(3) <> Nothing Or url(4) <> Nothing Or url(5) <> Nothing Then
                 FTV_api_connector(current_imdb_id, url, "movies", "selected")
             End If
 
             current_imdb_id = lv_movies.FocusedItem.SubItems.Item(1).Text
             l_imdb_id.Text = current_imdb_id
 
-            For x = 0 To 4
+            For x = 0 To 5
 
                 If checked(0, x) Then
 
-                    If x < 3 Then
+                    If x < 4 Then
                         thumbpath = thumbs & DVDArt_Common.folder(0, x, 1) & current_imdb_id & ".png"
-                    ElseIf x = 3 Then
+                    ElseIf x = 4 Then
                         thumbpath = lv_movies.FocusedItem.SubItems.Item(2).Text
 
                         If IO.Path.GetFileNameWithoutExtension(thumbpath) <> current_imdb_id Then
@@ -2280,15 +2295,15 @@ Public Class DVDArt_GUI
                             Try
                                 path = IO.Path.GetDirectoryName(thumbpath) & "\"
                             Catch ex As Exception
-                                path = thumbs & DVDArt_Common.folder(0, 3, 1)
+                                path = thumbs & DVDArt_Common.folder(0, 4, 1)
                             End Try
 
                             If IO.File.Exists(path & current_imdb_id & ".jpg") Then
                                 thumbpath = path & current_imdb_id & ".jpg"
-                                lv_movies.FocusedItem.SubItems.Item(2).Text = thumbpath
+                                lv_movies.FocusedItem.SubItems.Item(3).Text = thumbpath
                             End If
                         End If
-                    ElseIf x = 4 Then
+                    ElseIf x = 5 Then
                         thumbpath = lv_movies.FocusedItem.SubItems.Item(3).Text
 
                         If IO.Path.GetFileNameWithoutExtension(thumbpath) <> current_imdb_id Then
@@ -2296,7 +2311,7 @@ Public Class DVDArt_GUI
                             Try
                                 path = IO.Path.GetDirectoryName(thumbpath) & "\"
                             Catch ex As Exception
-                                path = thumbs & DVDArt_Common.folder(0, 4, 1)
+                                path = thumbs & DVDArt_Common.folder(0, 5, 1)
                             End Try
 
                             If IO.File.Exists(path & current_imdb_id & ".jpg") Then
@@ -2328,9 +2343,12 @@ Public Class DVDArt_GUI
                         DVDArt_Common.load_image(pb_movie_clearlogo, thumbpath)
                         b_movie_deletelogo.Visible = (pb_movie_clearlogo.Image IsNot Nothing)
                     ElseIf x = 3 Then
+                        DVDArt_Common.load_image(pb_movie_banner, thumbpath)
+                        b_movie_deletebanner.Visible = (pb_movie_banner.Image IsNot Nothing)
+                    ElseIf x = 4 Then
                         DVDArt_Common.load_image(pb_movie_backdrop, thumbpath)
                         b_movie_deletebackdrop.Visible = (pb_movie_backdrop.Image IsNot Nothing)
-                    ElseIf x = 4 Then
+                    ElseIf x = 5 Then
                         DVDArt_Common.load_image(pb_movie_cover, thumbpath)
                         b_movie_deletecover.Visible = (pb_movie_cover.Image IsNot Nothing)
                     End If
@@ -3047,6 +3065,22 @@ Public Class DVDArt_GUI
 
     End Sub
 
+    Private Sub lv_movie_banner_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_movie_banner.SelectedIndexChanged
+
+        For Each item In lv_movie_banner.SelectedItems
+
+            Dim itemkey As String = item.ImageKey
+            Dim image As Image = il_banner.Images(itemkey)
+
+            pb_movie_banner.Image = image
+            pb_movie_banner.Tag = lv_url_banner.Items(item.index).Text
+
+        Next
+
+        tbc_main.Tag = "movies"
+
+    End Sub
+
     Private Sub lv_movie_backdrop_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_movie_backdrop.SelectedIndexChanged
 
         For Each item In lv_movie_backdrop.SelectedItems
@@ -3185,6 +3219,7 @@ Public Class DVDArt_GUI
             XMLwriter.SetValueAsBool("Scraper Movies", "clearlogo", cb_ClearLogo_movies.Checked)
             XMLwriter.SetValueAsBool("Scraper Movies", "backdrop", cb_Backdrop_movies.Checked)
             XMLwriter.SetValueAsBool("Scraper Movies", "cover", cb_Cover_movies.Checked)
+            XMLwriter.SetValueAsBool("Scraper Movies", "banner", cb_Banner_movies.Checked)
             XMLwriter.SetValue("Scraper Movies", "template", template_type)
             XMLwriter.SetValue("Scraper Movies", "path", tb_movie_path.Text)
             XMLwriter.SetValueAsBool("Scraper Movies", "person", cb_persons.Checked)
@@ -3230,6 +3265,7 @@ Public Class DVDArt_GUI
             cb_ClearLogo_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
             cb_Backdrop_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "backdrop", False)
             cb_Cover_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "cover", False)
+            cb_Banner_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "banner", False)
             tb_movie_path.Text = XMLreader.GetValueAsString("Scraper Movies", "path", thumbs & "\MovingPictures")
             cb_persons.Checked = XMLreader.GetValueAsBool("Scraper Movies", "person", False)
             tb_person_path.Text = XMLreader.GetValueAsString("Scraper Movies", "person path", thumbs & "\Actors")
@@ -3342,14 +3378,16 @@ Public Class DVDArt_GUI
             If tbc_movies.TabCount > 0 Then
                 If Not tbc_movies.TabPages.Contains(tp_Movie_DVDArt) And Not tbc_movies.TabPages.Contains(tp_Movie_ClearArt) Then
                     tbc_movies.TabPages.Insert(0, tp_Movie_ClearLogo)
-                ElseIf tbc_movies.TabPages.Contains(tp_Movie_Backdrop) Then
-                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_Backdrop), tp_Movie_ClearLogo)
-                ElseIf tbc_movies.TabPages.Contains(tp_Movie_Cover) And Not tbc_movies.TabPages.Contains(tp_Movie_Backdrop) Then
-                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_Cover), tp_Movie_ClearLogo)
                 ElseIf tbc_movies.TabPages.Contains(tp_Movie_ClearArt) Then
                     tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_ClearArt) + 1, tp_Movie_ClearLogo)
                 ElseIf tbc_movies.TabPages.Contains(tp_Movie_DVDArt) Then
                     tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_DVDArt) + 1, tp_Movie_ClearLogo)
+                ElseIf tbc_movies.TabPages.Contains(tp_Movie_Banner) Then
+                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_Banner), tp_Movie_ClearLogo)
+                ElseIf tbc_movies.TabPages.Contains(tp_Movie_Backdrop) Then
+                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_Backdrop), tp_Movie_ClearLogo)
+                ElseIf tbc_movies.TabPages.Contains(tp_Movie_Cover) Then
+                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_Cover), tp_Movie_ClearLogo)
                 End If
             Else
                 tbc_movies.TabPages.Add(tp_Movie_ClearLogo)
@@ -3360,9 +3398,40 @@ Public Class DVDArt_GUI
 
     End Sub
 
+    Private Sub cb_Banner_movies_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cb_Banner_movies.CheckedChanged
+
+        checked(0, 3) = cb_Banner_movies.Checked
+
+        If cb_Banner_movies.Checked = True Then
+            If tbc_movies.TabPages.Contains(tp_Movie_Banner) Then tbc_movies.TabPages.Remove(tp_Movie_Banner)
+
+            If tbc_movies.TabCount > 0 Then
+
+                If Not tbc_movies.TabPages.Contains(tp_Movie_DVDArt) And Not tbc_movies.TabPages.Contains(tp_Movie_ClearArt) And Not tbc_movies.TabPages.Contains(tp_Movie_ClearLogo) Then
+                    tbc_movies.TabPages.Insert(0, tp_Movie_Banner)
+                ElseIf tbc_movies.TabPages.Contains(tp_Movie_Backdrop) Then
+                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_Backdrop), tp_Movie_Banner)
+                ElseIf tbc_movies.TabPages.Contains(tp_Movie_Cover) And Not tbc_movies.TabPages.Contains(tp_Movie_Backdrop) Then
+                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_Cover), tp_Movie_Banner)
+                ElseIf tbc_movies.TabPages.Contains(tp_Movie_ClearLogo) Then
+                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_ClearLogo) + 1, tp_Movie_Banner)
+                ElseIf tbc_movies.TabPages.Contains(tp_Movie_ClearArt) Then
+                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_ClearArt) + 1, tp_Movie_Banner)
+                ElseIf tbc_movies.TabPages.Contains(tp_Movie_DVDArt) Then
+                    tbc_movies.TabPages.Insert(tbc_movies.TabPages.IndexOf(tp_Movie_DVDArt) + 1, tp_Movie_Banner)
+                End If
+            Else
+                tbc_movies.TabPages.Add(tp_Movie_Banner)
+            End If
+        Else
+            tbc_movies.TabPages.Remove(tp_Movie_Banner)
+        End If
+
+    End Sub
+
     Private Sub cb_Backdrop_movies_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_Backdrop_movies.CheckedChanged
 
-        checked(0, 3) = cb_Backdrop_movies.Checked
+        checked(0, 4) = cb_Backdrop_movies.Checked
 
         If cb_Backdrop_movies.Checked = True Then
             If tbc_movies.TabPages.Contains(tp_Movie_Backdrop) Then tbc_movies.TabPages.Remove(tp_Movie_Backdrop)
@@ -3380,7 +3449,7 @@ Public Class DVDArt_GUI
 
     Private Sub cb_Cover_movies_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_Cover_movies.CheckedChanged
 
-        checked(0, 4) = cb_Cover_movies.Checked
+        checked(0, 5) = cb_Cover_movies.Checked
 
         If cb_Cover_movies.Checked = True Then
             If tbc_movies.TabPages.Contains(tp_Movie_Cover) Then tbc_movies.TabPages.Remove(tp_Movie_Cover)
@@ -3536,9 +3605,19 @@ Public Class DVDArt_GUI
         b_movie_delete.Visible = False
     End Sub
 
+    Private Sub b_movie_deletebanner_Click(sender As Object, e As EventArgs) Handles b_movie_deletebanner.Click
+        If lv_movies.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 3, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 3, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 3, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 3, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            pb_movie_banner.Image = Nothing
+            pb_movie_banner.Tag = Nothing
+            b_movie_deletebanner.Visible = False
+        End If
+    End Sub
+
     Private Sub b_movie_deletebackdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deletebackdrop.Click
         If IO.File.Exists(lv_movies.SelectedItems(0).SubItems.Item(2).Text) Then FileSystem.DeleteFile(lv_movies.SelectedItems(0).SubItems.Item(2).Text)
-        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 3, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text)) Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 3, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text))
+        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text)) Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text))
         pb_movie_backdrop.Image = Nothing
         pb_movie_backdrop.Tag = Nothing
         b_movie_deletebackdrop.Visible = False
@@ -3548,7 +3627,7 @@ Public Class DVDArt_GUI
 
     Private Sub b_movie_deletecover_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deletecover.Click
         If IO.File.Exists(lv_movies.SelectedItems(0).SubItems.Item(3).Text) Then FileSystem.DeleteFile(lv_movies.SelectedItems(0).SubItems.Item(3).Text)
-        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text)) Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text))
+        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 5, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text)) Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 5, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text))
         pb_movie_cover.Image = Nothing
         pb_movie_cover.Tag = Nothing
         b_movie_deletecover.Visible = False
@@ -3699,6 +3778,31 @@ Public Class DVDArt_GUI
         Process.Start(url)
     End Sub
 
+    Private Sub pb_donate_Click(sender As Object, e As EventArgs) Handles pb_donate.Click
+        Dim url As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=7MDF77KKTGKAJ&lc=MT&item_name=DVDArt%20plugin%20support&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
+        Process.Start(url)
+    End Sub
+
+    Private Sub ll_developer_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles ll_developer.LinkClicked
+        Dim url As String = "http://www.team-mediaportal.com/extensions/owner/m3rcury"
+        Process.Start(url)
+    End Sub
+
+    Private Sub ll_project_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles ll_project.LinkClicked
+        Dim url As String = "http://www.team-mediaportal.com/extensions/movies-videos/dvdart-plugin/visit"
+        Process.Start(url)
+    End Sub
+
+    Private Sub ll_forum_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles ll_forum.LinkClicked
+        Dim url As String = "http://forum.team-mediaportal.com/threads/dvdart-plugin-that-scrapes-fanart-tv-for-dvd-cover-art-of-you-movie-collection-in-movingpictures.112847/"
+        Process.Start(url)
+    End Sub
+
+    Private Sub ll_wiki_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles ll_wiki.LinkClicked
+        Dim url As String = "http://code.google.com/p/dvdart/w/list"
+        Process.Start(url)
+    End Sub
+
     Private Sub DVDArt_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
 
         If Err.Number = 0 Then
@@ -3710,7 +3814,7 @@ Public Class DVDArt_GUI
             If tbc_main.Tag <> Nothing Then
 
                 If tbc_main.Tag = "movies" Then
-                    url = {pb_movie_dvdart.Tag, pb_movie_clearart.Tag, pb_movie_clearlogo.Tag, pb_movie_backdrop.Tag, pb_movie_cover.Tag}
+                    url = {pb_movie_dvdart.Tag, pb_movie_clearart.Tag, pb_movie_clearlogo.Tag, pb_movie_banner.Tag, pb_movie_backdrop.Tag, pb_movie_cover.Tag}
                 ElseIf tbc_main.Tag = "tv" Then
                     url = {Nothing, pb_serie_clearart.Tag, pb_serie_clearlogo.Tag, Nothing, Nothing}
                 ElseIf tbc_main.Tag = "music" Then
@@ -3766,6 +3870,9 @@ Public Class DVDArt_GUI
 
             'pre Initialize
             DVDArt_Common.preInitialize()
+
+            'initialize about tab version
+            l_version.Text = DVDArt_Common._version
 
             'show splashscreen
             Dim splash As New DVDArt_SplashScreen

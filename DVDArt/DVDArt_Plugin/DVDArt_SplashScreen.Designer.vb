@@ -34,19 +34,19 @@ Partial Class DVDArt_SplashScreen
         '
         Me.l_plugin.AutoSize = True
         Me.l_plugin.BackColor = System.Drawing.Color.White
-        Me.l_plugin.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.l_plugin.Font = New System.Drawing.Font("Verdana", 27.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.l_plugin.Location = New System.Drawing.Point(148, 13)
         Me.l_plugin.Name = "l_plugin"
-        Me.l_plugin.Size = New System.Drawing.Size(247, 37)
+        Me.l_plugin.Size = New System.Drawing.Size(318, 45)
         Me.l_plugin.TabIndex = 1
-        Me.l_plugin.Text = "DVDArt_Plugin"
+        Me.l_plugin.Text = "DVDArt Plugin"
         Me.l_plugin.UseWaitCursor = True
         '
         'l_version
         '
         Me.l_version.AutoSize = True
         Me.l_version.BackColor = System.Drawing.Color.White
-        Me.l_version.Location = New System.Drawing.Point(155, 54)
+        Me.l_version.Location = New System.Drawing.Point(156, 56)
         Me.l_version.Name = "l_version"
         Me.l_version.Size = New System.Drawing.Size(41, 13)
         Me.l_version.TabIndex = 2
