@@ -82,9 +82,9 @@ In order to facilitate skin file modding, a number of property fields have been 
       <description>Movie Banner</description>
       <type>image</type>
       <id>98</id>
-      <posX>1175</posX>
-      <posY>700</posY>
-      <width>500</width>
+      <posX>1100</posX>
+      <posY>660</posY>
+      <width>800</width>
       <keepaspectratio>yes</keepaspectratio>
       <texture>#MovingPictures.Banner\#MovingPictures.SelectedMovie.imdb_id.png</texture>
       <visible>string.contains(#Play.Current.Thumb,MovingPictures)</visible>
