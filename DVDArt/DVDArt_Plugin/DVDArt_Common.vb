@@ -1111,6 +1111,9 @@ Public Class DVDArt_Common
 
             If downstring <> Nothing And InStr(downstring, artist) > 0 Then
                 Dim images As New List(Of String)
+                Dim start As Integer = InStr(downstring, """profile_path"":")
+
+                If start > 0 Then downstring = Right(downstring, Len(downstring) - start + 1)
 
                 images.AddRange(Split(downstring, """profile_path"":"))
                 downstring = Nothing
@@ -1440,7 +1443,7 @@ Public Class DVDArt_Common
 
             End If
 
-                logStats("DVDArt: download thread complete for [" & parm & "]", "DEBUG")
+            logStats("DVDArt: download thread complete for [" & parm & "]", "DEBUG")
 
         Catch ex As Exception
             logStats("DVDArt: Error downloading with exception " & ex.Message, "ERROR")
@@ -1457,7 +1460,7 @@ Public Class DVDArt_Common
     Public Shared Function download(ByVal thumbs As String, ByVal folder(,,) As String, ByVal id As String, ByVal overwrite As Boolean, _
                                     ByVal try2download As Array, ByVal type As String, Optional ByVal language As String = "##") As Array
 
-        Dim url(9, 0) As String
+        Dim url As Array
         Dim found(5) As Boolean
         Dim parm As Object = Nothing
         Dim y As Integer
@@ -2074,7 +2077,7 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.2.8"
+        _version = "v1.0.2.9"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 

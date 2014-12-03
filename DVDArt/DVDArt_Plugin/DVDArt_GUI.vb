@@ -279,7 +279,7 @@ Public Class DVDArt_GUI
                         Next
 
                         If addedmissing Then
-                            li_missing.SubItems.Add(" ")
+                            'li_missing.SubItems.Add(" ")
                             li_missing.SubItems.Add(lv_import.Items.Item(x).SubItems.Item(1).Text)
                         Else
                             li_missing.SubItems.RemoveAt(li_missing.Index)
