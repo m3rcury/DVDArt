@@ -10,11 +10,60 @@ Imports System.IO
 Imports System.Text
 Imports System.Threading
 Imports System.Reflection
+Imports System.Security.Cryptography
+
+Imports Newtonsoft.Json
+imports Newtonsoft.Json.Serialization
 
 Imports MyFilmsPlugin.DataBase
 Imports MyFilmsPlugin.MyFilms.Utils
 
 Public Class DVDArt_Common
+
+    Public Class json_detail
+        Public Property url As String
+        Public Property lang As String
+        Public Property disc_type As String
+    End Class
+
+    Public Class json_album_detail
+        Public Property cdart As List(Of json_detail)
+    End Class
+
+    Public Class json_albums
+        Public Property album As Dictionary(Of json_album_detail, json_album_detail)
+    End Class
+
+    Public Class fanarttv_movie_JSON
+        Public Property name As String
+        Public Property imdb_id As String
+        Public Property moviedisc As List(Of json_detail)
+        Public Property movieart As List(Of json_detail)
+        Public Property hdmovieclearart As List(Of json_detail)
+        Public Property movielogo As List(Of json_detail)
+        Public Property hdmovielogo As List(Of json_detail)
+        Public Property moviebanner As List(Of json_detail)
+        Public Property backdrops As List(Of json_detail)
+        Public Property posters As List(Of json_detail)
+    End Class
+
+    Public Class fanarttv_tv_JSON
+        Public Property name As String
+        Public Property tmdb_id As String
+        Public Property hdclearart As List(Of json_detail)
+        Public Property hdtvlogo As List(Of json_detail)
+        Public Property clearart As List(Of json_detail)
+        Public Property clearlogo As List(Of json_detail)
+    End Class
+
+    Public Class fanarttv_music_JSON
+        Public Property name As String
+        Public Property mbid_id As String
+        Public Property albums As json_albums
+        Public Property musicbanner As List(Of json_detail)
+        Public Property hdmusiclogo As List(Of json_detail)
+        Public Property musiclogo As List(Of json_detail)
+    End Class
 
     Public Structure Movies
         Dim imdb_id As String
@@ -701,270 +750,154 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Function parse(ByVal jsonresponse As String, ByVal type As String, ByVal id As String, Optional ByVal language As String = "##") As Array
+    Private Shared Function populate_details(ByVal list As Object, ByVal language As String, ByRef details(,) As String, ByVal x As Integer, ByVal y As Integer, ByVal max_download As Integer) As Integer
 
-        Dim parseHD_l As String = Nothing
-        Dim parseHD_c As String = Nothing
-        Dim parse_bd As String = Nothing
-        Dim parse_ps As String = Nothing
-        Dim details(11, 0), parsestring(5), keyword(9) As String
-        Dim starting(5), startHD_l, startHD_c, start_bd, start_ps, startp, endp, len, x, y, i, j As Integer
-        Dim invalidimage As String = "http://assets.fanart.tv/fanart/movies/0/movieposter/-5278db34067a7.jpg"
+        If list Is Nothing Then Return x
 
-        logStats("DVDArt: " & type & " JSON parsing for " & id & " started.", "LOG")
+        For Each artwork As json_detail In list
+            If language <> "##" Then
+                If artwork.lang = LCase(language) Or artwork.lang = "en" Or artwork.lang = "00" Or artwork.lang = String.Empty Or artwork.lang = Nothing Then
 
-        If type = "movies" Then
-            keyword = {"""hdmovielogo"":", """hdmovieclearart"":", """backdrops"":", "posters"":", """moviedisc"":", """movieart"":", """movielogo"":", """moviebanner"":", """moviebackground"":", "movieposter"":"}
-        ElseIf type = "tv" Then
-            keyword = {"""hdtvlogo"":", """hdclearart"":", "**n/a**", "**n/a**", "**n/a**", """clearart"":", """clearlogo"":", "**n/a**", "**n/a**", "**n/a**"}
-        ElseIf type = "music" Then
-            keyword = {"""hdmusiclogo"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**", """musicbanner"":", """musiclogo"":", "**n/a**", "**n/a**", "**n/a**"}
-        ElseIf type = "music/albums" Then
-            keyword = {"**n/a**", "**n/a**", "**n/a**", "**n/a**", """cdart"":", "**n/a**", "**n/a**", "**n/a**", "**n/a**", "**n/a**"}
-        End If
+                    x += 1
 
-        ' check if there are HD logos and if yes, store in a temporary variable to later on merge with movielogos
+                    If x > max_download Then Exit For
 
-        startHD_l = InStr(jsonresponse, keyword(0))
-        startHD_c = InStr(jsonresponse, keyword(1))
-        start_bd = InStr(jsonresponse, keyword(2))
-        start_ps = InStr(jsonresponse, keyword(3))
+                    If UBound(details, 2) < x Then ReDim Preserve details(11, x)
 
-        If startHD_l > 0 Then
-            parseHD_l = Mid(jsonresponse, startHD_l, InStr(startHD_l, jsonresponse, "]") - startHD_l)
-        End If
+                    details(y, x) = artwork.url
 
-        If startHD_c > 0 Then
-            parseHD_c = Mid(jsonresponse, startHD_c, InStr(startHD_c, jsonresponse, "]") - startHD_c)
-        End If
+                    If artwork.disc_type <> Nothing Then
+                        details(y + 1, x) = String.Format("LANG:{0} - DISC TYPE:{1}", UCase(artwork.lang), UCase(artwork.disc_type))
+                    ElseIf InStr(artwork.url, "/hd") > 0 Then
+                        details(y + 1, x) = String.Format("HD - LANG:{0}", UCase(artwork.lang))
+                    ElseIf artwork.lang <> Nothing Then
+                        details(y + 1, x) = String.Format("LANG:{0}", UCase(artwork.lang))
+                    End If
 
-        If start_bd > 0 Then
-            parse_bd = Mid(jsonresponse, start_bd, InStr(start_bd, jsonresponse, "]") - start_bd)
-        End If
-
-        If start_ps > 0 Then
-            parse_ps = Mid(jsonresponse, start_ps, InStr(start_ps, jsonresponse, "]") - start_ps)
-        End If
-
-        ' find the starting place of the respective sections
-
-        For i = 0 To starting.Count - 1
-            starting(i) = InStr(jsonresponse, keyword(i + 4))
-        Next
-
-        ' split the jsonresponse to the respective sections
-
-        For i = 0 To parsestring.Count - 1
-            If starting(i) > 0 Then
-                parsestring(i) = Mid(jsonresponse, starting(i), InStr(starting(i), jsonresponse, "]") - starting(i)).Replace(invalidimage, "")
+                End If
             End If
         Next
 
-        ' if there are HD images, merge with SD images
-
-        If startHD_l > 0 Then
-            parsestring(2) = parseHD_l.Replace(keyword(0), keyword(6)) & Trim(parsestring(2))
-            If starting(2) = 0 Then starting(2) = startHD_l
-        End If
-
-        If startHD_c > 0 Then
-            parsestring(1) = parseHD_c.Replace(keyword(1), keyword(5)) & Trim(parsestring(1))
-            If starting(1) = 0 Then starting(1) = startHD_c
-        End If
-
-        If start_bd > 0 Then
-            parsestring(4) = parse_bd.Replace(keyword(2), keyword(8)) & Trim(parsestring(4))
-            If starting(4) = 0 Then starting(4) = start_bd
-        End If
-
-        If start_ps > 0 Then
-            parsestring(5) = parse_ps.Replace(keyword(3), keyword(9)) & Trim(parsestring(5))
-            If starting(5) = 0 Then starting(5) = start_ps
-        End If
-
-        For i = 0 To starting.Count - 1
-
-            If starting(i) > 0 Then
-
-                If x > y Then y = x
-
-                x = 0
-                j = i * 2
-                startp = 1
-
-                Do Until startp = 0
-
-                    startp = InStr(startp, parsestring(i), "id"":")
-
-                    If startp > 0 Then
-
-                        startp = InStr(startp, parsestring(i), "url"":")
-
-                        If startp > 0 Then
-
-                            If x >= y Then ReDim Preserve details(11, x)
-
-                            startp += 6
-                            endp = InStr(startp, parsestring(i), """,")
-                            len = endp - startp
-
-                            'url
-                            details(j, x) = Mid(parsestring(i), startp, len).Replace("\", "")
-
-                            startp = InStr(endp, parsestring(i), "lang"":")
-
-                            If startp > 0 Then
-
-                                endp = InStr(startp, parsestring(i), """,")
-                                len = endp - startp
-
-                                'language
-                                If InStr(details(j, x), "/hd") Then
-                                    details(j + 1, x) = "HD - " & UCase(Mid(parsestring(i), startp, len).Replace("""", ""))
-                                Else
-                                    details(j + 1, x) = UCase(Mid(parsestring(i), startp, len).Replace("""", ""))
-                                End If
-
-                                startp = InStr(endp, parsestring(i), "disc_type"":")
-
-                                If startp > 0 Then
-
-                                    endp = InStr(startp, parsestring(i), """}")
-                                    len = endp - startp
-
-                                    'disk type
-                                    details(j + 1, x) = Trim(details(j + 1, x)) & " - " & UCase(Mid(parsestring(i), startp, len).Replace("""", ""))
-                                    details(j + 1, x) = details(j + 1, x).Replace("_", " ")
-
-                                End If
-
-                            End If
-
-                            x += 1
-
-                            startp = endp
-
-                        Else
-                            Exit Do
-                        End If
-                    Else
-                        Exit Do
-                    End If
-
-                Loop
-
-            End If
-
-        Next
-
-        Dim returndetails(UBound(details, 1), 0)
-
-        If language <> "##" Then
-
-            Dim size_array As Boolean
-
-            j = -1
-
-            For x = 0 To UBound(details, 2)
-
-                size_array = True
-
-                For y = 1 To UBound(details, 1) Step 2
-
-                    If InStr(details(y, x), "LANG:" & language) > 0 Or InStr(details(y, x), "LANG:EN") > 0 Or InStr(details(y, x), "LANG:00") > 0 Or (details(y - 1, x) <> Nothing And details(y, x) = Nothing) Then
-
-                        If size_array Then
-                            j += 1
-                            ReDim Preserve returndetails(UBound(details, 1), j)
-                            size_array = False
-                        End If
-
-                        returndetails(y - 1, j) = details(y - 1, x)
-                        returndetails(y, j) = details(y, x)
-
-                    End If
-
-                Next
-            Next
-
-        Else
-            returndetails = details
-        End If
-
-        logStats("DVDArt: " & type & " JSON parsing for " & id & " complete.", "LOG")
-
-        Return returndetails
+        Return x
 
     End Function
 
-    Public Shared Function parse_music(ByVal jsonresponse As String, ByVal album As String) As Array
+    Public Shared Function parse(ByVal jsonresponse As Object, ByVal type As String, ByVal id As String, ByVal max_download As Integer, Optional ByVal language As String = "##") As Array
 
-        Dim details(5, 0), parsestring As String
-        Dim startp, endp, len, x, y, j As Integer
+        logStats("DVDArt: " & type & " JSON parsing for " & id & " started.", "LOG")
 
-        ' find the starting place of the respective sections
+        Dim details(11, 0) As String
 
-        startp = InStr(jsonresponse, """cdart"":")
+        If jsonresponse IsNot Nothing Then
 
-        If startp > 0 Then
+            If type = "movies" Then
 
-            If x > y Then y = x
+                populate_details(jsonresponse.moviedisc, language, details, -1, 0, max_download)
+                populate_details(jsonresponse.movieart, language, details, populate_details(jsonresponse.hdmovieclearart, language, details, -1, 2, max_download), 2, max_download)
+                populate_details(jsonresponse.movielogo, language, details, populate_details(jsonresponse.hdmovielogo, language, details, -1, 4, max_download), 4, max_download)
+                populate_details(jsonresponse.moviebanner, language, details, -1, 6, max_download)
+                populate_details(jsonresponse.backdrops, language, details, -1, 8, max_download)
+                populate_details(jsonresponse.posters, language, details, -1, 10, max_download)
 
-            x = 0
-            j = 0
+            ElseIf type = "tv" Then
 
-            Do Until startp = 0
+                populate_details(jsonresponse.clearart, language, details, populate_details(jsonresponse.hdclearart, language, details, -1, 2, max_download), 2, max_download)
+                populate_details(jsonresponse.clearlogo, language, details, populate_details(jsonresponse.hdtvlogo, language, details, -1, 4, max_download), 4, max_download)
 
-                endp = InStr(startp, jsonresponse, "]") - startp + 1
-                parsestring = Mid(jsonresponse, startp, endp)
-                jsonresponse = Right(jsonresponse, Microsoft.VisualBasic.Len(jsonresponse) - startp + 1)
+            ElseIf type = "music" Then
 
-                startp = InStr(parsestring, "id"":")
+                populate_details(jsonresponse.banner, language, details, -1, 2, max_download)
+                populate_details(jsonresponse.musiclogo, language, details, populate_details(jsonresponse.hdmusiclogo, language, details, -1, 4, max_download), 4, max_download)
 
-                If startp > 0 Then
-
-                    startp = InStr(startp, parsestring, "url"":")
-
-                    If startp > 0 Then
-
-                        startp += 6
-                        endp = InStr(startp, parsestring, """,")
-                        len = endp - startp
-
-                        'url
-                        If Mid(parsestring, startp, len).Contains("/cdart/" & album) Then
-
-                            If x >= y Then ReDim Preserve details(5, x)
-
-                            details(j, x) = Mid(parsestring, startp, len).Replace("\", "")
-
-                            x += 1
-                        End If
-
-                        startp = InStr(InStr(jsonresponse, "]"), jsonresponse, "cdart"":")
-
-                    Else
-                        Exit Do
-                    End If
-                Else
-                    Exit Do
-                End If
-
-            Loop
+            End If
 
         End If
+
+        logStats("DVDArt: " & type & " JSON parsing for " & id & " complete.", "LOG")
 
         Return details
 
     End Function
 
-    Public Shared Function JSON_request(ByVal id As String, ByVal type As String) As String
+    Public Shared Function parse_music(ByVal jsonresponse As Object, ByVal album As String, ByVal max_download As Integer) As Array
 
-        Dim downloaded As String = Fanart_tv(id, type)
+        logStats("DVDArt: Music JSON parsing for " & album & " started.", "LOG")
 
-        If type = "movies" Then downloaded += theMovieDB(id)
+        Dim details(11, 0) As String
 
-        Return downloaded
+        If jsonresponse IsNot Nothing Then
+
+            Dim x As Integer = -1
+
+            For Each cdart As json_detail In jsonresponse.albums.cdart
+
+                If cdart.url.Contains("/cdart/" & album) Then
+                    x += 1
+
+                    If x > max_download Then Exit For
+
+                    If UBound(details, 2) < x Then ReDim Preserve details(11, x)
+
+                    details(0, x) = cdart.url
+                End If
+
+            Next
+
+        End If
+
+        logStats("DVDArt: Music JSON parsing for " & album & " completed.", "LOG")
+
+        Return details
+
+    End Function
+
+    Public Shared Function JSON_request(ByVal id As String, ByVal type As String) As Object
+
+        Dim json As Object = Nothing
+
+        Try
+            Dim downloaded As String = Fanart_tv(id, type)
+
+            If type = "movies" Then
+                If downloaded IsNot Nothing Then
+                    Dim replacement As Array = {"movieposter", "posters", "moviebackground", "backdrops"}
+                    For x As Integer = 0 To UBound(replacement) - 1 Step 2
+                        downloaded = downloaded.Replace(replacement(x), replacement(x + 1))
+                    Next
+
+                    json = JsonConvert.DeserializeObject(Of fanarttv_movie_JSON)(downloaded)
+                End If
+
+                downloaded = theMovieDB(id)
+
+                Dim json2 As Object = JsonConvert.DeserializeObject(Of fanarttv_movie_JSON)(downloaded)
+
+                If json2 IsNot Nothing Then
+                    If json.backdrops IsNot Nothing Then
+                        json.backdrops.AddRange(json2.backdrops)
+                    Else
+                        json.backdrops = json2.backdrops
+                    End If
+
+                    If json.posters IsNot Nothing Then
+                        json.posters.AddRange(json2.posters)
+                    Else
+                        json.posters = json2.posters
+                    End If
+                End If
+            ElseIf type = "tv" Then
+                json = JsonConvert.DeserializeObject(Of fanarttv_tv_JSON)(downloaded)
+            ElseIf type = "music" Or type = "music/albums" Then
+                json = JsonConvert.DeserializeObject(Of fanarttv_music_JSON)(downloaded)
+            End If
+        Catch ex As Exception
+            logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+        End Try
+
+        'If type = "movies" Then downloaded += htbackdrops(id)
+        'If type = "tv" Then downloaded += allcdcovers(id)
+
+        Return json
 
     End Function
 
@@ -972,57 +905,81 @@ Public Class DVDArt_Common
 
         Dim apikey As String = "bfd6e4e0d4e71237f784b70fc43f8269"
         Dim personalAPIkey As String = p_personalAPIkey
-
-        'Dim url As String = "http://api.fanart.tv/webservice/" & type & "/" & apikey & "/" & id & "/json/all/1/" & nbrimages
         Dim url As String = "http://webservice.fanart.tv/v3/" & type & "/" & id & "?api_key=" & apikey
+        Dim downstring As String = Nothing
+        Dim tries As Integer
 
         If personalAPIkey <> Nothing Then url = url & "&client_key=" & personalAPIkey
 
-        Try
-            Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
-            WebClient.Accept = "application/json"
-            WebClient.Timeout = timeout
+        Do Until tries = 4
 
-            Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
-            Dim receiveStream As Stream = response.GetResponseStream()
-            Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
-            Dim downstring As String = readStream.ReadToEnd()
-            response.Close()
-            readStream.Close()
+            Try
+                Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
+                WebClient.Accept = "application/json"
+                WebClient.Timeout = timeout
 
-            Return downstring.Replace(" ", String.Empty).Replace(vbLf, String.Empty)
-        Catch ex As Exception
-            Return "null"
-        End Try
+                Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
+                Dim receiveStream As Stream = response.GetResponseStream()
+                Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
+                downstring = readStream.ReadToEnd().Replace(" ", String.Empty).Replace(vbLf, String.Empty)
+                response.Close()
+                readStream.Close()
+                readStream.Dispose()
+                Exit Do
+            Catch ex As System.Net.WebException
+                logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+                tries += 1
+            Catch ex As Exception
+                logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+                Exit Do
+            End Try
+
+        Loop
+
+        Return downstring
 
     End Function
 
     Public Shared Function theMovieDB(ByVal id As String) As String
 
         Dim apikey As String = "cc25933c4094ca50635f94574491f320"
-
         Dim url As String = "http://api.themoviedb.org/3/movie/" & id & "/images?api_key=" & apikey
+        Dim downstring As String = Nothing
+        Dim tries As Integer
 
-        Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
-        WebClient.Accept = "application/json"
-        WebClient.Timeout = timeout
+        Do Until tries = 4
 
-        Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
-        Dim receiveStream As Stream = response.GetResponseStream()
-        Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
-        Dim downstring As String = readStream.ReadToEnd()
-        response.Close()
-        readStream.Close()
+            Try
+                Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
+                WebClient.Accept = "application/json"
+                WebClient.Timeout = timeout
 
-        Return downstring.Replace("/", "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w1920/").Replace("file_path", "id"":,""url")
+                Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
+                Dim receiveStream As Stream = response.GetResponseStream()
+                Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
+                downstring = readStream.ReadToEnd().Replace("/", "http://image.tmdb.org/t/p/w1920/").Replace("file_path", "id"":,""url")
+                response.Close()
+                readStream.Close()
+                readStream.Dispose()
+                Exit Do
+            Catch ex As System.Net.WebException
+                logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+                tries += 1
+            Catch ex As Exception
+                logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+                Exit Do
+            End Try
+
+        Loop
+
+        Return downstring
 
     End Function
 
     Public Shared Function htbackdrops(ByVal id As String) As String
 
         Dim apikey As String = "02274c29b2cc898a726664b96dcc0e76"
-
-        Dim url As String = "http://htbackdrops.com/api/" & apikey & "/searchXML?" & id
+        Dim url As String = String.Format("http://htbackdrops.org/api/{0}/searchXML?keywords={1}&aid=8", apikey, id)
 
         Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
         WebClient.Accept = "application/json"
@@ -1034,8 +991,47 @@ Public Class DVDArt_Common
         Dim downstring As String = readStream.ReadToEnd()
         response.Close()
         readStream.Close()
+        readStream.Dispose()
+        Return downstring.Replace("/", "http://htbackdrops.com/api/" & apikey & "/download/").Replace("file_path", "id"":,""url").Replace(".jpg", ".jpg/fullsize")
 
-        Return downstring.Replace("/", "http://htbackdrops.com/api/" & apikey & "/download/").Replace("file_path", "id"":,""url")
+        Return Nothing
+
+    End Function
+
+    Public Shared Function allcdcovers(ByVal title As String) As String
+
+        Dim search As String = title.ToLower.Trim()
+        Dim secretkey As String = "jU4eZenaD6G5"
+        Dim md As String = CalculateMD5Hash(String.Join(secretkey, search))
+        Dim url As String = String.Format("http://www.allcdcovers.com/api/search/tincanjukebox/{0}/{1}", md, Uri.EscapeUriString(search))
+
+
+        'Dim WebClient As New System.Net.WebClient
+        'Dim freecovers_XML As String
+
+        'WebBrowser.Navigate(New Uri(url))
+
+        'freecovers_XML = WebClient.DownloadString(url)
+
+
+        Return Nothing
+
+    End Function
+
+    Private Shared Function CalculateMD5Hash(ByVal input As String) As String
+
+        ' step 1, calculate MD5 hash from input
+        Dim md5 As MD5 = md5.Create()
+        Dim hash As Byte() = md5.ComputeHash(System.Text.Encoding.ASCII.GetBytes(input))
+
+        ' step 2, convert byte array to hex string
+        Dim sb As StringBuilder = New StringBuilder()
+
+        For i As Integer = 0 To hash.Length - 1
+            sb.Append(hash(i).ToString("X2"))
+        Next
+
+        Return sb.ToString()
 
     End Function
 
@@ -1129,7 +1125,7 @@ Public Class DVDArt_Common
 
                 If downstring <> Nothing Then
                     Dim filename As String = downstring.Replace("/", "")
-                    downstring = "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w300/" & downstring
+                    downstring = "http://image.tmdb.org/t/p/w300/" & downstring
 
                     Dim ImageClient As New System.Net.WebClient
                     Dim ImageInBytes() As Byte
@@ -1468,7 +1464,7 @@ Public Class DVDArt_Common
         Dim title As String = Nothing
         Dim thumbpath As String = Nothing
         Dim fullpath As String = Nothing
-        Dim jsonresponse As String
+        Dim jsonresponse As Object
 
         Try
             y = InStr(type, "|")
@@ -1480,12 +1476,12 @@ Public Class DVDArt_Common
 
             jsonresponse = JSON_request(id, type)
 
-            If jsonresponse <> "null" Then
+            If jsonresponse IsNot Nothing Then
 
                 If Left(type, 12) <> "music/albums" Then
-                    url = parse(jsonresponse, type, id, language)
+                    url = parse(jsonresponse, type, id, 1, language)
                 Else
-                    url = parse_music(jsonresponse, LCase(title.Replace(" ", "-")))
+                    url = parse_music(jsonresponse, LCase(title.Replace(" ", "-")), 1)
                 End If
 
                 For y = 0 To UBound(found)
@@ -1791,7 +1787,8 @@ Public Class DVDArt_Common
                         tempfile = _temp & "\" & studios(x) & ".png"
                         If Not FileSystem.FileExists(tempfile) Then
                             Try
-                                url = New Uri("https://dvdart.googlecode.com/svn/trunk/Studio/logos/" + studios(x) + ".png")
+                                'url = New Uri("https://dvdart.googlecode.com/svn/trunk/Studio/logos/" + studios(x) + ".png")
+                                url = New Uri("https://raw.githubusercontent.com/m3rcury/DVDArt/master/Studio/logos/" + studios(x) + ".png")
                                 objDL.DownloadFile(url, tempfile)
                             Catch ex As Exception
                                 tempfile = ""
@@ -1829,7 +1826,8 @@ Public Class DVDArt_Common
 
                 If Not FileSystem.FileExists(certification) Then
                     Try
-                        url = New Uri("https://dvdart.googlecode.com/svn/trunk/Certification/logos/" + certification + ".png")
+                        'url = New Uri("https://dvdart.googlecode.com/svn/trunk/Certification/logos/" + certification + ".png")
+                        url = New Uri("https://raw.githubusercontent.com/m3rcury/DVDArt/master/Certification/logos/" + certification + ".png")
                         certification = _temp & "\" & certification & ".png"
                         objDL.DownloadFile(url, certification)
                     Catch ex As Exception
@@ -2077,7 +2075,7 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.2.9"
+        _version = "v1.0.3.3"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 

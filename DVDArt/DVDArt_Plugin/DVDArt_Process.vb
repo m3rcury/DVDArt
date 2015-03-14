@@ -42,126 +42,165 @@ Public Class DVDArt_Process
         Dim SQLcommand As SQLiteCommand
         Dim SQLreader As SQLiteDataReader
         Dim filenotexist(5) As Boolean
+        Dim enabled As Boolean = False
 
         DVDArt_Common.logStats("DVDArt: Missing Artwork - Process started.", "INFO")
 
         lv_import.Items.Clear()
 
-        DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Movie List started.", "LOG")
+        If IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) Or IO.File.Exists(DVDArt_Common.p_Databases("myfilms")) Or IO.File.Exists(database & DVDArt_Common.p_Databases("myvideos")) Then
 
-        Dim mymovies As DVDArt_Common.Movies() = DVDArt_Common.loadMovingPictures(database)
+            For x = 0 To UBound(_checked, 2)
+                enabled = enabled Or _checked(0, x)
+            Next
 
-        Try
-            mymovies = DVDArt_Common.loadMyFilms(mymovies)
-        Catch ex As Exception
-        End Try
+            If enabled Then
 
-        Try
-            mymovies = DVDArt_Common.loadMyVideos(database, mymovies)
-        Catch ex As Exception
-        End Try
+                DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Movie List started.", "LOG")
 
-        mymovies.Distinct()
+                Dim mymovies As DVDArt_Common.Movies() = DVDArt_Common.loadMovingPictures(database)
 
-        ' process loaded movies
+                Try
+                    mymovies = DVDArt_Common.loadMyFilms(mymovies)
+                Catch ex As Exception
+                End Try
 
-        For i As Integer = 0 To UBound(mymovies)
+                Try
+                    mymovies = DVDArt_Common.loadMyVideos(database, mymovies)
+                Catch ex As Exception
+                End Try
 
-            If Trim(mymovies(i).imdb_id) <> "" Then
+                mymovies.Distinct()
 
-                For y = 0 To 5
-                    If y < 4 Then
-                        filenotexist(y) = _checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & mymovies(i).imdb_id & ".png")
-                    ElseIf y = 4 Then
-                        filenotexist(y) = _checked(0, y) And Not mymovies(i).backdrop <> String.Empty
-                    ElseIf y = 5 Then
-                        filenotexist(y) = _checked(0, y) And Not mymovies(i).cover <> String.Empty
+                ' process loaded movies
+
+                For i As Integer = 0 To UBound(mymovies)
+
+                    If Trim(mymovies(i).imdb_id) <> "" Then
+
+                        For y = 0 To 5
+                            If y < 4 Then
+                                filenotexist(y) = _checked(0, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & mymovies(i).imdb_id & ".png")
+                            ElseIf y = 4 Then
+                                filenotexist(y) = _checked(0, y) And Not mymovies(i).backdrop <> String.Empty
+                            ElseIf y = 5 Then
+                                filenotexist(y) = _checked(0, y) And Not mymovies(i).cover <> String.Empty
+                            End If
+                        Next
+
+                        If filenotexist(0) Or filenotexist(1) Or filenotexist(2) Then
+                            li_import = lv_import.Items.Add(mymovies(i).name)
+                            li_import.SubItems.Add(mymovies(i).imdb_id)
+                            li_import.SubItems.Add("movie")
+
+                            For y = 0 To 5
+                                li_import.SubItems.Add(filenotexist(y))
+                            Next
+                        End If
+
                     End If
+
                 Next
 
-                If filenotexist(0) Or filenotexist(1) Or filenotexist(2) Then
-                    li_import = lv_import.Items.Add(mymovies(i).name)
-                    li_import.SubItems.Add(mymovies(i).imdb_id)
-                    li_import.SubItems.Add("movie")
-
-                    For y = 0 To 5
-                        li_import.SubItems.Add(filenotexist(y))
-                    Next
-                End If
+                DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Movie List complete.", "LOG")
 
             End If
 
-        Next
+        End If
 
-        DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Movie List complete.", "LOG")
+        If IO.File.Exists(database & DVDArt_Common.p_Databases("tvseries")) Then
 
-        DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Series List started.", "LOG")
+            enabled = False
 
-        ' Read TVSeries database
+            For x = 1 To 2
+                enabled = enabled Or _checked(1, x)
+            Next
 
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("tvseries") & ";Read Only=True;"
+            If enabled Then
 
-        SQLconnect.Open()
+                DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Series List started.", "LOG")
 
-        SQLcommand = SQLconnect.CreateCommand
+                ' Read TVSeries database
 
-        SQLcommand.CommandText = "SELECT id, pretty_name FROM online_series WHERE id is not Null and pretty_name is not Null ORDER BY sortname"
+                SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("tvseries") & ";Read Only=True;"
 
-        SQLreader = SQLcommand.ExecuteReader()
+                SQLconnect.Open()
 
-        While SQLreader.Read()
+                SQLcommand = SQLconnect.CreateCommand
 
-            If Trim(SQLreader(0)) <> "" Then
+                SQLcommand.CommandText = "SELECT id, pretty_name FROM online_series WHERE id is not Null and pretty_name is not Null ORDER BY sortname"
 
-                For y = 1 To 2
-                    filenotexist(y) = _checked(1, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & SQLreader(0) & ".png")
+                SQLreader = SQLcommand.ExecuteReader()
+
+                While SQLreader.Read()
+
+                    If Trim(SQLreader(0)) <> "" Then
+
+                        For y = 1 To 2
+                            filenotexist(y) = _checked(1, y) And Not FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & SQLreader(0) & ".png")
+                        Next
+
+                        If filenotexist(1) Or filenotexist(2) Then
+                            li_import = lv_import.Items.Add(SQLreader(1))
+                            li_import.SubItems.Add(SQLreader(0))
+                            li_import.SubItems.Add("series")
+
+                            For y = 1 To 2
+                                li_import.SubItems.Add(filenotexist(y))
+                            Next
+                        End If
+
+                    End If
+
+                End While
+
+                DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Series List complete.", "LOG")
+
+                SQLconnect.Close()
+
+            End If
+
+        End If
+
+        If IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) Or IO.File.Exists(DVDArt_Common.p_Databases("myfilms")) Or IO.File.Exists(database & DVDArt_Common.p_Databases("myvideos")) Then
+
+            For x = 0 To UBound(_checked, 2)
+                enabled = enabled Or _checked(0, x)
+            Next
+
+            ' Check for any new person images to download
+
+            If enabled And _persons Then
+
+                DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Persons List started.", "LOG")
+
+                Dim mypersons As SortedList = DVDArt_Common.loadMovingPicturesPersons(database)
+
+                Try
+                    mypersons = DVDArt_Common.loadMyFilmsPersons(mypersons)
+                Catch ex As Exception
+                End Try
+
+                Try
+                    mypersons = DVDArt_Common.loadMyVideosPersons(database, mypersons)
+                Catch ex As Exception
+                End Try
+
+                For i As Integer = 0 To mypersons.Count - 1
+
+                    If Not IO.File.Exists(_persons_path & Utils.MakeFileName(mypersons.GetKey(i)) & ".png") Then
+                        li_import = lv_import.Items.Add(mypersons.GetKey(i))
+                        li_import.SubItems.Add("")
+                        li_import.SubItems.Add("person")
+                    End If
+
                 Next
 
-                If filenotexist(1) Or filenotexist(2) Then
-                    li_import = lv_import.Items.Add(SQLreader(1))
-                    li_import.SubItems.Add(SQLreader(0))
-                    li_import.SubItems.Add("series")
-
-                    For y = 1 To 2
-                        li_import.SubItems.Add(filenotexist(y))
-                    Next
-                End If
+                DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Persons List complete.", "LOG")
 
             End If
 
-        End While
-
-        DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Series List complete.", "LOG")
-
-        SQLconnect.Close()
-
-        ' Check for any new person images to download
-
-        DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Persons List started.", "LOG")
-
-        Dim mypersons As SortedList = DVDArt_Common.loadMovingPicturesPersons(database)
-
-        Try
-            mypersons = DVDArt_Common.loadMyFilmsPersons(mypersons)
-        Catch ex As Exception
-        End Try
-
-        Try
-            mypersons = DVDArt_Common.loadMyVideosPersons(database, mypersons)
-        Catch ex As Exception
-        End Try
-
-        For i As Integer = 0 To mypersons.Count - 1
-
-            If Not IO.File.Exists(_persons_path & Utils.MakeFileName(mypersons.GetKey(i)) & ".png") Then
-                li_import = lv_import.Items.Add(mypersons.GetKey(i))
-                li_import.SubItems.Add("")
-                li_import.SubItems.Add("person")
-            End If
-
-        Next
-
-        DVDArt_Common.logStats("DVDArt: Missing Artwork - Loading Persons List complete.", "LOG")
+        End If
 
         If lv_import.Items.Count > 0 Then
             DVDArt_Common.logStats("DVDArt: Missing Artwork - import started.", "LOG")
@@ -273,36 +312,40 @@ Public Class DVDArt_Process
 
                 DVDArt_Common.logStats("DVDArt: Background Import - Loading Persons List started.", "LOG")
 
-                Dim mypersons As SortedList = DVDArt_Common.loadMovingPicturesPersons(database)
+                If _persons Then
 
-                Try
-                    mypersons = DVDArt_Common.loadMyFilmsPersons(mypersons)
-                Catch ex As Exception
-                End Try
+                    Dim mypersons As SortedList = DVDArt_Common.loadMovingPicturesPersons(database)
 
-                Try
-                    mypersons = DVDArt_Common.loadMyVideosPersons(database, mypersons)
-                Catch ex As Exception
-                End Try
+                    Try
+                        mypersons = DVDArt_Common.loadMyFilmsPersons(mypersons)
+                    Catch ex As Exception
+                    End Try
 
-                For i As Integer = 0 To mypersons.Count - 1
+                    Try
+                        mypersons = DVDArt_Common.loadMyVideosPersons(database, mypersons)
+                    Catch ex As Exception
+                    End Try
 
-                    If Not IO.File.Exists(_persons_path & Utils.MakeFileName(mypersons.GetKey(i)) & ".png") Then
-                        If l_new_movies.Contains(mypersons.GetByIndex(i)) Then
-                            DVDArt_Common.logStats("DVDArt: new person - """ & mypersons.GetKey(i) & """ found.", "DEBUG")
-                            li_import = lv_import.Items.Add(mypersons.GetKey(i))
-                            li_import.SubItems.Add("")
-                            li_import.SubItems.Add("person")
-                            l_new_persons.Add(mypersons.GetKey(i))
+                    For i As Integer = 0 To mypersons.Count - 1
+
+                        If Not IO.File.Exists(_persons_path & Utils.MakeFileName(mypersons.GetKey(i)) & ".png") Then
+                            If l_new_movies.Contains(mypersons.GetByIndex(i)) Then
+                                DVDArt_Common.logStats("DVDArt: new person - """ & mypersons.GetKey(i) & """ found.", "DEBUG")
+                                li_import = lv_import.Items.Add(mypersons.GetKey(i))
+                                li_import.SubItems.Add("")
+                                li_import.SubItems.Add("person")
+                                l_new_persons.Add(mypersons.GetKey(i))
+                            End If
                         End If
+
+                    Next
+
+                    If l_new_persons.Count > 0 Then
+                        DVDArt_Common.logStats("DVDArt: Background Import - " & l_new_persons.Count.ToString & " new persons found for import.", "LOG")
+                    Else
+                        DVDArt_Common.logStats("DVDArt: Background Import - No new persons found for import.", "LOG")
                     End If
 
-                Next
-
-                If l_new_persons.Count > 0 Then
-                    DVDArt_Common.logStats("DVDArt: Background Import - " & l_new_persons.Count.ToString & " new persons found for import.", "LOG")
-                Else
-                    DVDArt_Common.logStats("DVDArt: Background Import - No new persons found for import.", "LOG")
                 End If
 
                 DVDArt_Common.logStats("DVDArt: Background Import - Loading Persons List complete.", "LOG")

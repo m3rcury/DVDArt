@@ -1,4 +1,4 @@
-﻿Imports Microsoft.VisualBasic.FileIO
+﻿Imports Microsoft.VisualBasic.FileIO.FileSystem
 
 Imports System.Data
 Imports System.Data.SQLite
@@ -128,6 +128,7 @@ Public Class DVDArt_GUI
 
                 SQLcommand.CommandText = "SELECT alternatecovers, coverfullpath, title FROM movie_info WHERE imdb_id = """ & imdb_id & """"
                 SQLreader = SQLcommand.ExecuteReader(CommandBehavior.SingleRow)
+                SQLreader.Read()
 
                 images = Split(SQLreader(0), "|")
 
@@ -559,13 +560,13 @@ Public Class DVDArt_GUI
 
                     type = l_import_queue.Item(x)
                     endp = InStr(type, "|") - 1
-                    id = Microsoft.VisualBasic.Left(type, endp)
+                    id = Microsoft.Visualbasic.Left(type, endp)
                     endp += 1
-                    type = Microsoft.VisualBasic.Right(type, Microsoft.VisualBasic.Len(l_import_queue.Item(x)) - endp)
+                    type = Microsoft.Visualbasic.Right(type, Microsoft.VisualBasic.Len(l_import_queue.Item(x)) - endp)
                     endp = InStr(type, "|") - 1
-                    title = Microsoft.VisualBasic.Left(type, endp)
+                    title = Microsoft.Visualbasic.Left(type, endp)
                     endp += 1
-                    type = Microsoft.VisualBasic.Right(type, Microsoft.VisualBasic.Len(type) - endp)
+                    type = Microsoft.Visualbasic.Right(type, Microsoft.VisualBasic.Len(type) - endp)
 
                     lv_import.Items(l_import_index(x)).StateImageIndex = 0
 
@@ -787,7 +788,7 @@ Public Class DVDArt_GUI
 
                         Next
 
-                    ElseIf Microsoft.VisualBasic.Left(type, 12) = "music/albums" Then
+                    ElseIf Microsoft.Visualbasic.Left(type, 12) = "music/albums" Then
 
                         downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type & "|" & title, personpath, checked)
 
@@ -1044,131 +1045,134 @@ Public Class DVDArt_GUI
 
     Private Sub FTV_api_connector(ByVal id As String, ByVal url() As String, ByVal type As String, ByVal mode As String)
 
-        On Error Resume Next
-
         If Not cb_autoimport.Checked And b_import.Enabled Then Exit Sub
 
         Me.Cursor = Cursors.WaitCursor
 
         Dim x As Integer
         Dim details As Array = Nothing
-        Dim WebClient As New System.Net.WebClient
 
         x = 0
 
         If mode = "preview" Then
 
-            Dim jsonresponse As String
+            Dim jsonresponse As Object
 
-            If Microsoft.VisualBasic.Left(type, 12) <> "music/albums" Then
+            If Microsoft.Visualbasic.Left(type, 12) <> "music/albums" Then
                 jsonresponse = DVDArt_Common.JSON_request(id, type)
             Else
                 jsonresponse = DVDArt_Common.JSON_request(id, "music")
             End If
 
-            If jsonresponse <> "null" Then
+            If jsonresponse IsNot Nothing Then
+
+                Dim max_download As Integer = nud_downloads.Value - 1
 
                 If Microsoft.VisualBasic.Left(type, 12) <> "music/albums" Then
-                    details = DVDArt_Common.parse(jsonresponse, type, id, _lang)
+                    details = DVDArt_Common.parse(jsonresponse, type, id, max_download, _lang)
                 Else
-                    details = DVDArt_Common.parse_music(jsonresponse, LCase(Microsoft.VisualBasic.Right(type, Len(type) - 6).Replace(" ", "-")))
+                    details = DVDArt_Common.parse_music(jsonresponse, LCase(Microsoft.VisualBasic.Right(type, Len(type) - 6).Replace(" ", "-")), max_download)
                 End If
 
-                Dim ImageInBytes() As Byte
+                Dim WebClient As New System.Net.WebClient
                 Dim stream As System.IO.MemoryStream
-                Dim max_download As Integer
+                Dim ImageInBytes() As Byte
+                Dim imagekey As String
 
-                If cb_downloads.Checked Then
-                    max_download = nud_downloads.Value - 1
-                Else
-                    max_download = UBound(details, 2)
-                End If
+                clearLists()
+
+                If UBound(details, 2) < (nud_downloads.Value - 1) Then max_download = UBound(details, 2)
 
                 For x = 0 To max_download
 
                     If ((cb_DVDArt_movies.Checked And type = "movies") Or (cb_CDArt_music.Checked And Microsoft.VisualBasic.Left(type, 12) = "music/albums")) And details(0, x) <> Nothing Then
-                        Dim imagekey As String = Guid.NewGuid().ToString()
-                        ImageInBytes = WebClient.DownloadData(details(0, x).Replace("/fanart/", "/preview/"))
-                        stream = New System.IO.MemoryStream(ImageInBytes)
-                        il_dvdart.Images.Add(imagekey, Image.FromStream(stream))
-                        If type = "movies" Then
-                            lv_movie_dvdart.Items.Add(details(1, x), imagekey)
-                        ElseIf Microsoft.VisualBasic.Left(type, 12) = "music/albums" Then
-                            lv_album_cdart.Items.Add(details(1, x), imagekey)
-                        End If
-                        lv_url_dvdart.Items.Add(details(0, x), imagekey)
+                        imagekey = Guid.NewGuid().ToString()
+                        Try
+                            ImageInBytes = WebClient.DownloadData(details(0, x).Replace("/fanart/", "/preview/"))
+                            stream = New System.IO.MemoryStream(ImageInBytes)
+                            il_dvdart.Images.Add(imagekey, Image.FromStream(stream))
+                            If type = "movies" Then
+                                lv_movie_dvdart.Items.Add(details(1, x), imagekey)
+                            ElseIf Microsoft.VisualBasic.Left(type, 12) = "music/albums" Then
+                                lv_album_cdart.Items.Add(details(1, x), imagekey)
+                            End If
+                            lv_url_dvdart.Items.Add(details(0, x), imagekey)
+                        Catch ex As System.Net.WebException
+                        End Try
                     End If
 
                     If ((cb_ClearArt_movies.Checked And type = "movies") Or (cb_ClearArt_series.Checked And type = "tv") Or (cb_Banner_artist.Checked And type = "music")) And details(2, x) <> Nothing Then
-                        Dim imagekey As String = Guid.NewGuid().ToString()
-                        ImageInBytes = WebClient.DownloadData(details(2, x).Replace("/fanart/", "/preview/"))
-                        stream = New System.IO.MemoryStream(ImageInBytes)
-                        If type = "movies" Then
-                            il_clearart.Images.Add(imagekey, Image.FromStream(stream))
-                            lv_movie_clearart.Items.Add(details(3, x), imagekey)
-                        ElseIf type = "tv" Then
-                            il_clearart.Images.Add(imagekey, Image.FromStream(stream))
-                            lv_serie_clearart.Items.Add(details(3, x), imagekey)
-                        ElseIf type = "music" Then
-                            il_banner.Images.Add(imagekey, Image.FromStream(stream))
-                            lv_artist_banner.Items.Add(details(3, x), imagekey)
-                        End If
-                        lv_url_clearart.Items.Add(details(2, x), imagekey)
+                        imagekey = Guid.NewGuid().ToString()
+                        Try
+                            ImageInBytes = WebClient.DownloadData(details(2, x).Replace("/fanart/", "/preview/"))
+                            stream = New System.IO.MemoryStream(ImageInBytes)
+                            If type = "movies" Then
+                                il_clearart.Images.Add(imagekey, Image.FromStream(stream))
+                                lv_movie_clearart.Items.Add(details(3, x), imagekey)
+                            ElseIf type = "tv" Then
+                                il_clearart.Images.Add(imagekey, Image.FromStream(stream))
+                                lv_serie_clearart.Items.Add(details(3, x), imagekey)
+                            ElseIf type = "music" Then
+                                il_banner.Images.Add(imagekey, Image.FromStream(stream))
+                                lv_artist_banner.Items.Add(details(3, x), imagekey)
+                            End If
+                            lv_url_clearart.Items.Add(details(2, x), imagekey)
+                        Catch ex As System.Net.WebException
+                        End Try
                     End If
 
                     If ((cb_ClearLogo_movies.Checked And type = "movies") Or (cb_ClearLogo_series.Checked And type = "tv") Or (cb_ClearLogo_artist.Checked And type = "music")) And details(4, x) <> Nothing Then
-                        Dim imagekey As String = Guid.NewGuid().ToString()
-                        ImageInBytes = WebClient.DownloadData(details(4, x).Replace("/fanart/", "/preview/"))
-                        stream = New System.IO.MemoryStream(ImageInBytes)
-                        il_clearlogo.Images.Add(imagekey, Image.FromStream(stream))
-                        If type = "movies" Then
-                            lv_movie_clearlogo.Items.Add(details(5, x), imagekey)
-                        ElseIf type = "tv" Then
-                            lv_serie_clearlogo.Items.Add(details(5, x), imagekey)
-                        ElseIf type = "music" Then
-                            lv_artist_clearlogo.Items.Add(details(5, x), imagekey)
-                        End If
-                        lv_url_clearlogo.Items.Add(details(4, x), imagekey)
+                        imagekey = Guid.NewGuid().ToString()
+                        Try
+                            ImageInBytes = WebClient.DownloadData(details(4, x).Replace("/fanart/", "/preview/"))
+                            stream = New System.IO.MemoryStream(ImageInBytes)
+                            il_clearlogo.Images.Add(imagekey, Image.FromStream(stream))
+                            If type = "movies" Then
+                                lv_movie_clearlogo.Items.Add(details(5, x), imagekey)
+                            ElseIf type = "tv" Then
+                                lv_serie_clearlogo.Items.Add(details(5, x), imagekey)
+                            ElseIf type = "music" Then
+                                lv_artist_clearlogo.Items.Add(details(5, x), imagekey)
+                            End If
+                            lv_url_clearlogo.Items.Add(details(4, x), imagekey)
+                        Catch ex As System.Net.WebException
+                        End Try
                     End If
 
                     If cb_Banner_movies.Checked And type = "movies" And details(6, x) <> Nothing Then
-                        Dim imagekey As String = Guid.NewGuid().ToString()
-                        ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/fanart/", "/preview/"))
-                        stream = New System.IO.MemoryStream(ImageInBytes)
-                        il_banner.Images.Add(imagekey, Image.FromStream(stream))
-                        lv_movie_banner.Items.Add(details(7, x), imagekey)
-                    
-                        lv_url_banner.Items.Add(details(6, x), imagekey)
+                        imagekey = Guid.NewGuid().ToString()
+                        Try
+                            ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/fanart/", "/preview/"))
+                            stream = New System.IO.MemoryStream(ImageInBytes)
+                            il_banner.Images.Add(imagekey, Image.FromStream(stream))
+                            lv_movie_banner.Items.Add(details(7, x), imagekey)
+                            lv_url_banner.Items.Add(details(6, x), imagekey)
+                        Catch ex As System.Net.WebException
+                        End Try
                     End If
 
                     If cb_Backdrop_movies.Checked And type = "movies" And details(8, x) <> Nothing Then
-                        Dim imagekey As String = Guid.NewGuid().ToString()
-
-                        If InStr(details(6, x), "/w1920/") > 0 Then
-                            ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/w1920/", "/w150/"))
-                        Else
-                            ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/fanart/", "/preview/"))
-                        End If
-
-                        stream = New System.IO.MemoryStream(ImageInBytes)
-                        il_backdrop.Images.Add(imagekey, Image.FromStream(stream))
-                        lv_movie_backdrop.Items.Add(details(9, x), imagekey)
-                        lv_url_backdrop.Items.Add(details(8, x), imagekey)
+                        imagekey = Guid.NewGuid().ToString()
+                        Try
+                            ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/w1920/", "/w300/").Replace("/fanart/", "/preview/"))
+                            stream = New System.IO.MemoryStream(ImageInBytes)
+                            il_backdrop.Images.Add(imagekey, Image.FromStream(stream))
+                            lv_movie_backdrop.Items.Add(details(9, x), imagekey)
+                            lv_url_backdrop.Items.Add(details(8, x), imagekey)
+                        Catch ex As System.Net.WebException
+                        End Try
                     End If
 
                     If cb_Cover_movies.Checked And type = "movies" And details(10, x) <> Nothing Then
-                        Dim imagekey As String = Guid.NewGuid().ToString()
-
-                        If InStr(details(8, x), "/w1920/") > 0 Then
-                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/w1920/", "/w150/"))
-                        Else
-                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/fanart/", "/preview/"))
-                        End If
-
-                        stream = New System.IO.MemoryStream(ImageInBytes)
-                        il_cover.Images.Add(imagekey, Image.FromStream(stream))
-                        lv_movie_cover.Items.Add(details(11, x), imagekey)
-                        lv_url_cover.Items.Add(details(10, x), imagekey)
+                        imagekey = Guid.NewGuid().ToString()
+                        Try
+                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/w1920/", "/w300/").Replace("/fanart/", "/preview/"))
+                            stream = New System.IO.MemoryStream(ImageInBytes)
+                            il_cover.Images.Add(imagekey, Image.FromStream(stream))
+                            lv_movie_cover.Items.Add(details(11, x), imagekey)
+                            lv_url_cover.Items.Add(details(10, x), imagekey)
+                        Catch ex As System.Net.WebException
+                        End Try
                     End If
 
                 Next
@@ -1487,11 +1491,11 @@ Public Class DVDArt_GUI
 
                     For y = 0 To UBound(checked, 2)
                         If y < 4 Then
-                            fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & mymovies(i).imdb_id & ".png")
+                            fileexist(y) = FileExists(thumbs & DVDArt_Common.folder(0, y, 1) & mymovies(i).imdb_id & ".png")
                         ElseIf y = 4 Then
-                            fileexist(y) = mymovies(i).backdrop <> String.Empty
+                            fileexist(y) = FileExists(mymovies(i).backdrop)
                         ElseIf y = 5 Then
-                            fileexist(y) = mymovies(i).cover <> String.Empty
+                            fileexist(y) = FileExists(mymovies(i).cover)
                         End If
                         If Not found Then found = checked(0, y) And fileexist(y)
                         If Not missing Then missing = checked(0, y) And Not fileexist(y)
@@ -1667,7 +1671,7 @@ Public Class DVDArt_GUI
 
         ' create processed series table with a unique index
 
-        If Not FileSystem.FileExists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
+        If Not FileExists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
 
         SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
         SQLconnect.Open()
@@ -1725,7 +1729,7 @@ Public Class DVDArt_GUI
                     missing = False
 
                     For y = 1 To 2
-                        fileexist(y) = checked(1, y) And FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & myseries(i).thetvdb_id & ".png")
+                        fileexist(y) = checked(1, y) And FileExists(thumbs & DVDArt_Common.folder(1, y, 1) & myseries(i).thetvdb_id & ".png")
                         If Not found Then found = checked(1, y) And fileexist(y)
                         If Not missing Then missing = checked(1, y) And Not fileexist(y)
                     Next
@@ -2117,7 +2121,7 @@ Public Class DVDArt_GUI
                         missing = False
 
                         For y = 0 To 0
-                            fileexist(y) = FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & t_album & ".png") Or FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & t_album & ".jpg")
+                            fileexist(y) = FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & t_album & ".png") Or FileExists(thumbs & DVDArt_Common.folder(2, y, 1) & t_album & ".jpg")
                             If Not found Then found = checked(2, y) And fileexist(y)
                             If Not missing Then missing = checked(2, y) And Not fileexist(y)
                         Next
@@ -2705,9 +2709,9 @@ Public Class DVDArt_GUI
                         Dim upload As New DVDArt_ManualUpload(imdb_id, title, "movies")
                         upload.ShowDialog()
 
-                        If FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png") Or _
-                           FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, 1, 1) & imdb_id & ".png") Or _
-                           FileSystem.FileExists(thumbs & DVDArt_Common.folder(0, 2, 1) & imdb_id & ".png") Then
+                        If FileExists(thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png") Or _
+                           FileExists(thumbs & DVDArt_Common.folder(0, 1, 1) & imdb_id & ".png") Or _
+                           FileExists(thumbs & DVDArt_Common.folder(0, 2, 1) & imdb_id & ".png") Then
 
                             li_import = lv_import.Items.Add(title)
                             li_import.SubItems.Add(imdb_id)
@@ -2785,8 +2789,8 @@ Public Class DVDArt_GUI
                         Dim upload As New DVDArt_ManualUpload(thetvdb_id, title, "tv")
                         upload.ShowDialog()
 
-                        If FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, 1, 1) & thetvdb_id & ".png") Or _
-                           FileSystem.FileExists(thumbs & DVDArt_Common.folder(1, 2, 1) & thetvdb_id & ".png") Then
+                        If FileExists(thumbs & DVDArt_Common.folder(1, 1, 1) & thetvdb_id & ".png") Or _
+                           FileExists(thumbs & DVDArt_Common.folder(1, 2, 1) & thetvdb_id & ".png") Then
 
                             li_import = lv_import.Items.Add(title)
                             li_import.SubItems.Add(thetvdb_id)
@@ -2872,9 +2876,9 @@ Public Class DVDArt_GUI
                             upload.ShowDialog()
                         End If
 
-                        If FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, 0, 1) & title & ".png") Or _
-                           FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, 1, 1) & title & ".png") Or _
-                           FileSystem.FileExists(thumbs & DVDArt_Common.folder(2, 2, 1) & title & ".png") Then
+                        If FileExists(thumbs & DVDArt_Common.folder(2, 0, 1) & title & ".png") Or _
+                           FileExists(thumbs & DVDArt_Common.folder(2, 1, 1) & title & ".png") Or _
+                           FileExists(thumbs & DVDArt_Common.folder(2, 2, 1) & title & ".png") Then
 
                             Dim mbid As String = lv_music_missing.SelectedItems(x).SubItems(4).Text
 
@@ -3247,7 +3251,7 @@ Public Class DVDArt_GUI
             xml_version = XMLreader.GetValueAsString("Plugin", "version", "0")
             cb_autoimport.Checked = XMLreader.GetValueAsBool("Settings", "auto import", True)
             cb_downloads.Checked = XMLreader.GetValueAsBool("Settings", "limit downloads", False)
-            nud_downloads.Value = XMLreader.GetValueAsInt("Settings", "downloads limit", 3)
+            nud_downloads.Value = XMLreader.GetValueAsInt("Settings", "downloads limit", 99)
             nud_delay.Value = XMLreader.GetValueAsInt("Settings", "delay", 1)
             cb_delay.Text = XMLreader.GetValueAsString("Settings", "delay value", "minutes")
             cb_backgroundscraper.Checked = XMLreader.GetValueAsBool("Settings", "backgroundscraper", True)
@@ -3572,8 +3576,8 @@ Public Class DVDArt_GUI
 
     Private Sub b_movie_deleteart_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deleteart.Click
         If lv_movies.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 1, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 1, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 1, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 1, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
             pb_movie_clearart.Image = Nothing
             pb_movie_clearart.Tag = Nothing
             b_movie_deleteart.Visible = False
@@ -3582,8 +3586,8 @@ Public Class DVDArt_GUI
 
     Private Sub b_movie_deletelogo_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deletelogo.Click
         If lv_movies.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 2, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 2, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 2, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 2, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 2, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 2, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 2, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 2, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
             pb_movie_clearlogo.Image = Nothing
             pb_movie_clearlogo.Tag = Nothing
             b_movie_deletelogo.Visible = False
@@ -3596,8 +3600,8 @@ Public Class DVDArt_GUI
     End Sub
 
     Private Sub b_movie_delete_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_delete.Click
-        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 0, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 0, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
-        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 0, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 0, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 0, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 0, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 0, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 0, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
         pb_movie_dvdart.Image = Nothing
         pb_movie_dvdart.Tag = Nothing
         b_movie_compress.Visible = False
@@ -3607,8 +3611,8 @@ Public Class DVDArt_GUI
 
     Private Sub b_movie_deletebanner_Click(sender As Object, e As EventArgs) Handles b_movie_deletebanner.Click
         If lv_movies.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 3, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 3, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 3, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 3, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 3, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 3, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 3, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 3, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
             pb_movie_banner.Image = Nothing
             pb_movie_banner.Tag = Nothing
             b_movie_deletebanner.Visible = False
@@ -3616,8 +3620,8 @@ Public Class DVDArt_GUI
     End Sub
 
     Private Sub b_movie_deletebackdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deletebackdrop.Click
-        If IO.File.Exists(lv_movies.SelectedItems(0).SubItems.Item(2).Text) Then FileSystem.DeleteFile(lv_movies.SelectedItems(0).SubItems.Item(2).Text)
-        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text)) Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text))
+        If IO.File.Exists(lv_movies.SelectedItems(0).SubItems.Item(2).Text) Then DeleteFile(lv_movies.SelectedItems(0).SubItems.Item(2).Text)
+        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text)) Then DeleteFile(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text))
         pb_movie_backdrop.Image = Nothing
         pb_movie_backdrop.Tag = Nothing
         b_movie_deletebackdrop.Visible = False
@@ -3626,8 +3630,8 @@ Public Class DVDArt_GUI
     End Sub
 
     Private Sub b_movie_deletecover_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deletecover.Click
-        If IO.File.Exists(lv_movies.SelectedItems(0).SubItems.Item(3).Text) Then FileSystem.DeleteFile(lv_movies.SelectedItems(0).SubItems.Item(3).Text)
-        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 5, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text)) Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(0, 5, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text))
+        If IO.File.Exists(lv_movies.SelectedItems(0).SubItems.Item(3).Text) Then DeleteFile(lv_movies.SelectedItems(0).SubItems.Item(3).Text)
+        If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 5, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text)) Then DeleteFile(thumbs & DVDArt_Common.folder(0, 5, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text))
         pb_movie_cover.Image = Nothing
         pb_movie_cover.Tag = Nothing
         b_movie_deletecover.Visible = False
@@ -3637,8 +3641,8 @@ Public Class DVDArt_GUI
 
     Private Sub b_serie_deleteart_Click(sender As System.Object, e As System.EventArgs) Handles b_serie_deleteart.Click
         If lv_series.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 1, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(1, 1, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 1, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(1, 1, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 1, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(1, 1, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 1, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(1, 1, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
             pb_serie_clearart.Image = Nothing
             pb_serie_clearart.Tag = Nothing
             b_serie_deleteart.Visible = False
@@ -3647,8 +3651,8 @@ Public Class DVDArt_GUI
 
     Private Sub b_serie_deletelogo_Click(sender As System.Object, e As System.EventArgs) Handles b_serie_deletelogo.Click
         If lv_series.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 2, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(1, 2, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 2, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(1, 2, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 2, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(1, 2, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 2, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(1, 2, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
             pb_serie_clearlogo.Image = Nothing
             pb_serie_clearlogo.Tag = Nothing
             b_serie_deletelogo.Visible = False
@@ -3675,8 +3679,8 @@ Public Class DVDArt_GUI
     End Sub
 
     Private Sub b_album_deletecdart_Click(sender As System.Object, e As System.EventArgs) Handles b_album_delete.Click
-        If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 0, 0) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(2, 0, 0) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png")
-        If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 0, 1) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(2, 0, 1) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png")
+        If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 0, 0) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 0, 0) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png")
+        If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 0, 1) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 0, 1) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png")
         pb_album_cdart.Image = Nothing
         pb_album_cdart.Tag = Nothing
         b_album_compress.Visible = False
@@ -3686,8 +3690,8 @@ Public Class DVDArt_GUI
 
     Private Sub b_artist_deletebanner_Click(sender As System.Object, e As System.EventArgs) Handles b_artist_deletebanner.Click
         If lv_artist.SelectedItems(0).SubItems.Item(0).Text <> Nothing Then
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 1, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(2, 1, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(0).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(2, 1, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 1, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 1, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 1, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
             pb_artist_banner.Image = Nothing
             pb_artist_banner.Tag = Nothing
             b_artist_deletebanner.Visible = False
@@ -3696,8 +3700,8 @@ Public Class DVDArt_GUI
 
     Private Sub b_artist_deletelogo_Click(sender As System.Object, e As System.EventArgs) Handles b_artist_deletelogo.Click
         If lv_artist.SelectedItems(0).SubItems.Item(0).Text <> Nothing Then
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 2, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(2, 2, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
-            If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 2, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then FileSystem.DeleteFile(thumbs & DVDArt_Common.folder(2, 2, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 2, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 2, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
+            If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 2, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 2, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
             pb_artist_clearlogo.Image = Nothing
             pb_artist_clearlogo.Tag = Nothing
             b_artist_deletelogo.Visible = False
