@@ -76,6 +76,23 @@
           </Items>
         </Files>
       </GroupItem>
+      <GroupItem Name="Newtonsoft.Json">
+        <ParentGroup />
+        <DisplayName>Newtonsoft.Json</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Newtonsoft.Json</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>AlwaysOverwrite</UpdateOption>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\Newtonsoft.Json.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{02e8f05b-fac8-42b4-9ae7-b5c7702dded8}-Newtonsoft.Json.dll</ZipFileName>
+              <DestinationFilename>%Base%\Newtonsoft.Json.dll</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
     </Items>
   </Groups>
   <Sections>
@@ -263,8 +280,8 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>1</Major>
       <Minor>0</Minor>
-      <Build>2</Build>
-      <Revision>9</Revision>
+      <Build>3</Build>
+      <Revision>3</Revision>
     </Version>
     <ExtensionDescription>This plugin scans your MovingPictures, MyFilms, MyVideos, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art, Banners, Actor, Writer and Director images from the fanart.tv and themoviedb.org websites where applicable.</ExtensionDescription>
     <VersionDescription>Fixed background scraping.</VersionDescription>
@@ -342,6 +359,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <ZipFileName>Installer{CopyFile}\{eefb8321-f981-4c12-8d70-4a6410bb231e}-convert.exe</ZipFileName>
         <DestinationFilename>%Base%\convert.exe</DestinationFilename>
       </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>AlwaysOverwrite</UpdateOption>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\Newtonsoft.Json.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{02e8f05b-fac8-42b4-9ae7-b5c7702dded8}-Newtonsoft.Json.dll</ZipFileName>
+        <DestinationFilename>%Base%\Newtonsoft.Json.dll</DestinationFilename>
+      </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
@@ -368,7 +392,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
   <ProjectSettings>
     <FolderGroups />
     <ProjectFilename>DVDArt_Plugin.xmp2</ProjectFilename>
-    <UpdatePath1>E:\Software\MediaPortal\Subversion\dvdart\trunk\DVDArt\DVDArt_Plugin_update.xml</UpdatePath1>
+    <UpdatePath1>E:\Software\MediaPortal\Subversion\DVDArt.git\trunk\DVDArt\DVDArt_Plugin_update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
   </ProjectSettings>
