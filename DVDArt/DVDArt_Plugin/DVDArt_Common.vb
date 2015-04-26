@@ -193,7 +193,7 @@ Public Class DVDArt_Common
             End While
 
         Catch ex As Exception
-            logStats("DVDArt: " & ex.Message, "ERROR")
+            logStats("DVDArt: [loadMovingPictures] " & ex.Message, "ERROR")
         End Try
 
         SQLconnect.Close()
@@ -416,7 +416,7 @@ Public Class DVDArt_Common
             End While
 
         Catch ex As Exception
-            logStats("DVDArt: " & ex.Message, "ERROR")
+            logStats("DVDArt: [loadMovingPicturesPersons] " & ex.Message, "ERROR")
         End Try
 
         SQLconnect.Close()
@@ -860,7 +860,7 @@ Public Class DVDArt_Common
 
             If type = "movies" Then
                 If downloaded IsNot Nothing Then
-                    Dim replacement As Array = {"movieposter", "posters", "moviebackground", "backdrops"}
+                    Dim replacement As Array = {"""movieposter"":", """posters"":", """moviebackground"":", """backdrops"":"}
                     For x As Integer = 0 To UBound(replacement) - 1 Step 2
                         downloaded = downloaded.Replace(replacement(x), replacement(x + 1))
                     Next
@@ -891,7 +891,7 @@ Public Class DVDArt_Common
                 json = JsonConvert.DeserializeObject(Of fanarttv_music_JSON)(downloaded)
             End If
         Catch ex As Exception
-            logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+            logStats("DVDArt: [JSON_request] ERROR - " & ex.Message, "ERROR")
         End Try
 
         'If type = "movies" Then downloaded += htbackdrops(id)
@@ -927,10 +927,10 @@ Public Class DVDArt_Common
                 readStream.Dispose()
                 Exit Do
             Catch ex As System.Net.WebException
-                logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+                logStats("DVDArt: [Fanart_tv] ERROR - " & ex.Message, "ERROR")
                 tries += 1
             Catch ex As Exception
-                logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+                logStats("DVDArt: [Fanart_tv] ERROR - " & ex.Message, "ERROR")
                 Exit Do
             End Try
 
@@ -963,10 +963,10 @@ Public Class DVDArt_Common
                 readStream.Dispose()
                 Exit Do
             Catch ex As System.Net.WebException
-                logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+                logStats("DVDArt: [theMovieDB] ERROR - " & ex.Message, "ERROR")
                 tries += 1
             Catch ex As Exception
-                logStats("DVDArt: ERROR - " & ex.Message, "ERROR")
+                logStats("DVDArt: [theMovieDB] ERROR - " & ex.Message, "ERROR")
                 Exit Do
             End Try
 
@@ -1125,6 +1125,9 @@ Public Class DVDArt_Common
 
                 If downstring <> Nothing Then
                     Dim filename As String = downstring.Replace("/", "")
+
+                    If Left(downstring, 1) = "/" Then downstring = Right(downstring, Len(downstring) - 1)
+
                     downstring = "http://image.tmdb.org/t/p/w300/" & downstring
 
                     Dim ImageClient As New System.Net.WebClient
@@ -1324,7 +1327,7 @@ Public Class DVDArt_Common
             Try
                 SQLcommand.ExecuteNonQuery()
             Catch ex As Exception
-                logStats("DVDArt: " & SQLcommand.CommandText & " failed with exception - " & ex.Message, "ERROR")
+                logStats("DVDArt: [import] " & SQLcommand.CommandText & " failed with exception - " & ex.Message, "ERROR")
             End Try
 
             SQLconnect.Close()
@@ -1396,7 +1399,7 @@ Public Class DVDArt_Common
 
             endp = InStr(parm, "|")
             path = Left(parm, endp - 1)
-            url = Right(parm, Microsoft.VisualBasic.Len(parm) - endp)
+            url = Right(parm, Len(parm) - endp)
 
             'download image and if set to shrink, reduce size accordingly
 
@@ -1404,37 +1407,43 @@ Public Class DVDArt_Common
 
                 Dim image As Image = downloadimage(url)
 
-                If InStr(path, "\DVDArt\") Then
-                    If shrink Then factor = 500 / image.Size.Height
-                ElseIf InStr(path, folder(0, 4, 1)) Then
-                    factor = _coversize / image.Size.Width
-                End If
+                If image IsNot Nothing Then
 
-                image = New Bitmap(image, New Size(image.Size.Width * factor, image.Size.Height * factor))
-                image.Save(path)
-                image.Dispose()
-
-                logStats("DVDArt: artwork downloaded to " & path, "LOG")
-
-                Dim info As New IO.FileInfo(path)
-
-                If info.Extension = ".jpg" And (InStr(url, "/preview/") = 0 Or InStr(url, "/w1920/") > 0) Then
-
-                    reduceSize(path, info.Length)
-
-                    Dim database As String = Nothing
-                    Dim t As String = Nothing
-                    Get_Paths(database, t)
-
-                    If InStr(url, "/w" & _coversize & "/") > 0 Or InStr(url, "movieposter") > 0 Or InStr(LCase(path), "\covers\") > 0 Then
-                        If InStr(LCase(path), "\fullsize\") > 0 Then
-                            updateMovingPicturesDB(database, "cover", IO.Path.GetFileNameWithoutExtension(path), path)
-                        ElseIf InStr(LCase(path), "covers\thumbs\") > 0 Then
-                            updateMovingPicturesDB(database, "coverthumb", IO.Path.GetFileNameWithoutExtension(path), path)
-                        End If
-                    Else
-                        If InStr(LCase(path), "\backdrops\thumbs\") = 0 Then updateMovingPicturesDB(database, "backdrop", IO.Path.GetFileNameWithoutExtension(path), path)
+                    If InStr(path, "\DVDArt\") Then
+                        If shrink Then factor = 500 / image.Size.Height
+                    ElseIf InStr(path, folder(0, 4, 1)) Then
+                        factor = _coversize / image.Size.Width
                     End If
+
+                    image = New Bitmap(image, New Size(image.Size.Width * factor, image.Size.Height * factor))
+                    image.Save(path)
+                    image.Dispose()
+
+                    logStats("DVDArt: artwork downloaded to " & path, "LOG")
+
+                    Dim info As New IO.FileInfo(path)
+
+                    If info.Extension = ".jpg" And (InStr(url, "/preview/") = 0 Or InStr(url, "/w1920/") > 0) Then
+
+                        reduceSize(path, info.Length)
+
+                        Dim database As String = Nothing
+                        Dim t As String = Nothing
+                        Get_Paths(database, t)
+
+                        If InStr(url, "/w" & _coversize & "/") > 0 Or InStr(url, "movieposter") > 0 Or InStr(LCase(path), "\covers\") > 0 Then
+                            If InStr(LCase(path), "\fullsize\") > 0 Then
+                                updateMovingPicturesDB(database, "cover", IO.Path.GetFileNameWithoutExtension(path), path)
+                            ElseIf InStr(LCase(path), "covers\thumbs\") > 0 Then
+                                updateMovingPicturesDB(database, "coverthumb", IO.Path.GetFileNameWithoutExtension(path), path)
+                            End If
+                        Else
+                            If InStr(LCase(path), "\backdrops\thumbs\") = 0 Then updateMovingPicturesDB(database, "backdrop", IO.Path.GetFileNameWithoutExtension(path), path)
+                        End If
+                    End If
+
+                Else
+                    logStats("DVDArt: no artwork downloaded to " & path, "LOG")
                 End If
 
             End If
@@ -1442,7 +1451,7 @@ Public Class DVDArt_Common
             logStats("DVDArt: download thread complete for [" & parm & "]", "DEBUG")
 
         Catch ex As Exception
-            logStats("DVDArt: Error downloading with exception " & ex.Message, "ERROR")
+            logStats("DVDArt: [bw_download_worker] Error downloading with exception " & ex.Message, "ERROR")
         End Try
 
         e.Result = "DONE"
@@ -1598,7 +1607,7 @@ Public Class DVDArt_Common
             End If
 
         Catch ex As Exception
-            Log.Error("DVDArt: download failed with exception - " & ex.Message)
+            Log.Error("DVDArt: [download] failed with exception - " & ex.Message)
         End Try
 
         Return found
