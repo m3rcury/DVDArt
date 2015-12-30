@@ -287,7 +287,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <VersionDescription>Fixed background scraping.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2015-09-21T23:39:41</ReleaseDate>
+    <ReleaseDate>2015-12-13T23:39:41</ReleaseDate>
     <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures, tvseries, music, actors, writers, directors, myfilms</Tags>
     <Location>E:\Software\MediaPortal\DVDArt_Plugin\[Name]-v[Version].mpe1</Location>
     <Params>
@@ -370,21 +370,21 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{289b35e2-2c7a-4795-bd91-f58cdb6358c4}-DVDArt_Plugin.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{903f69a4-bb5f-4823-b553-3cb7ce124a84}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{026ef87a-0a66-473f-8095-d7b41339fea4}-DVDArt_Plugin_logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{d26487f8-3475-41d1-9635-e7cd817d41ab}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{70f6df19-ed27-45e6-86c2-1f996472988f}-MP_Packaging.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{f2bcd264-3f0b-4385-af38-eaad8ef3c93c}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
