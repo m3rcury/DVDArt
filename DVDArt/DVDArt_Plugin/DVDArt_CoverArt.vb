@@ -40,7 +40,7 @@ Public Class DVDArt_CoverArt
         _movie_name = movie_name.Replace("""", Nothing)
     End Sub
 
-    Private Sub lv_coverart_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_coverart.SelectedIndexChanged
+    Private Sub lv_coverart_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_coverart.SelectedIndexChanged
 
         Dim path As String
         Dim factor As Decimal
@@ -65,7 +65,7 @@ Public Class DVDArt_CoverArt
 
     End Sub
 
-    Private Sub DVDArt_CoverArt_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub DVDArt_CoverArt_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         cb_title_and_logos_CheckedChanged(Nothing, Nothing)
 
@@ -123,7 +123,7 @@ Public Class DVDArt_CoverArt
 
     End Sub
 
-    Private Sub b_preview_Click(sender As System.Object, e As System.EventArgs) Handles b_preview.Click
+    Private Sub b_preview_Click(sender As Object, e As EventArgs) Handles b_preview.Click
 
         Dim file As String = DVDArt_Common._temp & "\" & _imdb_id & ".jpg"
         Dim file2 As String = DVDArt_Common._temp & "\" & _imdb_id & ".png"
@@ -135,12 +135,12 @@ Public Class DVDArt_CoverArt
 
     End Sub
 
-    Private Sub b_change_layout_Click(sender As System.Object, e As System.EventArgs) Handles b_change_layout.Click
+    Private Sub b_change_layout_Click(sender As Object, e As EventArgs) Handles b_change_layout.Click
         Dim layout As New DVDArt_layout
         layout.ChangeLayout(this_template_type, this_template_type)
     End Sub
 
-    Private Sub b_done_Click(sender As System.Object, e As System.EventArgs) Handles b_done.Click
+    Private Sub b_done_Click(sender As Object, e As EventArgs) Handles b_done.Click
 
         Dim file2 As String = _thumbs & DVDArt_Common.folder(0, 0, 0) & _imdb_id & ".png"
 
@@ -188,7 +188,7 @@ Public Class DVDArt_CoverArt
 
     End Sub
 
-    Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.TextChanged, cb_logos.CheckedChanged
+    Private Sub cb_title_and_logos_CheckedChanged(sender As Object, e As EventArgs) Handles cb_title.TextChanged, cb_logos.CheckedChanged
         b_change_layout.Enabled = cb_title.SelectedIndex > 0 Or cb_logos.Checked
     End Sub
 

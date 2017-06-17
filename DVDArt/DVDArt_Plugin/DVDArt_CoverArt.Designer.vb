@@ -63,7 +63,7 @@ Partial Class DVDArt_CoverArt
         Me.pb_coverart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
         Me.pb_coverart.TabIndex = 1
         Me.pb_coverart.TabStop = False
-        Me.tt_preview.SetToolTip(Me.pb_coverart, "Use mouse to position coverart for best visibility." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Image has been resized for" & _
+        Me.tt_preview.SetToolTip(Me.pb_coverart, "Use mouse to position coverart for best visibility." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Image has been resized for" &
         " best fit, and only vertical" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "movement is allowed.")
         '
         'l_copyright
@@ -75,7 +75,7 @@ Partial Class DVDArt_CoverArt
         Me.l_copyright.Name = "l_copyright"
         Me.l_copyright.Size = New System.Drawing.Size(138, 12)
         Me.l_copyright.TabIndex = 25
-        Me.l_copyright.Text = "Copyright © 2012-2015, m3rcury"
+        Me.l_copyright.Text = "Copyright © 2012-2017, m3rcury"
         '
         'b_done
         '

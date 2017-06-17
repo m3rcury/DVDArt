@@ -8,12 +8,10 @@ Imports System.ComponentModel
 Imports System.Data.SQLite
 Imports System.IO
 Imports System.Text
-Imports System.Threading
 Imports System.Reflection
 Imports System.Security.Cryptography
 
 Imports Newtonsoft.Json
-imports Newtonsoft.Json.Serialization
 
 Imports MyFilmsPlugin.DataBase
 Imports MyFilmsPlugin.MyFilms.Utils
@@ -78,7 +76,16 @@ Public Class DVDArt_Common
     End Structure
 
     Public Shared _version, folder(2, 5, 1), lang(4), langcode(4), _coversize As String
-    Public Shared WithEvents bw_download0, bw_download1, bw_download2, bw_download3, bw_download4, bw_download5, bw_download6, bw_download7, bw_download8, bw_download9 As New BackgroundWorker
+    Public Shared WithEvents bw_download0 As New BackgroundWorker
+    Public Shared WithEvents bw_download1 As New BackgroundWorker
+    Public Shared WithEvents bw_download2 As New BackgroundWorker
+    Public Shared WithEvents bw_download3 As New BackgroundWorker
+    Public Shared WithEvents bw_download4 As New BackgroundWorker
+    Public Shared WithEvents bw_download5 As New BackgroundWorker
+    Public Shared WithEvents bw_download6 As New BackgroundWorker
+    Public Shared WithEvents bw_download7 As New BackgroundWorker
+    Public Shared WithEvents bw_download8 As New BackgroundWorker
+    Public Shared WithEvents bw_download9 As New BackgroundWorker
     Public Shared _temp As String = Environ("temp")
     Public Shared timeout As Integer = 5000
 
@@ -576,11 +583,11 @@ Public Class DVDArt_Common
         Dim MBID As String = Nothing
 
         If mode = "music" Then
-            url = Uri.EscapeUriString("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" & artist & "&lang=en&autocorrect=1&api_key=80c3a2a37a2b6666b38c107759645e48&format=json")
+            url = Uri.EscapeUriString("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" & artist & "&api_key=80c3a2a37a2b6666b38c107759645e48&format=json")
         ElseIf mode = "track" Then
-            url = Uri.EscapeUriString("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&autocorrect=1&api_key=80c3a2a37a2b6666b38c107759645e48&artist=" & artist & "&track=" & search.Replace(" ", "%20") & "&format=json")
+            url = Uri.EscapeUriString("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=80c3a2a37a2b6666b38c107759645e48&artist=" & artist & "&track=" & search.Replace(" ", "%20") & "&format=json")
         ElseIf mode = "album" Then
-            url = Uri.EscapeUriString("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&lang=en&autocorrect=1&api_key=80c3a2a37a2b6666b38c107759645e48&artist=" & artist & "&album=" & search & "&format=json")
+            url = Uri.EscapeUriString("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=80c3a2a37a2b6666b38c107759645e48&artist=" & artist & "&album=" & search.Replace(" ", "%20") & "&format=json")
         Else
             Return Nothing
         End If
@@ -607,6 +614,8 @@ Public Class DVDArt_Common
                     startp = InStr(Lastfm_XML, "title"":")
                     startp = InStr(startp, Lastfm_XML, "mbid"":") + 7
                 End If
+
+                If startp = 7 Then Return Nothing
 
                 endp = InStr(startp, Lastfm_XML, """,")
                 len = endp - startp
@@ -663,6 +672,8 @@ Public Class DVDArt_Common
 
                 startp = InStr(theAudioDB_XML, "strMusicBrainzID"":") + 19
 
+                If startp = 19 Then Return Nothing
+
                 endp = InStr(startp, theAudioDB_XML, """,")
                 len = endp - startp
 
@@ -718,8 +729,12 @@ Public Class DVDArt_Common
 
                 If MBz_XML.Contains("ext:score=""100""") Then
                     startp = InStr(MBz_XML, "<artist id=") + 12
+
+                    If startp = 12 Then Return Nothing
+
                     endp = InStr(startp, MBz_XML, """")
                     len = endp - startp
+
                     If len > 0 Then
                         MBID = Mid(MBz_XML, startp, len)
                     Else
@@ -733,6 +748,8 @@ Public Class DVDArt_Common
 
                 If MBz_XML.Contains("<title>" & track & "</title>") Then
                     startp = InStr(MBz_XML, "<release id=") + 13
+                    If startp = 13 Then Return Nothing
+
                     endp = InStr(startp, MBz_XML, """")
                     len = endp - startp
                     MBID = Mid(MBz_XML, startp, len)
@@ -806,7 +823,7 @@ Public Class DVDArt_Common
 
             ElseIf type = "music" Then
 
-                populate_details(jsonresponse.banner, language, details, -1, 2, max_download)
+                populate_details(jsonresponse.musicbanner, language, details, -1, 2, max_download)
                 populate_details(jsonresponse.musiclogo, language, details, populate_details(jsonresponse.hdmusiclogo, language, details, -1, 4, max_download), 4, max_download)
 
             End If
@@ -1093,7 +1110,7 @@ Public Class DVDArt_Common
         Try
             Dim apikey As String = "cc25933c4094ca50635f94574491f320"
 
-            Dim url As String = Uri.EscapeUriString("http://api.themoviedb.org/3/search/person?api_key=" & apikey & "&query=" & LCase(artist))
+            Dim url As String = Uri.EscapeUriString("http://api.themoviedb.org/3/search/person?api_key=" & apikey & "&query=" & Trim(LCase(artist)))
 
             Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
             WebClient.Accept = "application/json"
@@ -1117,18 +1134,19 @@ Public Class DVDArt_Common
                 images.RemoveAll(AddressOf cotainsNULL)
 
                 For Each image In images
-                    If InStr(image, "}") > 0 Then
+                    If InStr(image, """,""name"":") Then
+                        downstring = Left(image, InStr(image, """,""name"":") - 1).Replace("""", "")
+                        Exit For
+                    ElseIf InStr(image, "}") > 0 Then
                         downstring = Left(image, InStr(image, "}") - 1).Replace("""", "")
                         Exit For
                     End If
                 Next
 
                 If downstring <> Nothing Then
-                    Dim filename As String = downstring.Replace("/", "")
+                    Dim filename As String = downstring.Replace("/", "").Replace("\", "")
 
-                    If Left(downstring, 1) = "/" Then downstring = Right(downstring, Len(downstring) - 1)
-
-                    downstring = "http://image.tmdb.org/t/p/w300/" & downstring
+                    downstring = "http://image.tmdb.org/t/p/w300/" & downstring.Replace("/", "").Replace("\", "")
 
                     Dim ImageClient As New System.Net.WebClient
                     Dim ImageInBytes() As Byte
@@ -1377,7 +1395,7 @@ Public Class DVDArt_Common
 
     End Function
 
-    Public Shared Sub bw_download_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork, bw_download6.DoWork, bw_download7.DoWork, bw_download8.DoWork, bw_download9.DoWork
+    Public Shared Sub bw_download_worker(ByVal sender As Object, ByVal e As DoWorkEventArgs) Handles bw_download0.DoWork, bw_download1.DoWork, bw_download2.DoWork, bw_download3.DoWork, bw_download4.DoWork, bw_download5.DoWork, bw_download6.DoWork, bw_download7.DoWork, bw_download8.DoWork, bw_download9.DoWork
 
         Try
 
@@ -1692,6 +1710,11 @@ Public Class DVDArt_Common
 
     End Sub
 
+    Public Shared Function getStudios(studios As String) As String
+        studios = studios.Replace("|", "_PIPE_")
+        Return String.Join("_", studios.Split(Path.GetInvalidFileNameChars())).Replace(" ", "_").Replace("_PIPE_", "|")
+    End Function
+
     Public Shared Sub create_CoverArt(ByVal file As String, ByVal imagename As String, ByVal name As String, ByVal _title As Integer, ByVal _logos As Boolean, ByVal template As Integer, Optional ByVal preview As Boolean = False, Optional ByVal previewfile As String = Nothing, Optional ByVal type As String = "dvdart")
 
         If Trim(file) = "" Then Exit Sub
@@ -1744,7 +1767,7 @@ Public Class DVDArt_Common
 
             If Not IsDBNull(SQLreader(0)) Then videoresolution = LCase(SQLreader(0))
             If Not IsDBNull(SQLreader(1)) Then certification = LCase(SQLreader(1))
-            If Not IsDBNull(SQLreader(2)) Then studios = Split(LCase(SQLreader(2).replace(" ", "_")), "|")
+            If Not IsDBNull(SQLreader(2)) Then studios = Split(getStudios(LCase(SQLreader(2))), "|")
             If Not IsDBNull(SQLreader(3)) Then is3d = SQLreader(3)
 
             SQLreader.Close()
@@ -1819,7 +1842,7 @@ Public Class DVDArt_Common
                             logos = {"""" & studio(0) & """", "-geometry", "+155", "-composite"}
                         Case 2
                             logos = {"""" & studio(0) & """", "-geometry", "+148-50", "-composite", """" & studio(1) & """", "-geometry", "+148+50", "-composite"}
-                        Case 3
+                        Case Else
                             logos = {"""" & studio(0) & """", "-geometry", "+130-85", "-composite", """" & studio(1) & """", "-geometry", "+155", "-composite", """" & studio(2) & """", "-geometry", "+130+85", "-composite"}
                     End Select
 
@@ -1835,7 +1858,7 @@ Public Class DVDArt_Common
 
                 If Not FileSystem.FileExists(certification) Then
                     Try
-                        'url = New Uri("https://dvdart.googlecode.com/svn/trunk/Certification/logos/" + certification + ".png")
+                        'url = New Uri("https: //dvdart.googlecode.com/svn/trunk/Certification/logos/" + certification + ".png")
                         url = New Uri("https://raw.githubusercontent.com/m3rcury/DVDArt/master/Certification/logos/" + certification + ".png")
                         certification = _temp & "\" & certification & ".png"
                         objDL.DownloadFile(url, certification)
@@ -2084,7 +2107,7 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.3.3"
+        _version = "v1.0.3.6"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 

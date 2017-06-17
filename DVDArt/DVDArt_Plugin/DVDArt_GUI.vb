@@ -105,7 +105,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub bw_coverart_worker(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_coverart.DoWork
+    Private Sub bw_coverart_worker(ByVal sender As Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bw_coverart.DoWork
 
         If Not IO.File.Exists(database & DVDArt_Common.p_Databases("movingpictures")) Then Exit Sub
 
@@ -170,7 +170,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub bw_compress_worker(sender As System.Object, e As System.ComponentModel.DoWorkEventArgs) Handles bw_compress.DoWork
+    Private Sub bw_compress_worker(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bw_compress.DoWork
 
         For Each filePath As String In IO.Directory.GetFiles(thumbs & DVDArt_Common.folder(0, 0, 0))
 
@@ -182,7 +182,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub bw_import_worker(sender As System.Object, e As System.ComponentModel.DoWorkEventArgs) Handles bw_import.DoWork
+    Private Sub bw_import_worker(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bw_import.DoWork
 
         Dim parm As String = e.Argument
         Dim x, y As Integer
@@ -560,13 +560,13 @@ Public Class DVDArt_GUI
 
                     type = l_import_queue.Item(x)
                     endp = InStr(type, "|") - 1
-                    id = Microsoft.Visualbasic.Left(type, endp)
+                    id = Microsoft.VisualBasic.Left(type, endp)
                     endp += 1
-                    type = Microsoft.Visualbasic.Right(type, Microsoft.VisualBasic.Len(l_import_queue.Item(x)) - endp)
+                    type = Microsoft.VisualBasic.Right(type, Microsoft.VisualBasic.Len(l_import_queue.Item(x)) - endp)
                     endp = InStr(type, "|") - 1
-                    title = Microsoft.Visualbasic.Left(type, endp)
+                    title = Microsoft.VisualBasic.Left(type, endp)
                     endp += 1
-                    type = Microsoft.Visualbasic.Right(type, Microsoft.VisualBasic.Len(type) - endp)
+                    type = Microsoft.VisualBasic.Right(type, Microsoft.VisualBasic.Len(type) - endp)
 
                     lv_import.Items(l_import_index(x)).StateImageIndex = 0
 
@@ -788,7 +788,7 @@ Public Class DVDArt_GUI
 
                         Next
 
-                    ElseIf Microsoft.Visualbasic.Left(type, 12) = "music/albums" Then
+                    ElseIf Microsoft.VisualBasic.Left(type, 12) = "music/albums" Then
 
                         downloaded = DVDArt_Common.import(database, thumbs, id, title, _lang, type & "|" & title, personpath, checked)
 
@@ -977,7 +977,7 @@ Public Class DVDArt_GUI
         Dim SQLconnect As New SQLiteConnection()
         Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
 
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
         SQLconnect.Open()
         SQLcommand.CommandText = "UPDATE processed_artist SET MBID = '" & new_MBID & "' WHERE MBID = '" & old_MBID & "'"
         SQLcommand.ExecuteNonQuery()
@@ -1047,7 +1047,7 @@ Public Class DVDArt_GUI
 
         If Not cb_autoimport.Checked And b_import.Enabled Then Exit Sub
 
-        Me.Cursor = Cursors.WaitCursor
+        Cursor = Cursors.WaitCursor
 
         Dim x As Integer
         Dim details As Array = Nothing
@@ -1058,7 +1058,7 @@ Public Class DVDArt_GUI
 
             Dim jsonresponse As Object
 
-            If Microsoft.Visualbasic.Left(type, 12) <> "music/albums" Then
+            If Microsoft.VisualBasic.Left(type, 12) <> "music/albums" Then
                 jsonresponse = DVDArt_Common.JSON_request(id, type)
             Else
                 jsonresponse = DVDArt_Common.JSON_request(id, "music")
@@ -1295,7 +1295,7 @@ Public Class DVDArt_GUI
 
         End If
 
-        Me.Cursor = Cursors.Default
+        Cursor = Cursors.Default
 
     End Sub
 
@@ -1671,9 +1671,9 @@ Public Class DVDArt_GUI
 
         ' create processed series table with a unique index
 
-        If Not FileExists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
+        If Not FileExists(database & DVDArt_Common.p_Databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_Databases("dvdart"))
 
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
         SQLconnect.Open()
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_series(thetvdb_id TEXT)"
         SQLcommand.ExecuteNonQuery()
@@ -1863,7 +1863,7 @@ Public Class DVDArt_GUI
         Dim found, missing As Boolean
         Dim x As Integer = 0
 
-        If Not IO.File.Exists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_Databases("dvdart"))
 
         Try
             SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
@@ -2050,9 +2050,9 @@ Public Class DVDArt_GUI
         Dim found, missing As Boolean
         Dim x As Integer = 0
 
-        If Not IO.File.Exists(database & DVDArt_Common.p_databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_databases("dvdart"))
+        If Not IO.File.Exists(database & DVDArt_Common.p_Databases("dvdart")) Then SQLiteConnection.CreateFile(database & DVDArt_Common.p_Databases("dvdart"))
 
-        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_databases("dvdart")
+        SQLconnect.ConnectionString = "Data Source=" & database & DVDArt_Common.p_Databases("dvdart")
         SQLconnect.Open()
         SQLcommand.CommandText = "CREATE TABLE IF NOT EXISTS processed_music(album TEXT, MBID TEXT)"
         SQLcommand.ExecuteNonQuery()
@@ -2257,7 +2257,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_movies_GotFocus(sender As Object, e As System.EventArgs) Handles lv_movies.GotFocus, lv_movies_missing.GotFocus
+    Private Sub lv_movies_GotFocus(sender As Object, e As EventArgs) Handles lv_movies.GotFocus, lv_movies_missing.GotFocus
         cms_found.Items.Item(cms_found.Items.IndexOfKey("SelectCoverArtForDVDArt_found")).Visible = True
         cms_found.Items.Item(cms_found.Items.IndexOfKey("ChangeMBID_found")).Visible = False
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("SelectCoverArtForDVDArt_missing")).Visible = True
@@ -2265,7 +2265,7 @@ Public Class DVDArt_GUI
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("ChangeMBID_missing")).Visible = False
     End Sub
 
-    Private Sub lv_movies_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_movies.SelectedIndexChanged
+    Private Sub lv_movies_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_movies.SelectedIndexChanged
 
         Try
 
@@ -2304,7 +2304,7 @@ Public Class DVDArt_GUI
 
                             If IO.File.Exists(path & current_imdb_id & ".jpg") Then
                                 thumbpath = path & current_imdb_id & ".jpg"
-                                lv_movies.FocusedItem.SubItems.Item(3).Text = thumbpath
+                                lv_movies.FocusedItem.SubItems.Item(2).Text = thumbpath
                             End If
                         End If
                     ElseIf x = 5 Then
@@ -2366,7 +2366,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_person_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_person.SelectedIndexChanged
+    Private Sub lv_person_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_person.SelectedIndexChanged
 
         Try
 
@@ -2385,7 +2385,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_series_GotFocus(sender As Object, e As System.EventArgs) Handles lv_series.GotFocus, lv_series_missing.GotFocus
+    Private Sub lv_series_GotFocus(sender As Object, e As EventArgs) Handles lv_series.GotFocus, lv_series_missing.GotFocus
         cms_found.Items.Item(cms_found.Items.IndexOfKey("SelectCoverArtForDVDArt_found")).Visible = False
         cms_found.Items.Item(cms_found.Items.IndexOfKey("ChangeMBID_found")).Visible = False
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("SelectCoverArtForDVDArt_missing")).Visible = False
@@ -2393,7 +2393,7 @@ Public Class DVDArt_GUI
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("ChangeMBID_missing")).Visible = False
     End Sub
 
-    Private Sub lv_series_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_series.SelectedIndexChanged
+    Private Sub lv_series_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_series.SelectedIndexChanged
 
         Try
 
@@ -2432,7 +2432,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_artist_GotFocus(sender As Object, e As System.EventArgs) Handles lv_artist.GotFocus, lv_music_missing.GotFocus, lv_album.GotFocus
+    Private Sub lv_artist_GotFocus(sender As Object, e As EventArgs) Handles lv_artist.GotFocus, lv_music_missing.GotFocus, lv_album.GotFocus
         cms_found.Items.Item(cms_found.Items.IndexOfKey("SelectCoverArtForDVDArt_found")).Visible = False
         cms_found.Items.Item(cms_found.Items.IndexOfKey("ChangeMBID_found")).Visible = True
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("SelectCoverArtForDVDArt_missing")).Visible = False
@@ -2440,7 +2440,7 @@ Public Class DVDArt_GUI
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("ChangeMBID_missing")).Visible = True
     End Sub
 
-    Private Sub lv_artist_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_artist.SelectedIndexChanged
+    Private Sub lv_artist_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_artist.SelectedIndexChanged
 
         Try
 
@@ -2480,7 +2480,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_album_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_album.SelectedIndexChanged
+    Private Sub lv_album_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_album.SelectedIndexChanged
 
         Try
 
@@ -2522,7 +2522,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_movies_missing_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles lv_movies_missing.GotFocus
+    Private Sub lv_movies_missing_GotFocus(ByVal sender As Object, ByVal e As EventArgs) Handles lv_movies_missing.GotFocus
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("SelectCoverArtForDVDArt_missing")).Visible = False
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("UseCoverArtForDVDArt_missing")).Visible = False
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("ChangeMBID_missing")).Visible = True
@@ -2569,7 +2569,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_series_missing_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles lv_series_missing.GotFocus
+    Private Sub lv_series_missing_GotFocus(ByVal sender As Object, ByVal e As EventArgs) Handles lv_series_missing.GotFocus
         cms_missing.Items.Item(cms_missing.Items.IndexOfKey("SelectCoverArtForDVDArt_missing")).Visible = False
     End Sub
 
@@ -2709,8 +2709,8 @@ Public Class DVDArt_GUI
                         Dim upload As New DVDArt_ManualUpload(imdb_id, title, "movies")
                         upload.ShowDialog()
 
-                        If FileExists(thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png") Or _
-                           FileExists(thumbs & DVDArt_Common.folder(0, 1, 1) & imdb_id & ".png") Or _
+                        If FileExists(thumbs & DVDArt_Common.folder(0, 0, 1) & imdb_id & ".png") Or
+                           FileExists(thumbs & DVDArt_Common.folder(0, 1, 1) & imdb_id & ".png") Or
                            FileExists(thumbs & DVDArt_Common.folder(0, 2, 1) & imdb_id & ".png") Then
 
                             li_import = lv_import.Items.Add(title)
@@ -2789,7 +2789,7 @@ Public Class DVDArt_GUI
                         Dim upload As New DVDArt_ManualUpload(thetvdb_id, title, "tv")
                         upload.ShowDialog()
 
-                        If FileExists(thumbs & DVDArt_Common.folder(1, 1, 1) & thetvdb_id & ".png") Or _
+                        If FileExists(thumbs & DVDArt_Common.folder(1, 1, 1) & thetvdb_id & ".png") Or
                            FileExists(thumbs & DVDArt_Common.folder(1, 2, 1) & thetvdb_id & ".png") Then
 
                             li_import = lv_import.Items.Add(title)
@@ -2876,8 +2876,8 @@ Public Class DVDArt_GUI
                             upload.ShowDialog()
                         End If
 
-                        If FileExists(thumbs & DVDArt_Common.folder(2, 0, 1) & title & ".png") Or _
-                           FileExists(thumbs & DVDArt_Common.folder(2, 1, 1) & title & ".png") Or _
+                        If FileExists(thumbs & DVDArt_Common.folder(2, 0, 1) & title & ".png") Or
+                           FileExists(thumbs & DVDArt_Common.folder(2, 1, 1) & title & ".png") Or
                            FileExists(thumbs & DVDArt_Common.folder(2, 2, 1) & title & ".png") Then
 
                             Dim mbid As String = lv_music_missing.SelectedItems(x).SubItems(4).Text
@@ -3021,7 +3021,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_movie_dvdart_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_movie_dvdart.SelectedIndexChanged
+    Private Sub lv_movie_dvdart_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_movie_dvdart.SelectedIndexChanged
 
         For Each item In lv_movie_dvdart.SelectedItems
 
@@ -3037,7 +3037,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_movie_clearart_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_movie_clearart.SelectedIndexChanged
+    Private Sub lv_movie_clearart_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_movie_clearart.SelectedIndexChanged
 
         For Each item In lv_movie_clearart.SelectedItems
 
@@ -3053,7 +3053,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_movie_clearlogo_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_movie_clearlogo.SelectedIndexChanged
+    Private Sub lv_movie_clearlogo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_movie_clearlogo.SelectedIndexChanged
 
         For Each item In lv_movie_clearlogo.SelectedItems
 
@@ -3085,7 +3085,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_movie_backdrop_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_movie_backdrop.SelectedIndexChanged
+    Private Sub lv_movie_backdrop_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_movie_backdrop.SelectedIndexChanged
 
         For Each item In lv_movie_backdrop.SelectedItems
 
@@ -3101,7 +3101,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_movie_cover_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_movie_cover.SelectedIndexChanged
+    Private Sub lv_movie_cover_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_movie_cover.SelectedIndexChanged
 
         For Each item In lv_movie_cover.SelectedItems
 
@@ -3117,7 +3117,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_serie_clearart_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_serie_clearart.SelectedIndexChanged
+    Private Sub lv_serie_clearart_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_serie_clearart.SelectedIndexChanged
 
         For Each item In lv_serie_clearart.SelectedItems
 
@@ -3133,7 +3133,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_serie_clearlogo_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_serie_clearlogo.SelectedIndexChanged
+    Private Sub lv_serie_clearlogo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_serie_clearlogo.SelectedIndexChanged
 
         For Each item In lv_serie_clearlogo.SelectedItems
 
@@ -3149,7 +3149,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_artist_banner_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_artist_banner.SelectedIndexChanged
+    Private Sub lv_artist_banner_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_artist_banner.SelectedIndexChanged
 
         For Each item In lv_artist_banner.SelectedItems
 
@@ -3165,7 +3165,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_artist_clearlogo_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_artist_clearlogo.SelectedIndexChanged
+    Private Sub lv_artist_clearlogo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_artist_clearlogo.SelectedIndexChanged
 
         For Each item In lv_artist_clearlogo.SelectedItems
 
@@ -3181,7 +3181,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub lv_album_cdart_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lv_album_cdart.SelectedIndexChanged
+    Private Sub lv_album_cdart_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lv_album_cdart.SelectedIndexChanged
 
         For Each item In lv_album_cdart.SelectedItems
 
@@ -3303,7 +3303,7 @@ Public Class DVDArt_GUI
         setSettings()
     End Sub
 
-    Private Sub cb_autoimport_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_autoimport.CheckedChanged
+    Private Sub cb_autoimport_CheckedChanged(sender As Object, e As EventArgs) Handles cb_autoimport.CheckedChanged
 
         If cb_autoimport.Checked Then
             b_import_Click(Nothing, Nothing)
@@ -3318,14 +3318,14 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_downloads_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_downloads.CheckedChanged
+    Private Sub cb_downloads_CheckedChanged(sender As Object, e As EventArgs) Handles cb_downloads.CheckedChanged
 
         l_downloads.Visible = cb_downloads.Checked
         nud_downloads.Visible = cb_downloads.Checked
 
     End Sub
 
-    Private Sub cb_backgroundscraper_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_backgroundscraper.CheckedChanged
+    Private Sub cb_backgroundscraper_CheckedChanged(sender As Object, e As EventArgs) Handles cb_backgroundscraper.CheckedChanged
 
         cb_delay.Enabled = cb_backgroundscraper.Checked
         nud_delay.Enabled = cb_backgroundscraper.Checked
@@ -3337,7 +3337,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_DVDArt_movies_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cb_DVDArt_movies.CheckedChanged
+    Private Sub cb_DVDArt_movies_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cb_DVDArt_movies.CheckedChanged
 
         checked(0, 0) = cb_DVDArt_movies.Checked
 
@@ -3350,7 +3350,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_ClearArt_movies_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearArt_movies.CheckedChanged
+    Private Sub cb_ClearArt_movies_CheckedChanged(sender As Object, e As EventArgs) Handles cb_ClearArt_movies.CheckedChanged
 
         checked(0, 1) = cb_ClearArt_movies.Checked
 
@@ -3372,7 +3372,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_ClearLogo_movies_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearLogo_movies.CheckedChanged
+    Private Sub cb_ClearLogo_movies_CheckedChanged(sender As Object, e As EventArgs) Handles cb_ClearLogo_movies.CheckedChanged
 
         checked(0, 2) = cb_ClearLogo_movies.Checked
 
@@ -3402,7 +3402,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_Banner_movies_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cb_Banner_movies.CheckedChanged
+    Private Sub cb_Banner_movies_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cb_Banner_movies.CheckedChanged
 
         checked(0, 3) = cb_Banner_movies.Checked
 
@@ -3433,7 +3433,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_Backdrop_movies_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_Backdrop_movies.CheckedChanged
+    Private Sub cb_Backdrop_movies_CheckedChanged(sender As Object, e As EventArgs) Handles cb_Backdrop_movies.CheckedChanged
 
         checked(0, 4) = cb_Backdrop_movies.Checked
 
@@ -3451,7 +3451,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_Cover_movies_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_Cover_movies.CheckedChanged
+    Private Sub cb_Cover_movies_CheckedChanged(sender As Object, e As EventArgs) Handles cb_Cover_movies.CheckedChanged
 
         checked(0, 5) = cb_Cover_movies.Checked
 
@@ -3464,7 +3464,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_ClearArt_series_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearArt_series.CheckedChanged
+    Private Sub cb_ClearArt_series_CheckedChanged(sender As Object, e As EventArgs) Handles cb_ClearArt_series.CheckedChanged
 
         checked(1, 1) = cb_ClearArt_series.Checked
 
@@ -3477,7 +3477,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_ClearLogo_series_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearLogo_series.CheckedChanged
+    Private Sub cb_ClearLogo_series_CheckedChanged(sender As Object, e As EventArgs) Handles cb_ClearLogo_series.CheckedChanged
 
         checked(1, 2) = cb_ClearLogo_series.Checked
 
@@ -3490,7 +3490,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_CDArt_music_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_CDArt_music.CheckedChanged
+    Private Sub cb_CDArt_music_CheckedChanged(sender As Object, e As EventArgs) Handles cb_CDArt_music.CheckedChanged
 
         checked(2, 0) = cb_CDArt_music.Checked
 
@@ -3509,7 +3509,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_Banner_artist_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_Banner_artist.CheckedChanged
+    Private Sub cb_Banner_artist_CheckedChanged(sender As Object, e As EventArgs) Handles cb_Banner_artist.CheckedChanged
 
         checked(2, 1) = cb_Banner_artist.Checked
 
@@ -3526,7 +3526,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub cb_ClearLogo_artist_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_ClearLogo_artist.CheckedChanged
+    Private Sub cb_ClearLogo_artist_CheckedChanged(sender As Object, e As EventArgs) Handles cb_ClearLogo_artist.CheckedChanged
 
         checked(2, 2) = cb_ClearLogo_artist.Checked
 
@@ -3543,26 +3543,26 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub rb_t1_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles rb_t1.CheckedChanged
+    Private Sub rb_t1_CheckedChanged(sender As Object, e As EventArgs) Handles rb_t1.CheckedChanged
         rb_t1.Image = My.Resources.template_1
         rb_t2.Image = My.Resources.template_2_disabled
         template_type = 1
     End Sub
 
-    Private Sub rb_t2_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles rb_t2.CheckedChanged
+    Private Sub rb_t2_CheckedChanged(sender As Object, e As EventArgs) Handles rb_t2.CheckedChanged
         rb_t1.Image = My.Resources.template_1_disabled
         rb_t2.Image = My.Resources.template_2
         template_type = 2
     End Sub
 
-    Private Sub b_import_Click(sender As System.Object, e As System.EventArgs) Handles b_import.Click
+    Private Sub b_import_Click(sender As Object, e As EventArgs) Handles b_import.Click
         'initialize importer timer
         t_import_timer.Interval = 5000
         t_import_timer.Start()
         b_import.Enabled = False
     End Sub
 
-    Private Sub b_movie_compress_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_compress.Click
+    Private Sub b_movie_compress_Click(sender As Object, e As EventArgs) Handles b_movie_compress.Click
 
         DVDArt_Common.Resize(thumbs & DVDArt_Common.folder(0, 0, 0) & current_imdb_id & ".png")
 
@@ -3574,7 +3574,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub b_movie_deleteart_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deleteart.Click
+    Private Sub b_movie_deleteart_Click(sender As Object, e As EventArgs) Handles b_movie_deleteart.Click
         If lv_movies.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
             If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 1, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 1, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
             If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
@@ -3584,7 +3584,7 @@ Public Class DVDArt_GUI
         End If
     End Sub
 
-    Private Sub b_movie_deletelogo_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deletelogo.Click
+    Private Sub b_movie_deletelogo_Click(sender As Object, e As EventArgs) Handles b_movie_deletelogo.Click
         If lv_movies.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
             If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 2, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 2, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
             If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 2, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 2, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
@@ -3594,12 +3594,12 @@ Public Class DVDArt_GUI
         End If
     End Sub
 
-    Private Sub b_movie_preview_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_preview.Click
+    Private Sub b_movie_preview_Click(sender As Object, e As EventArgs) Handles b_movie_preview.Click
         Dim preview As New DVDArt_Preview(thumbs & DVDArt_Common.folder(0, 0, 0) & current_imdb_id & ".png")
         preview.Show()
     End Sub
 
-    Private Sub b_movie_delete_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_delete.Click
+    Private Sub b_movie_delete_Click(sender As Object, e As EventArgs) Handles b_movie_delete.Click
         If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 0, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 0, 0) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
         If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 0, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(0, 0, 1) & lv_movies.SelectedItems(0).SubItems.Item(1).Text & ".png")
         pb_movie_dvdart.Image = Nothing
@@ -3619,7 +3619,7 @@ Public Class DVDArt_GUI
         End If
     End Sub
 
-    Private Sub b_movie_deletebackdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deletebackdrop.Click
+    Private Sub b_movie_deletebackdrop_Click(sender As Object, e As EventArgs) Handles b_movie_deletebackdrop.Click
         If IO.File.Exists(lv_movies.SelectedItems(0).SubItems.Item(2).Text) Then DeleteFile(lv_movies.SelectedItems(0).SubItems.Item(2).Text)
         If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text)) Then DeleteFile(thumbs & DVDArt_Common.folder(0, 4, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(2).Text))
         pb_movie_backdrop.Image = Nothing
@@ -3629,7 +3629,7 @@ Public Class DVDArt_GUI
         DVDArt_Common.updateMovingPicturesDB(database, "backdrop", IO.Path.GetFileNameWithoutExtension(lv_movies.SelectedItems(0).SubItems.Item(1).Text), "")
     End Sub
 
-    Private Sub b_movie_deletecover_Click(sender As System.Object, e As System.EventArgs) Handles b_movie_deletecover.Click
+    Private Sub b_movie_deletecover_Click(sender As Object, e As EventArgs) Handles b_movie_deletecover.Click
         If IO.File.Exists(lv_movies.SelectedItems(0).SubItems.Item(3).Text) Then DeleteFile(lv_movies.SelectedItems(0).SubItems.Item(3).Text)
         If IO.File.Exists(thumbs & DVDArt_Common.folder(0, 5, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text)) Then DeleteFile(thumbs & DVDArt_Common.folder(0, 5, 1) & IO.Path.GetFileName(lv_movies.SelectedItems(0).SubItems.Item(3).Text))
         pb_movie_cover.Image = Nothing
@@ -3639,7 +3639,7 @@ Public Class DVDArt_GUI
         DVDArt_Common.updateMovingPicturesDB(database, "cover", IO.Path.GetFileNameWithoutExtension(lv_movies.SelectedItems(0).SubItems.Item(1).Text), "")
     End Sub
 
-    Private Sub b_serie_deleteart_Click(sender As System.Object, e As System.EventArgs) Handles b_serie_deleteart.Click
+    Private Sub b_serie_deleteart_Click(sender As Object, e As EventArgs) Handles b_serie_deleteart.Click
         If lv_series.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
             If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 1, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(1, 1, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
             If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 1, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(1, 1, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
@@ -3649,7 +3649,7 @@ Public Class DVDArt_GUI
         End If
     End Sub
 
-    Private Sub b_serie_deletelogo_Click(sender As System.Object, e As System.EventArgs) Handles b_serie_deletelogo.Click
+    Private Sub b_serie_deletelogo_Click(sender As Object, e As EventArgs) Handles b_serie_deletelogo.Click
         If lv_series.SelectedItems(0).SubItems.Item(1).Text <> Nothing Then
             If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 2, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(1, 2, 0) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
             If IO.File.Exists(thumbs & DVDArt_Common.folder(1, 2, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(1, 2, 1) & lv_series.SelectedItems(0).SubItems.Item(1).Text & ".png")
@@ -3659,7 +3659,7 @@ Public Class DVDArt_GUI
         End If
     End Sub
 
-    Private Sub b_album_compress_Click(sender As System.Object, e As System.EventArgs) Handles b_album_compress.Click
+    Private Sub b_album_compress_Click(sender As Object, e As EventArgs) Handles b_album_compress.Click
 
         Dim album As String = Utils.MakeFileName(current_album)
 
@@ -3673,12 +3673,12 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub b_album_preview_Click(sender As System.Object, e As System.EventArgs) Handles b_album_preview.Click
+    Private Sub b_album_preview_Click(sender As Object, e As EventArgs) Handles b_album_preview.Click
         Dim preview As New DVDArt_Preview(thumbs & DVDArt_Common.folder(2, 0, 0) & Utils.MakeFileName(current_album) & ".png")
         preview.Show()
     End Sub
 
-    Private Sub b_album_deletecdart_Click(sender As System.Object, e As System.EventArgs) Handles b_album_delete.Click
+    Private Sub b_album_deletecdart_Click(sender As Object, e As EventArgs) Handles b_album_delete.Click
         If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 0, 0) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 0, 0) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png")
         If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 0, 1) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 0, 1) & lv_album.SelectedItems(0).SubItems.Item(0).Text & ".png")
         pb_album_cdart.Image = Nothing
@@ -3688,7 +3688,7 @@ Public Class DVDArt_GUI
         b_album_delete.Visible = False
     End Sub
 
-    Private Sub b_artist_deletebanner_Click(sender As System.Object, e As System.EventArgs) Handles b_artist_deletebanner.Click
+    Private Sub b_artist_deletebanner_Click(sender As Object, e As EventArgs) Handles b_artist_deletebanner.Click
         If lv_artist.SelectedItems(0).SubItems.Item(0).Text <> Nothing Then
             If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 1, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 1, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
             If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 1, 1) & lv_movies.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 1, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
@@ -3698,7 +3698,7 @@ Public Class DVDArt_GUI
         End If
     End Sub
 
-    Private Sub b_artist_deletelogo_Click(sender As System.Object, e As System.EventArgs) Handles b_artist_deletelogo.Click
+    Private Sub b_artist_deletelogo_Click(sender As Object, e As EventArgs) Handles b_artist_deletelogo.Click
         If lv_artist.SelectedItems(0).SubItems.Item(0).Text <> Nothing Then
             If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 2, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 2, 0) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
             If IO.File.Exists(thumbs & DVDArt_Common.folder(2, 2, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png") Then DeleteFile(thumbs & DVDArt_Common.folder(2, 2, 1) & lv_artist.SelectedItems(0).SubItems.Item(0).Text & ".png")
@@ -3708,7 +3708,7 @@ Public Class DVDArt_GUI
         End If
     End Sub
 
-    Private Sub b_browse_Click(sender As System.Object, e As System.EventArgs) Handles b_music_path.Click, b_series_path.Click, b_movie_path.Click, b_person_path.Click
+    Private Sub b_browse_Click(sender As Object, e As EventArgs) Handles b_music_path.Click, b_series_path.Click, b_movie_path.Click, b_person_path.Click
 
         Dim objShell As Object
         Dim objFolder As Object
@@ -3807,11 +3807,13 @@ Public Class DVDArt_GUI
         Process.Start(url)
     End Sub
 
-    Private Sub DVDArt_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
+    Private Sub DVDArt_FormClosed(ByVal sender As Object, ByVal e As FormClosedEventArgs) Handles Me.FormClosed
+
+        On Error Resume Next
 
         If Err.Number = 0 Then
 
-            Me.Cursor = Cursors.WaitCursor
+            Cursor = Cursors.WaitCursor
 
             Dim url() As String = Nothing
 
@@ -3854,7 +3856,7 @@ Public Class DVDArt_GUI
             If bw_import.IsBusy Then bw_import.CancelAsync()
             If bw_rescan_persons.IsBusy Then bw_rescan_persons.CancelAsync()
 
-            Me.Cursor = Cursors.Default
+            Cursor = Cursors.Default
 
             setSettings()
 
@@ -3866,7 +3868,7 @@ Public Class DVDArt_GUI
 
     End Sub
 
-    Private Sub DVDArt_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    Private Sub DVDArt_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
 
         DVDArt_Common.logStats("DVDArt: Plugin started.", "LOG")
 

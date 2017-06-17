@@ -12,7 +12,7 @@
 
     End Sub
 
-    Private Sub b_done_Click(sender As System.Object, e As System.EventArgs) Handles b_done.Click
+    Private Sub b_done_Click(sender As Object, e As EventArgs) Handles b_done.Click
         Me.Close()
         Return
     End Sub

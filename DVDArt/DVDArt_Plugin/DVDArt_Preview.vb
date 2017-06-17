@@ -36,7 +36,7 @@
         _animate = animate
     End Sub
 
-    Private Sub DVDArt_Preview_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub DVDArt_Preview_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Dim imagesize As String = DVDArt_Common.getSize(IO.Path.GetDirectoryName(_path) & "\" & IO.Path.GetFileName(_path))
         Dim i_dim() As String = Split(imagesize, "x")

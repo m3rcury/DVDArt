@@ -33,7 +33,7 @@ Public Class DVDArt_ManualUpload
         _type = type
     End Sub
 
-    Private Sub DVDArt_ManualUpload_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub DVDArt_ManualUpload_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Dim database As String = String.Empty
 
@@ -93,7 +93,7 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_dvdart_Click(sender As System.Object, e As System.EventArgs) Handles b_dvdart.Click
+    Private Sub b_dvdart_Click(sender As Object, e As EventArgs) Handles b_dvdart.Click
         Dim openFileDialog As New OpenFileDialog
 
         If openFileDialog.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -107,7 +107,7 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_clearart_Click(sender As System.Object, e As System.EventArgs) Handles b_clearart.Click
+    Private Sub b_clearart_Click(sender As Object, e As EventArgs) Handles b_clearart.Click
         Dim openFileDialog As New OpenFileDialog
 
         If openFileDialog.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -121,7 +121,7 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_clearlogo_Click(sender As System.Object, e As System.EventArgs) Handles b_clearlogo.Click
+    Private Sub b_clearlogo_Click(sender As Object, e As EventArgs) Handles b_clearlogo.Click
         Dim openFileDialog As New OpenFileDialog
 
         If openFileDialog.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -135,7 +135,7 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_backdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_backdrop.Click
+    Private Sub b_backdrop_Click(sender As Object, e As EventArgs) Handles b_backdrop.Click
         Dim openFileDialog As New OpenFileDialog
 
         If openFileDialog.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -180,12 +180,12 @@ Public Class DVDArt_ManualUpload
 
     End Function
 
-    Private Sub b_preview_dvdart_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_dvdart.Click
+    Private Sub b_preview_dvdart_Click(sender As Object, e As EventArgs) Handles b_preview_dvdart.Click
         Dim preview As New DVDArt_Preview(tb_dvdart.Text.Replace(IO.Path.GetExtension(tb_dvdart.Text), ".png"))
         preview.Show()
     End Sub
 
-    Private Sub b_preview_clearart_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_clearart.Click
+    Private Sub b_preview_clearart_Click(sender As Object, e As EventArgs) Handles b_preview_clearart.Click
 
         Select Case _type
 
@@ -201,17 +201,17 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_preview_clearlogo_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_clearlogo.Click
+    Private Sub b_preview_clearlogo_Click(sender As Object, e As EventArgs) Handles b_preview_clearlogo.Click
         Dim preview As New DVDArt_Preview(tb_clearlogo.Text.Replace(IO.Path.GetExtension(tb_clearlogo.Text), ".png"), False)
         preview.Show()
     End Sub
 
-    Private Sub b_preview_backdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_preview_backdrop.Click
+    Private Sub b_preview_backdrop_Click(sender As Object, e As EventArgs) Handles b_preview_backdrop.Click
         Dim preview As New DVDArt_Preview(tb_backdrop.Text.Replace(IO.Path.GetExtension(tb_backdrop.Text), ".jpg"), False)
         preview.Show()
     End Sub
 
-    Private Sub b_process_dvdart_Click(sender As System.Object, e As System.EventArgs) Handles b_process_dvdart.Click
+    Private Sub b_process_dvdart_Click(sender As Object, e As EventArgs) Handles b_process_dvdart.Click
 
         If Check_Image(tb_dvdart.Text, 500, 500) Then
             b_process_dvdart.Visible = False
@@ -241,7 +241,7 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_process_clearart_Click(sender As System.Object, e As System.EventArgs) Handles b_process_clearart.Click
+    Private Sub b_process_clearart_Click(sender As Object, e As EventArgs) Handles b_process_clearart.Click
 
         Select Case _type
 
@@ -297,7 +297,7 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_process_clearlogo_Click(sender As System.Object, e As System.EventArgs) Handles b_process_clearlogo.Click
+    Private Sub b_process_clearlogo_Click(sender As Object, e As EventArgs) Handles b_process_clearlogo.Click
 
         If Check_Image(tb_clearlogo.Text, 400, 155) Then
             b_process_clearlogo.Visible = False
@@ -319,7 +319,7 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_process_backdrop_Click(sender As System.Object, e As System.EventArgs) Handles b_process_backdrop.Click
+    Private Sub b_process_backdrop_Click(sender As Object, e As EventArgs) Handles b_process_backdrop.Click
 
         If Check_Image(tb_backdrop.Text, 1920, 1080) Then
             b_process_backdrop.Visible = False
@@ -340,7 +340,7 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_upload_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles b_upload.Click
+    Private Sub b_upload_Click(ByVal sender As Object, ByVal e As EventArgs) Handles b_upload.Click
 
         Me.Cursor = Cursors.WaitCursor
 
@@ -477,8 +477,8 @@ Public Class DVDArt_ManualUpload
             Next
 
 
-            fullsize = thumbs & DVDArt_Common.folder(0, 3, 0) & _imagename & ".jpg"
-            thumb = thumbs & DVDArt_Common.folder(0, 3, 1) & _imagename & ".jpg"
+            fullsize = thumbs & DVDArt_Common.folder(0, 4, 0) & _imagename & ".jpg"
+            thumb = thumbs & DVDArt_Common.folder(0, 4, 1) & _imagename & ".jpg"
 
             'copy to FullSize folder
             FileIO.FileSystem.CopyFile(file, fullsize, True)
@@ -500,16 +500,16 @@ Public Class DVDArt_ManualUpload
 
     End Sub
 
-    Private Sub b_change_layout_Click(sender As System.Object, e As System.EventArgs) Handles b_change_layout.Click
+    Private Sub b_change_layout_Click(sender As Object, e As EventArgs) Handles b_change_layout.Click
         Dim layout As New DVDArt_Layout
         layout.ChangeLayout(this_template_type, this_template_type)
     End Sub
 
-    Private Sub cb_title_and_logos_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles cb_title.TextChanged, cb_logos.CheckedChanged
+    Private Sub cb_title_and_logos_CheckedChanged(sender As Object, e As EventArgs) Handles cb_title.TextChanged, cb_logos.CheckedChanged
         b_change_layout.Enabled = cb_title.SelectedIndex > 0 Or cb_logos.Checked
     End Sub
 
-    Private Sub tb_dvdart_TextChanged(sender As System.Object, e As System.EventArgs) Handles tb_dvdart.TextChanged
+    Private Sub tb_dvdart_TextChanged(sender As Object, e As EventArgs) Handles tb_dvdart.TextChanged
 
     End Sub
 

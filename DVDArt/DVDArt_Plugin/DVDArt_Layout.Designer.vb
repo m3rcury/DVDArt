@@ -66,7 +66,7 @@ Partial Class DVDArt_Layout
         Me.l_copyright.Name = "l_copyright"
         Me.l_copyright.Size = New System.Drawing.Size(138, 12)
         Me.l_copyright.TabIndex = 28
-        Me.l_copyright.Text = "Copyright © 2012-2015, m3rcury"
+        Me.l_copyright.Text = "Copyright © 2012-2017, m3rcury"
         '
         'DVDArt_Layout
         '

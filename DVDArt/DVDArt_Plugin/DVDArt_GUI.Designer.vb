@@ -469,7 +469,7 @@ Partial Class DVDArt_GUI
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(160, 13)
         Me.Label1.TabIndex = 24
-        Me.Label1.Text = "Copyright © 2012-2015, m3rcury"
+        Me.Label1.Text = "Copyright © 2012-2017, m3rcury"
         '
         'il_clearart
         '
@@ -2918,8 +2918,8 @@ Partial Class DVDArt_GUI
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(492, 48)
         Me.Label16.TabIndex = 0
-        Me.Label16.Text = "This plugin scans your MovingPictures, My Films, My Videos, TVSeries and Music" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "d" & _
-    "atabases to download available Artwork from the fanart.tv and themoviedb.org" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "we" & _
+        Me.Label16.Text = "This plugin scans your MovingPictures, My Films, My Videos, TVSeries and Music" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "d" &
+    "atabases to download available Artwork from the fanart.tv and themoviedb.org" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "we" &
     "bsites."
         '
         'GroupBox3
@@ -2943,8 +2943,8 @@ Partial Class DVDArt_GUI
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(492, 48)
         Me.Label13.TabIndex = 0
-        Me.Label13.Text = "This plugin scans your MovingPictures, My Films, My Videos, TVSeries and Music" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "d" & _
-    "atabases to download available Artwork from the fanart.tv and themoviedb.org" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "we" & _
+        Me.Label13.Text = "This plugin scans your MovingPictures, My Films, My Videos, TVSeries and Music" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "d" &
+    "atabases to download available Artwork from the fanart.tv and themoviedb.org" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "we" &
     "bsites."
         '
         'GroupBox9
@@ -2965,8 +2965,8 @@ Partial Class DVDArt_GUI
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(492, 48)
         Me.Label18.TabIndex = 0
-        Me.Label18.Text = "This plugin scans your MovingPictures, My Films, My Videos, TVSeries and Music" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "d" & _
-    "atabases to download available Artwork from the fanart.tv and themoviedb.org" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "we" & _
+        Me.Label18.Text = "This plugin scans your MovingPictures, My Films, My Videos, TVSeries and Music" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "d" &
+    "atabases to download available Artwork from the fanart.tv and themoviedb.org" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "we" &
     "bsites."
         '
         'GroupBox7
@@ -3043,7 +3043,7 @@ Partial Class DVDArt_GUI
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(236, 26)
         Me.Label17.TabIndex = 0
-        Me.Label17.Text = "If you enjoy DVDArt, please consider donating to" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "help support continued developm" & _
+        Me.Label17.Text = "If you enjoy DVDArt, please consider donating to" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "help support continued developm" &
     "ent.  Thanks."
         '
         'PictureBox10
@@ -3076,7 +3076,7 @@ Partial Class DVDArt_GUI
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(236, 26)
         Me.Label12.TabIndex = 0
-        Me.Label12.Text = "If you enjoy DVDArt, please consider donating to" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "help support continued developm" & _
+        Me.Label12.Text = "If you enjoy DVDArt, please consider donating to" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "help support continued developm" &
     "ent.  Thanks."
         '
         'pb_donate
