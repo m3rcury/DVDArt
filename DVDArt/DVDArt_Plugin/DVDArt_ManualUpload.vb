@@ -37,7 +37,7 @@ Public Class DVDArt_ManualUpload
 
         Dim database As String = String.Empty
 
-        If DVDArt_Common.Get_Paths(database, thumbs) Then
+        If DVDArt_Common.Get_Paths(thumbs) Then
 
             cb_title_and_logos_CheckedChanged(Nothing, Nothing)
 
@@ -488,8 +488,8 @@ Public Class DVDArt_ManualUpload
             If FileIO.FileSystem.FileExists(tb_backdrop.Text) Then FileIO.FileSystem.DeleteFile(tb_backdrop.Text)
 
             Dim database As String = Nothing
-            DVDArt_Common.Get_Paths(database, thumbs)
-            DVDArt_Common.updateMovingPicturesDB(database, "backdrop", _imagename, fullsize)
+            DVDArt_Common.Get_Paths(thumbs)
+            DVDArt_Common.updateMovingPicturesDB("backdrop", _imagename, fullsize)
 
         End If
 

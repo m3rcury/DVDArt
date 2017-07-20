@@ -55,6 +55,9 @@ Partial Class DVDArt_GUI
         Me.lv_movies = New System.Windows.Forms.ListView()
         Me.Movie = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.IMDb_id = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.backdrop = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.cover = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.sortby = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tbc_movies = New System.Windows.Forms.TabControl()
         Me.tp_Movie_DVDArt = New System.Windows.Forms.TabPage()
         Me.b_movie_delete = New System.Windows.Forms.Button()
@@ -118,8 +121,8 @@ Partial Class DVDArt_GUI
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.tp_series = New System.Windows.Forms.TabPage()
         Me.lv_series = New System.Windows.Forms.ListView()
-        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.Serie = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.theTVDB_ID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tbc_series = New System.Windows.Forms.TabControl()
         Me.tp_Serie_ClearArt = New System.Windows.Forms.TabPage()
         Me.l_thetvdb_id = New System.Windows.Forms.Label()
@@ -146,8 +149,8 @@ Partial Class DVDArt_GUI
         Me.tbc_music = New System.Windows.Forms.TabControl()
         Me.tp_artists = New System.Windows.Forms.TabPage()
         Me.lv_artist = New System.Windows.Forms.ListView()
-        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.artist = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.MB_ID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tbc_artist = New System.Windows.Forms.TabControl()
         Me.tp_artist_banner = New System.Windows.Forms.TabPage()
         Me.b_artist_deletebanner = New System.Windows.Forms.Button()
@@ -300,6 +303,7 @@ Partial Class DVDArt_GUI
         Me.MUploadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SendToImporterToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RescanAllToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.sort_name = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.cms_found.SuspendLayout()
         Me.cms_import.SuspendLayout()
         Me.cms_missing.SuspendLayout()
@@ -642,11 +646,10 @@ Partial Class DVDArt_GUI
         'lv_movies
         '
         Me.lv_movies.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid
-        Me.lv_movies.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.Movie, Me.IMDb_id})
+        Me.lv_movies.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.Movie, Me.IMDb_id, Me.backdrop, Me.cover, Me.sortby})
         Me.lv_movies.ContextMenuStrip = Me.cms_found
         Me.lv_movies.FullRowSelect = True
         Me.lv_movies.GridLines = True
-        Me.lv_movies.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_movies.Location = New System.Drawing.Point(8, 8)
         Me.lv_movies.MultiSelect = False
         Me.lv_movies.Name = "lv_movies"
@@ -658,13 +661,31 @@ Partial Class DVDArt_GUI
         '
         'Movie
         '
-        Me.Movie.Text = "Movie"
+        Me.Movie.Text = "Movie - order by title"
         Me.Movie.Width = 319
         '
         'IMDb_id
         '
         Me.IMDb_id.Text = "IMDb ID"
-        Me.IMDb_id.Width = 74
+        Me.IMDb_id.Width = 0
+        '
+        'backdrop
+        '
+        Me.backdrop.DisplayIndex = 3
+        Me.backdrop.Text = "backdrop"
+        Me.backdrop.Width = 0
+        '
+        'cover
+        '
+        Me.cover.DisplayIndex = 4
+        Me.cover.Text = "cover"
+        Me.cover.Width = 0
+        '
+        'sortby
+        '
+        Me.sortby.DisplayIndex = 2
+        Me.sortby.Text = "sortby"
+        Me.sortby.Width = 0
         '
         'tbc_movies
         '
@@ -1278,11 +1299,10 @@ Partial Class DVDArt_GUI
         'lv_series
         '
         Me.lv_series.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid
-        Me.lv_series.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
+        Me.lv_series.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.Serie, Me.theTVDB_ID, Me.sort_name})
         Me.lv_series.ContextMenuStrip = Me.cms_found
         Me.lv_series.FullRowSelect = True
         Me.lv_series.GridLines = True
-        Me.lv_series.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
         Me.lv_series.Location = New System.Drawing.Point(8, 8)
         Me.lv_series.MultiSelect = False
         Me.lv_series.Name = "lv_series"
@@ -1292,15 +1312,15 @@ Partial Class DVDArt_GUI
         Me.lv_series.UseCompatibleStateImageBehavior = False
         Me.lv_series.View = System.Windows.Forms.View.Details
         '
-        'ColumnHeader1
+        'Serie
         '
-        Me.ColumnHeader1.Text = "Serie"
-        Me.ColumnHeader1.Width = 319
+        Me.Serie.Text = "Serie - order by title"
+        Me.Serie.Width = 319
         '
-        'ColumnHeader2
+        'theTVDB_ID
         '
-        Me.ColumnHeader2.Text = "TheTVDB ID"
-        Me.ColumnHeader2.Width = 74
+        Me.theTVDB_ID.Text = "TheTVDB ID"
+        Me.theTVDB_ID.Width = 0
         '
         'tbc_series
         '
@@ -1564,7 +1584,7 @@ Partial Class DVDArt_GUI
         'lv_artist
         '
         Me.lv_artist.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid
-        Me.lv_artist.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4, Me.ColumnHeader5})
+        Me.lv_artist.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.artist, Me.MB_ID})
         Me.lv_artist.ContextMenuStrip = Me.cms_found
         Me.lv_artist.FullRowSelect = True
         Me.lv_artist.GridLines = True
@@ -1578,15 +1598,15 @@ Partial Class DVDArt_GUI
         Me.lv_artist.UseCompatibleStateImageBehavior = False
         Me.lv_artist.View = System.Windows.Forms.View.Details
         '
-        'ColumnHeader4
+        'artist
         '
-        Me.ColumnHeader4.Text = "Artist"
-        Me.ColumnHeader4.Width = 180
+        Me.artist.Text = "Artist"
+        Me.artist.Width = 180
         '
-        'ColumnHeader5
+        'MB_ID
         '
-        Me.ColumnHeader5.Text = "MBID"
-        Me.ColumnHeader5.Width = 220
+        Me.MB_ID.Text = "MBID"
+        Me.MB_ID.Width = 220
         '
         'tbc_artist
         '
@@ -3190,6 +3210,11 @@ Partial Class DVDArt_GUI
         Me.RescanAllToolStripMenuItem1.Size = New System.Drawing.Size(232, 22)
         Me.RescanAllToolStripMenuItem1.Text = "Rescan all"
         '
+        'sort_name
+        '
+        Me.sort_name.Text = "Sort Name"
+        Me.sort_name.Width = 0
+        '
         'DVDArt_GUI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3408,8 +3433,8 @@ Partial Class DVDArt_GUI
     Friend WithEvents TabControl2 As System.Windows.Forms.TabControl
     Friend WithEvents tp_series As System.Windows.Forms.TabPage
     Friend WithEvents lv_series As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents Serie As System.Windows.Forms.ColumnHeader
+    Friend WithEvents theTVDB_ID As System.Windows.Forms.ColumnHeader
     Friend WithEvents tbc_series As System.Windows.Forms.TabControl
     Friend WithEvents tp_Serie_ClearArt As System.Windows.Forms.TabPage
     Friend WithEvents b_serie_deleteart As System.Windows.Forms.Button
@@ -3476,8 +3501,8 @@ Partial Class DVDArt_GUI
     Public WithEvents lv_movies_missing As System.Windows.Forms.ListView
     Friend WithEvents tp_artists As System.Windows.Forms.TabPage
     Friend WithEvents lv_artist As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents artist As System.Windows.Forms.ColumnHeader
+    Friend WithEvents MB_ID As System.Windows.Forms.ColumnHeader
     Friend WithEvents tbc_album As System.Windows.Forms.TabControl
     Friend WithEvents tp_Music_CDArt As System.Windows.Forms.TabPage
     Friend WithEvents b_album_preview As System.Windows.Forms.Button
@@ -3621,5 +3646,8 @@ Partial Class DVDArt_GUI
     Friend WithEvents pb_movie_banner As System.Windows.Forms.PictureBox
     Friend WithEvents lv_movie_banner As System.Windows.Forms.ListView
     Friend WithEvents m_Banner As System.Windows.Forms.ColumnHeader
-
+    Friend WithEvents sortby As ColumnHeader
+    Friend WithEvents backdrop As ColumnHeader
+    Friend WithEvents cover As ColumnHeader
+    Friend WithEvents sort_name As ColumnHeader
 End Class
