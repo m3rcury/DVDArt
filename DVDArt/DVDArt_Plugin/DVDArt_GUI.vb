@@ -17,7 +17,7 @@ Imports MyFilmsPlugin.MyFilms.Utils
 Public Class DVDArt_GUI
 
     Public Shared checked(2, 5) As Boolean
-    Public Shared template_type As Integer
+    Public Shared template_type, size_type, title_pos As Integer
     Public Shared personchecked As Boolean
 
     Public Shared personpath As String
@@ -147,7 +147,7 @@ Public Class DVDArt_GUI
 
                     If images(y) <> SQLreader(1) Or images.Length = 1 Then
 
-                        DVDArt_Common.create_CoverArt(images(y), imdb_id, SQLreader(2), True, True, template_type)
+                        DVDArt_Common.create_CoverArt(images(y), imdb_id, SQLreader(2), True, True, template_type, size_type, title_pos)
 
                         If lv_movies.FindItemWithText(lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text) Is Nothing Then
                             li_movies = lv_movies.Items.Add(lv_movies_missing.SelectedItems(x).SubItems.Item(0).Text)
@@ -3277,6 +3277,7 @@ Public Class DVDArt_GUI
             XMLwriter.SetValueAsBool("Scraper Movies", "cover", cb_Cover_movies.Checked)
             XMLwriter.SetValueAsBool("Scraper Movies", "banner", cb_Banner_movies.Checked)
             XMLwriter.SetValue("Scraper Movies", "template", template_type)
+            XMLwriter.SetValue("Scraper Movies", "size", size_type)
             XMLwriter.SetValue("Scraper Movies", "path", tb_movie_path.Text)
             XMLwriter.SetValueAsBool("Scraper Movies", "person", cb_persons.Checked)
             XMLwriter.SetValue("Scraper Movies", "person path", tb_person_path.Text)
@@ -3316,6 +3317,7 @@ Public Class DVDArt_GUI
             tb_personalapikey.Text = XMLreader.GetValueAsString("Settings", "personal API key", Nothing)
             _lang = XMLreader.GetValueAsString("Scraper", "language", "##")
             template_type = XMLreader.GetValueAsInt("Scraper Movies", "template", 1)
+            size_type = XMLreader.GetValueAsInt("Scraper Movies", "size", 1)
             cb_DVDArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "dvdart", False)
             cb_ClearArt_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearart", False)
             cb_ClearLogo_movies.Checked = XMLreader.GetValueAsBool("Scraper Movies", "clearlogo", False)
@@ -3338,7 +3340,11 @@ Public Class DVDArt_GUI
         End Using
 
         rb_t1.Checked = (template_type = 1)
-        rb_t2.Checked = (template_type = 2)
+        rb_t2.Checked = Not rb_t1.Checked
+        rb_s1.Checked = (size_type = 1)
+        rb_s2.Checked = Not rb_s1.Checked
+
+        title_pos = 1
 
         cb_backgroundscraper_CheckedChanged(Nothing, Nothing)
 
@@ -3596,15 +3602,35 @@ Public Class DVDArt_GUI
     End Sub
 
     Private Sub rb_t1_CheckedChanged(sender As Object, e As EventArgs) Handles rb_t1.CheckedChanged
-        rb_t1.Image = My.Resources.template_1
-        rb_t2.Image = My.Resources.template_2_disabled
-        template_type = 1
+        If rb_t1.Checked Then
+            rb_t1.Image = My.Resources.template_1
+            rb_t2.Image = My.Resources.template_2_disabled
+            template_type = 1
+        End If
     End Sub
 
     Private Sub rb_t2_CheckedChanged(sender As Object, e As EventArgs) Handles rb_t2.CheckedChanged
-        rb_t1.Image = My.Resources.template_1_disabled
-        rb_t2.Image = My.Resources.template_2
-        template_type = 2
+        If rb_t2.Checked Then
+            rb_t1.Image = My.Resources.template_1_disabled
+            rb_t2.Image = My.Resources.template_2
+            template_type = 2
+        End If
+    End Sub
+
+    Private Sub rb_s1_CheckedChanged(sender As Object, e As EventArgs) Handles rb_s1.CheckedChanged
+        If rb_s1.Checked Then
+            rb_s1.Image = My.Resources.logo_size_80x56
+            rb_s2.Image = My.Resources.logo_size_177x125_disabled
+            size_type = 1
+        End If
+    End Sub
+
+    Private Sub rb_s2_CheckedChanged(sender As Object, e As EventArgs) Handles rb_s2.CheckedChanged
+        If rb_s2.Checked Then
+            rb_s1.Image = My.Resources.logo_size_80x56_disabled
+            rb_s2.Image = My.Resources.logo_size_177x125
+            size_type = 2
+        End If
     End Sub
 
     Private Sub b_import_Click(sender As Object, e As EventArgs) Handles b_import.Click

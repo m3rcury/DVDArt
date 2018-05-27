@@ -261,6 +261,10 @@
     <Content Include="Resources\hd.png" />
     <None Include="Resources\lastfm.gif" />
     <None Include="Resources\hd_3d.png" />
+    <None Include="Resources\logo size 80x56.png" />
+    <None Include="Resources\logo size 177x125.png" />
+    <Content Include="Resources\logo size 177x125_disabled.png" />
+    <Content Include="Resources\logo size 80x56_disabled.png" />
     <Content Include="Resources\music.png" />
     <None Include="Resources\musicbrainz-picard.png" />
     <None Include="Resources\myfilms.png" />
@@ -281,6 +285,10 @@
     <Content Include="Resources\template_2_disabled.png" />
     <None Include="Resources\theAudioDB.png" />
     <None Include="Resources\tick_2.png" />
+    <None Include="Resources\title_1.png" />
+    <None Include="Resources\title_1_disabled.png" />
+    <None Include="Resources\title_2.png" />
+    <None Include="Resources\title_2_disabled.png" />
     <Content Include="Resources\tvseries.png" />
     <Content Include="Resources\upload.png" />
     <None Include="Resources\compress.png" />

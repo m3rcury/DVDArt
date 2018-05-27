@@ -4,6 +4,8 @@ Imports System.Data.SQLite
 Public Class DVDArt_CoverArt
 
     Public this_template_type As Integer = DVDArt_GUI.template_type
+    Public this_size_type As Integer = DVDArt_GUI.size_type
+    Public this_title_pos As Integer = DVDArt_GUI.title_pos
 
     Private _images(), _thumbs, _imdb_id, _movie_name As String
     Private lv_images As New ListView
@@ -112,7 +114,7 @@ Public Class DVDArt_CoverArt
         CropImage.Save(tempfile)
         CropImage.Dispose()
 
-        DVDArt_Common.create_CoverArt(tempfile, _imdb_id, _movie_name, cb_title.SelectedIndex, cb_logos.Checked, this_template_type, preview, previewfile)
+        DVDArt_Common.create_CoverArt(tempfile, _imdb_id, _movie_name, cb_title.SelectedIndex, cb_logos.Checked, this_template_type, this_size_type, this_title_pos, preview, previewfile)
 
         If FileIO.FileSystem.FileExists(tempfile) Then
             Do While DVDArt_Common.FileInUse(tempfile)
@@ -136,8 +138,8 @@ Public Class DVDArt_CoverArt
     End Sub
 
     Private Sub b_change_layout_Click(sender As Object, e As EventArgs) Handles b_change_layout.Click
-        Dim layout As New DVDArt_layout
-        layout.ChangeLayout(this_template_type, this_template_type)
+        Dim layout As New DVDArt_Layout
+        layout.ChangeLayout(this_template_type, this_size_type, this_template_type, this_size_type, this_title_pos)
     End Sub
 
     Private Sub b_done_Click(sender As Object, e As EventArgs) Handles b_done.Click

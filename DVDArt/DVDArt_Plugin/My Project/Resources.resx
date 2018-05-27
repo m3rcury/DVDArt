@@ -283,4 +283,28 @@
   <data name="armageddon_banner" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\armageddon_banner.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="logo_size_177x125" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo size 177x125.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo_size_177x125_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo size 177x125_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo_size_80x56" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo size 80x56.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo_size_80x56_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo size 80x56_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="title_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\title_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="title_1_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\title_1_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="title_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\title_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="title_2_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\title_2_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

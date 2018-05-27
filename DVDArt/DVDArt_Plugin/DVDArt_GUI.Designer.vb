@@ -123,6 +123,7 @@ Partial Class DVDArt_GUI
         Me.lv_series = New System.Windows.Forms.ListView()
         Me.Serie = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.theTVDB_ID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.sort_name = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tbc_series = New System.Windows.Forms.TabControl()
         Me.tp_Serie_ClearArt = New System.Windows.Forms.TabPage()
         Me.l_thetvdb_id = New System.Windows.Forms.Label()
@@ -233,6 +234,9 @@ Partial Class DVDArt_GUI
         Me.cb_ClearArt_movies = New System.Windows.Forms.CheckBox()
         Me.cb_ClearLogo_movies = New System.Windows.Forms.CheckBox()
         Me.tp_manual_dvdart = New System.Windows.Forms.TabPage()
+        Me.p_size_type = New System.Windows.Forms.Panel()
+        Me.rb_s1 = New System.Windows.Forms.RadioButton()
+        Me.rb_s2 = New System.Windows.Forms.RadioButton()
         Me.rb_t2 = New System.Windows.Forms.RadioButton()
         Me.rb_t1 = New System.Windows.Forms.RadioButton()
         Me.tp_movies_path = New System.Windows.Forms.TabPage()
@@ -303,7 +307,6 @@ Partial Class DVDArt_GUI
         Me.MUploadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SendToImporterToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RescanAllToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.sort_name = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.cms_found.SuspendLayout()
         Me.cms_import.SuspendLayout()
         Me.cms_missing.SuspendLayout()
@@ -388,6 +391,7 @@ Partial Class DVDArt_GUI
         CType(Me.pb1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pb3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tp_manual_dvdart.SuspendLayout()
+        Me.p_size_type.SuspendLayout()
         Me.tp_movies_path.SuspendLayout()
         Me.tp_movies_persons.SuspendLayout()
         Me.tp_sSeries.SuspendLayout()
@@ -1321,6 +1325,11 @@ Partial Class DVDArt_GUI
         '
         Me.theTVDB_ID.Text = "TheTVDB ID"
         Me.theTVDB_ID.Width = 0
+        '
+        'sort_name
+        '
+        Me.sort_name.Text = "Sort Name"
+        Me.sort_name.Width = 0
         '
         'tbc_series
         '
@@ -2475,6 +2484,7 @@ Partial Class DVDArt_GUI
         'tp_manual_dvdart
         '
         Me.tp_manual_dvdart.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tp_manual_dvdart.Controls.Add(Me.p_size_type)
         Me.tp_manual_dvdart.Controls.Add(Me.rb_t2)
         Me.tp_manual_dvdart.Controls.Add(Me.rb_t1)
         Me.tp_manual_dvdart.Location = New System.Drawing.Point(4, 22)
@@ -2484,20 +2494,49 @@ Partial Class DVDArt_GUI
         Me.tp_manual_dvdart.TabIndex = 1
         Me.tp_manual_dvdart.Text = "Manual DVDArt layout options"
         '
+        'p_size_type
+        '
+        Me.p_size_type.Controls.Add(Me.rb_s1)
+        Me.p_size_type.Controls.Add(Me.rb_s2)
+        Me.p_size_type.Location = New System.Drawing.Point(6, 287)
+        Me.p_size_type.Name = "p_size_type"
+        Me.p_size_type.Size = New System.Drawing.Size(513, 126)
+        Me.p_size_type.TabIndex = 10
+        '
+        'rb_s1
+        '
+        Me.rb_s1.Checked = True
+        Me.rb_s1.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo_size_80x56
+        Me.rb_s1.Location = New System.Drawing.Point(18, 11)
+        Me.rb_s1.Name = "rb_s1"
+        Me.rb_s1.Size = New System.Drawing.Size(222, 105)
+        Me.rb_s1.TabIndex = 12
+        Me.rb_s1.TabStop = True
+        Me.rb_s1.UseVisualStyleBackColor = True
+        '
+        'rb_s2
+        '
+        Me.rb_s2.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo_size_177x125_disabled
+        Me.rb_s2.Location = New System.Drawing.Point(273, 11)
+        Me.rb_s2.Name = "rb_s2"
+        Me.rb_s2.Size = New System.Drawing.Size(222, 105)
+        Me.rb_s2.TabIndex = 11
+        Me.rb_s2.UseVisualStyleBackColor = True
+        '
         'rb_t2
         '
-        Me.rb_t2.Image = Global.DVDArt_Plugin.My.Resources.Resources.template_2
-        Me.rb_t2.Location = New System.Drawing.Point(279, 116)
+        Me.rb_t2.Image = Global.DVDArt_Plugin.My.Resources.Resources.template_2_disabled
+        Me.rb_t2.Location = New System.Drawing.Point(279, 41)
         Me.rb_t2.Name = "rb_t2"
         Me.rb_t2.Size = New System.Drawing.Size(222, 208)
         Me.rb_t2.TabIndex = 3
-        Me.rb_t2.TabStop = True
         Me.rb_t2.UseVisualStyleBackColor = True
         '
         'rb_t1
         '
+        Me.rb_t1.Checked = True
         Me.rb_t1.Image = Global.DVDArt_Plugin.My.Resources.Resources.template_1
-        Me.rb_t1.Location = New System.Drawing.Point(24, 116)
+        Me.rb_t1.Location = New System.Drawing.Point(24, 41)
         Me.rb_t1.Name = "rb_t1"
         Me.rb_t1.Size = New System.Drawing.Size(222, 208)
         Me.rb_t1.TabIndex = 2
@@ -3210,11 +3249,6 @@ Partial Class DVDArt_GUI
         Me.RescanAllToolStripMenuItem1.Size = New System.Drawing.Size(232, 22)
         Me.RescanAllToolStripMenuItem1.Text = "Rescan all"
         '
-        'sort_name
-        '
-        Me.sort_name.Text = "Sort Name"
-        Me.sort_name.Width = 0
-        '
         'DVDArt_GUI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3326,6 +3360,7 @@ Partial Class DVDArt_GUI
         CType(Me.pb1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pb3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tp_manual_dvdart.ResumeLayout(False)
+        Me.p_size_type.ResumeLayout(False)
         Me.tp_movies_path.ResumeLayout(False)
         Me.tp_movies_path.PerformLayout()
         Me.tp_movies_persons.ResumeLayout(False)
@@ -3650,4 +3685,7 @@ Partial Class DVDArt_GUI
     Friend WithEvents backdrop As ColumnHeader
     Friend WithEvents cover As ColumnHeader
     Friend WithEvents sort_name As ColumnHeader
+    Friend WithEvents p_size_type As Panel
+    Friend WithEvents rb_s1 As RadioButton
+    Friend WithEvents rb_s2 As RadioButton
 End Class

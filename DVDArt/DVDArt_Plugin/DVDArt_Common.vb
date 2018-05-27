@@ -33,6 +33,10 @@ Public Class DVDArt_Common
         Public Property album As Dictionary(Of json_album_detail, json_album_detail)
     End Class
 
+    Public Class themoviedb_JSON
+        Public Property id As String
+    End Class
+
     Public Class fanarttv_movie_JSON
         Public Property name As String
         Public Property imdb_id As String
@@ -940,6 +944,7 @@ Public Class DVDArt_Common
         Dim url As String = "http://webservice.fanart.tv/v3/" & type & "/" & id & "?api_key=" & apikey
         Dim downstring As String = Nothing
         Dim tries As Integer
+        Dim tmdbID As String = Nothing
 
         If personalAPIkey <> Nothing Then url = url & "&client_key=" & personalAPIkey
 
@@ -967,6 +972,58 @@ Public Class DVDArt_Common
             End Try
 
         Loop
+
+        If downstring Is Nothing Then
+            tmdbID = getTMDBID(id)
+            If tmdbID <> id Then
+                logStats("DVDArt: [Fanart_tv] Get Fanart details using TMDB ID instead of IMDB ID", "DEBUG")
+                downstring = Fanart_tv(tmdbID, type)
+            End If
+        End If
+
+        Return downstring
+
+    End Function
+
+    Public Shared Function getTMDBID(ByVal id As String) As String
+
+        Dim apikey As String = "cc25933c4094ca50635f94574491f320"
+        Dim url As String = "http://api.themoviedb.org/3/movie/" & id & "?api_key=" & apikey
+        Dim downstring As String = Nothing
+        Dim json As Object = Nothing
+        Dim tries As Integer
+
+        Do Until tries = 4
+
+            Try
+                Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
+                WebClient.Accept = "application/json"
+                WebClient.Timeout = timeout
+
+                Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
+                Dim receiveStream As Stream = response.GetResponseStream()
+                Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
+                downstring = readStream.ReadToEnd()
+                response.Close()
+                readStream.Close()
+                readStream.Dispose()
+                Exit Do
+            Catch ex As System.Net.WebException
+                logStats("DVDArt: [getMDBID] ERROR - " & ex.Message, "ERROR")
+                tries += 1
+            Catch ex As Exception
+                logStats("DVDArt: [getMDBID] ERROR - " & ex.Message, "ERROR")
+                Exit Do
+            End Try
+
+        Loop
+
+        If downstring IsNot Nothing Then
+            json = JsonConvert.DeserializeObject(Of themoviedb_JSON)(downstring)
+            downstring = json.id
+        Else
+            downstring = id
+        End If
 
         Return downstring
 
@@ -1729,7 +1786,7 @@ Public Class DVDArt_Common
         Return String.Join("_", studios.Split(Path.GetInvalidFileNameChars())).Replace(" ", "_").Replace("_PIPE_", "|")
     End Function
 
-    Public Shared Sub create_CoverArt(ByVal file As String, ByVal imagename As String, ByVal name As String, ByVal _title As Integer, ByVal _logos As Boolean, ByVal template As Integer, Optional ByVal preview As Boolean = False, Optional ByVal previewfile As String = Nothing, Optional ByVal type As String = "dvdart")
+    Public Shared Sub create_CoverArt(ByVal file As String, ByVal imagename As String, ByVal name As String, ByVal _title As Integer, ByVal _logos As Boolean, ByVal template As Integer, ByVal size_type As Integer, ByVal title_pos As Integer, Optional ByVal preview As Boolean = False, Optional ByVal previewfile As String = Nothing, Optional ByVal type As String = "dvdart")
 
         If Trim(file) = "" Then Exit Sub
 
@@ -1815,9 +1872,17 @@ Public Class DVDArt_Common
             image.Dispose()
 
             If template = 1 Then
-                logos = {tempfile, "-geometry", "-148+60", "-composite"}
+                If size_type = 1 Then
+                    logos = {tempfile + "[80x57]", "-geometry", "-195+30", "-composite"}
+                Else
+                    logos = {tempfile, "-geometry", "-148+60", "-composite"}
+                End If
             Else
-                logos = {tempfile, "-geometry", "+0+200", "-composite"}
+                If size_type = 1 Then
+                    logos = {tempfile + "[80x57]", "-geometry", "+0+200", "-composite"}
+                Else
+                    logos = {tempfile, "-geometry", "+0+200", "-composite"}
+                End If
             End If
 
             For x = 0 To UBound(logos)
@@ -1853,11 +1918,23 @@ Public Class DVDArt_Common
 
                     Select Case studio.Length
                         Case 1
-                            logos = {"""" & studio(0) & """", "-geometry", "+155", "-composite"}
+                            If size_type = 1 Then
+                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+200", "-composite"}
+                            Else
+                                logos = {"""" & studio(0) & """", "-geometry", "+155", "-composite"}
+                            End If
                         Case 2
-                            logos = {"""" & studio(0) & """", "-geometry", "+148-50", "-composite", """" & studio(1) & """", "-geometry", "+148+50", "-composite"}
+                            If size_type = 1 Then
+                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+195-25", "-composite", """" & studio(1) & "[80x57]""", "-geometry", "+195+25", "-composite"}
+                            Else
+                                logos = {"""" & studio(0) & """", "-geometry", "+148-50", "-composite", """" & studio(1) & """", "-geometry", "+148+50", "-composite"}
+                            End If
                         Case Else
-                            logos = {"""" & studio(0) & """", "-geometry", "+130-85", "-composite", """" & studio(1) & """", "-geometry", "+155", "-composite", """" & studio(2) & """", "-geometry", "+130+85", "-composite"}
+                            If size_type = 1 Then
+                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+180-42", "-composite", """" & studio(1) & "[80x57]""", "-geometry", "+200", "-composite", """" & studio(2) & "[80x57]""", "-geometry", "+180+42", "-composite"}
+                            Else
+                                logos = {"""" & studio(0) & """", "-geometry", "+130-85", "-composite", """" & studio(1) & """", "-geometry", "+155", "-composite", """" & studio(2) & """", "-geometry", "+130+85", "-composite"}
+                            End If
                     End Select
 
                     For x = 0 To UBound(logos)
@@ -1883,9 +1960,17 @@ Public Class DVDArt_Common
                 If FileSystem.FileExists(certification) Then
 
                     If template = 1 Then
-                        logos = {certification, "-geometry", "-148-60", "-composite"}
+                        If size_type = 1 Then
+                            logos = {certification + "[80x57]", "-geometry", "-195-30", "-composite"}
+                        Else
+                            logos = {certification, "-geometry", "-148-60", "-composite"}
+                        End If
                     Else
-                        logos = {certification, "-geometry", "-155", "-composite"}
+                        If size_type = 1 Then
+                            logos = {certification + "[80x57]", "-geometry", "-200", "-composite"}
+                        Else
+                            logos = {certification, "-geometry", "-155", "-composite"}
+                        End If
                     End If
 
                     For x = 0 To UBound(logos)
@@ -1908,7 +1993,12 @@ Public Class DVDArt_Common
             ElseIf _title = 2 Then
                 Dim temp_params() As String = {"-resize", "300", "( +clone", "-background", "black", "-shadow", "100x4+0+0 )", "+swap", "-background", "none", "-mosaic"}
                 Convert("""" & thumbs & folder(0, 2, 0) & imagename & ".png""", _temp & "\" & imagename & "#.png", temp_params)
-                title = {_temp & "\" & imagename & "#.png", "-geometry", "+0+135", "-composite"}
+                If title_pos = 1 Then
+                    title = {_temp & "\" & imagename & "#.png", "-geometry", "+0+135", "-composite"}
+                Else
+                    title = {_temp & "\" & imagename & "#.png", "-geometry", "+0-135", "-composite"}
+                End If
+
             End If
 
             For x = 0 To UBound(title)
@@ -2120,7 +2210,7 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.3.9"
+        _version = "v1.0.4.1"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 

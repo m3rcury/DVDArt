@@ -1,0 +1,354 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+DVDArt_Plugin
+</name>
+</assembly>
+<members>
+<member name="T:DVDArt_Plugin.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.armageddon_backdrop">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.armageddon_banner">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.armageddon_clearart">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.armageddon_clearlogo">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.armageddon_cover">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.armageddon_dvdart">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.arrow">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.btn_donateCC_LG">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.cdart">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.cdart_mask">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.compress">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.convert1">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.cross">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.delete">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.download">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.dvdart">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.dvdart_mask">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.dvdart_title">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.grimm_clearart">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.grimm_clearlogo">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.hd">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.hd_3d">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.lastfm">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.logo">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.logo_size_177x125">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.logo_size_177x125_disabled">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.logo_size_80x56">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.logo_size_80x56_disabled">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.movie_search">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.movies">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.movingpictures">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.music">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.musicbrainz_picard">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.myfilms">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.na">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.person_download">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.preview">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.process">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.queen_banner">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.queen_cdart">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.queen_clearlogo">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.rescan_movies">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.restart">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.sd">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.sd_3d">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.selectcoverart">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.sort_asc">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.sort_desc">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.sort_none">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.template_1">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.template_1_disabled">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.template_2">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.template_2_disabled">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.theAudioDB">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.tick">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.tick_2">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.title_1">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.title_1_disabled">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.title_2">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.title_2_disabled">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.tmdb_logo">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.tvseries">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.upload">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="M:DVDArt_Plugin.DVDArt_Plugin.DVDArt_Plugin.GetHome(System.String@,System.String@,System.String@,System.String@)">
+ <summary>
+ If the plugin should have it's own button on the main menu of MediaPortal then it
+ should return true to this method, otherwise if it should not be on home
+ it should return false
+ </summary>
+ <param name="strButtonText">text the button should have</param>
+ <param name="strButtonImage">image for the button, or empty for default</param>
+ <param name="strButtonImageFocus">image for the button, or empty for default</param>
+ <param name="strPictureImage">subpicture for the button or empty for none</param>
+ <returns>true : plugin needs it's own button on home
+ false : plugin does not need it's own button on home</returns>
+</member>
+</members>
+</doc>

@@ -8,6 +8,8 @@ Imports MediaPortal.Util
 Public Class DVDArt_ManualUpload
 
     Public this_template_type As Integer = DVDArt_GUI.template_type
+    Public this_size_type As Integer = DVDArt_GUI.size_type
+    Public this_title_pos As Integer = DVDArt_GUI.title_pos
 
     Private _imagename, _title, _type, thumbs As String
     Private _process(3) As Boolean
@@ -235,7 +237,7 @@ Public Class DVDArt_ManualUpload
 
             If _type = "music/albums" Then type = "cdart" Else type = "dvdart"
 
-            DVDArt_Common.create_CoverArt(tb_dvdart.Text, _imagename, _title, cb_title.SelectedIndex, cb_logos.Checked, this_template_type, True, file, type)
+            DVDArt_Common.create_CoverArt(tb_dvdart.Text, _imagename, _title, cb_title.SelectedIndex, cb_logos.Checked, this_template_type, this_size_type, this_title_pos, True, file, type)
 
         End If
 
@@ -502,7 +504,7 @@ Public Class DVDArt_ManualUpload
 
     Private Sub b_change_layout_Click(sender As Object, e As EventArgs) Handles b_change_layout.Click
         Dim layout As New DVDArt_Layout
-        layout.ChangeLayout(this_template_type, this_template_type)
+        layout.ChangeLayout(this_template_type, this_size_type, this_template_type, this_size_type, this_title_pos)
     End Sub
 
     Private Sub cb_title_and_logos_CheckedChanged(sender As Object, e As EventArgs) Handles cb_title.TextChanged, cb_logos.CheckedChanged

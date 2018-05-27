@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio\2017\community\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="15.0">
+ <Targets>
+  <Target Name="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll">
+   <Modules>
+    <Module Name="dvdart_plugin.dll">
+     <Namespaces>
+      <Namespace Name="DVDArt_Plugin">
+       <Types>
+        <Type Name="DVDArt_Common" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#create_CoverArt(System.String,System.String,System.String,System.Int32,System.Boolean,System.Int32,System.Int32,System.Boolean,System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1824">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.create_CoverArt(String, String, String, Integer, Boolean, Integer, Integer, Boolean, String, String)' could contain the following variables 'imagename'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1828">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.create_CoverArt(String, String, String, Integer, Boolean, Integer, Integer, Boolean, String, String)' could contain the following variables 'imagename'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#downloadimage(System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1459">Object 'WebResponse' can be disposed more than once in method 'DVDArt_Common.downloadimage(String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1459</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Fanart_tv(System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="964">Object 'readStream' can be disposed more than once in method 'DVDArt_Common.Fanart_tv(String, String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 964</Issue>
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="964">Object 'receiveStream' can be disposed more than once in method 'DVDArt_Common.Fanart_tv(String, String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 964</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#FieldExist(System.String,System.String[])" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="2098">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.FieldExist(String, String())' could contain the following variables 'table'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#get_MBID(System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="567">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.get_MBID(String, String)' could contain the following variables 'Strings.LCase(artist)'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#getImagePath(System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1173">Object 'SQLconnect' can be disposed more than once in method 'DVDArt_Common.getImagePath(String, String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1173</Issue>
+            </Message>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1142">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.getImagePath(String, String)' could contain the following variables 'field', 'imdb_id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1160">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.getImagePath(String, String)' could contain the following variables 'imdb_id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1162">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.getImagePath(String, String)' could contain the following variables 'imdb_id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#getTMDBID(System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1009">Object 'readStream' can be disposed more than once in method 'DVDArt_Common.getTMDBID(String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1009</Issue>
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1009">Object 'receiveStream' can be disposed more than once in method 'DVDArt_Common.getTMDBID(String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1009</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#htbackdrops(System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1083">Object 'readStream' can be disposed more than once in method 'DVDArt_Common.htbackdrops(String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1083</Issue>
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1083">Object 'receiveStream' can be disposed more than once in method 'DVDArt_Common.htbackdrops(String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1083</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#import(System.String,System.String,System.String,System.String,System.String,System.String,System.Array,System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1320">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.import(String, String, String, String, String, String, Array, String, String)' could contain the following variables 'id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1334">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.import(String, String, String, String, String, String, Array, String, String)' could contain the following variables 'id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1367">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.import(String, String, String, String, String, String, Array, String, String)' could contain the following variables 'title', 'DVDArt_Common.get_MBID(title, artist)', 'id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1400">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.import(String, String, String, String, String, String, Array, String, String)' could contain the following variables 'title', 'title', 'DVDArt_Common.get_Artist_MBID(title)', 'id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#readMovingPicturesDB(System.String,System.String)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="2155">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.readMovingPicturesDB(String, String)' could contain the following variables 'key'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#theMovieDB(System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1052">Object 'readStream' can be disposed more than once in method 'DVDArt_Common.theMovieDB(String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1052</Issue>
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="1052">Object 'receiveStream' can be disposed more than once in method 'DVDArt_Common.theMovieDB(String)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1052</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#updateMovingPicturesDB(System.String,System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="2183">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.updateMovingPicturesDB(String, String, String)' could contain the following variables 'field', 'value', 'key'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_Common.vb" Line="2187">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_Common.updateMovingPicturesDB(String, String, String)' could contain the following variables 'value', 'key'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="DVDArt_GUI" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#bw_coverart_worker(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="129">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_GUI.bw_coverart_worker(Object, DoWorkEventArgs)' could contain the following variables 'imdb_id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#changeMBID(System.String,System.String)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="982">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_GUI.changeMBID(String, String)' could contain the following variables 'new_MBID', 'old_MBID'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="984">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_GUI.changeMBID(String, String)' could contain the following variables 'new_MBID', 'old_MBID'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#DVDArt_Load(System.Object,System.EventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="4017">Object 'splash' can be disposed more than once in method 'DVDArt_GUI.DVDArt_Load(Object, EventArgs)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 4017</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#LoadAlbumList()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="2218">Object 'SQLconnect' can be disposed more than once in method 'DVDArt_GUI.LoadAlbumList()'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 2218, 2239, 2240</Issue>
+            </Message>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="2233">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_GUI.LoadAlbumList()' could contain the following variables '"DELETE FROM processed_music WHERE rowid = " &amp; SQLreader(1)'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#LoadArtistList()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="2019">Object 'SQLconnect' can be disposed more than once in method 'DVDArt_GUI.LoadArtistList()'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 2019, 2043, 2044</Issue>
+            </Message>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="2034">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_GUI.LoadArtistList()' could contain the following variables '"DELETE FROM processed_artist WHERE rowid = " &amp; SQLreader(1)'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#LoadMovieList()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="1595">Object 'SQLconnect' can be disposed more than once in method 'DVDArt_GUI.LoadMovieList()'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1595, 1596</Issue>
+            </Message>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="1589">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_GUI.LoadMovieList()' could contain the following variables '"DELETE FROM processed_movies WHERE rowid = " &amp; SQLreader(1)'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#LoadSerieList()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="1831">Object 'SQLconnect' can be disposed more than once in method 'DVDArt_GUI.LoadSerieList()'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1831, 1832</Issue>
+            </Message>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="1825">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_GUI.LoadSerieList()' could contain the following variables '"DELETE FROM processed_series WHERE rowid = " &amp; SQLreader(1)'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#SendMessage(System.IntPtr,System.Int32,System.Int32,System.Int32)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="Breaking">
+             <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'DVDArt_GUI.SendMessage(IntPtr, Integer, Integer, Integer)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#SendMessage(System.IntPtr,System.Int32,System.IntPtr,DVDArt_Plugin.DVDArt_GUI+LVITEM&amp;)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="Breaking">
+             <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'DVDArt_GUI.SendMessage(IntPtr, Integer, IntPtr, ByRef DVDArt_GUI.LVITEM)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#use_coverart(System.String)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin" File="DVDArt_GUI.vb" Line="931">The query string passed to 'SQLiteCommand.CommandText.Set(String)' in 'DVDArt_GUI.use_coverart(String)' could contain the following variables 'imdb_id', 'imdb_id'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="DVDArt_Process" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2017-12-13 13:21:31Z" FixCategory="DependsOnFix">
+           <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'DVDArt_Process' because it creates members of the following IDisposable types: 'ListView'. If 'DVDArt_Process' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202">
+   <Name>Do not dispose objects multiple times</Name>
+   <Description>A correctly implemented Dispose method can be called multiple times without throwing an exception. However, this is not guaranteed and to avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.</Description>
+   <Resolution Name="Default">Object {0} can be disposed more than once in method {1}. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 4017</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182334.aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="15.0.0.0" />
+  </Rule>
+  <Rule TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060">
+   <Name>Move P/Invokes to NativeMethods class</Name>
+   <Description>This type contains members with the DllImport attribute. Members with the DllImport attribute should be contained in classes named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Description>
+   <Resolution Name="Default">Because it is a P/Invoke method, {0} should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182161.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+   <File Name="designrules.dll" Version="15.0.0.0" />
+  </Rule>
+  <Rule TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100">
+   <Name>Review SQL queries for security vulnerabilities</Name>
+   <Description>A SQL command string built from user input is vulnerable to SQL injection attacks. Microsoft SQL Server and other database servers support stored procedures and parameterized SQL queries, which reduce the risk of injection attacks.</Description>
+   <Resolution Name="WithNonLiterals">The query string passed to {0} in {1} could contain the following variables {2}. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182310.aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="15.0.0.0" />
+  </Rule>
+  <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
+   <Name>Types that own disposable fields should be disposable</Name>
+   <Description>Types that declare disposable members should also implement IDisposable. If the type does not own any unmanaged resources, do not implement a finalizer on it.</Description>
+   <Resolution Name="DependsOnFix">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}. If {0} has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182172.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="designrules.dll" Version="15.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Category</String>
+  <String Key="Certainty">Certainty</String>
+  <String Key="CollapseAll">Collapse All</String>
+  <String Key="CheckId">Check Id</String>
+  <String Key="Error">Error</String>
+  <String Key="Errors">error(s)</String>
+  <String Key="ExpandAll">Expand All</String>
+  <String Key="Help">Help</String>
+  <String Key="Line">Line</String>
+  <String Key="Messages">message(s)</String>
+  <String Key="LocationNotStoredInPdb">[Location not stored in Pdb]</String>
+  <String Key="Project">Project</String>
+  <String Key="Resolution">Resolution</String>
+  <String Key="Rule">Rule</String>
+  <String Key="RuleFile">Rule File</String>
+  <String Key="RuleDescription">Rule Description</String>
+  <String Key="Source">Source</String>
+  <String Key="Status">Status</String>
+  <String Key="Target">Target</String>
+  <String Key="Warning">Warning</String>
+  <String Key="Warnings">warning(s)</String>
+  <String Key="ReportTitle">Code Analysis Report</String>
+ </Localized>
+</FxCopReport>

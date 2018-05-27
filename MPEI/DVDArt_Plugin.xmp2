@@ -73,6 +73,27 @@
               <ZipFileName>Installer{CopyFile}\{eefb8321-f981-4c12-8d70-4a6410bb231e}-convert.exe</ZipFileName>
               <DestinationFilename>%Base%\convert.exe</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\colors.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e2dd90f1-d9c3-488b-812a-f5fbc024e686}-colors.xml</ZipFileName>
+              <DestinationFilename>%Base%\colors.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\delegates.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fb078052-f1d1-4567-b005-2bcf060ec4d0}-delegates.xml</ZipFileName>
+              <DestinationFilename>%Base%\delegates.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\..\..\..\DVDArt_Plugin\magic.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9ba9275a-8198-4f2c-801a-292bb3fe6613}-magic.xml</ZipFileName>
+              <DestinationFilename>%Base%\magic.xml</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -280,16 +301,14 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>1</Major>
       <Minor>0</Minor>
-      <Build>3</Build>
-      <Revision>9</Revision>
+      <Build>4</Build>
+      <Revision>2</Revision>
     </Version>
     <ExtensionDescription>This plugin scans your MovingPictures, MyFilms, MyVideos, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art, Banners, Actor, Writer and Director images from the fanart.tv and themoviedb.org websites where applicable.</ExtensionDescription>
-    <VersionDescription>Added function to sort movie list either by title or by sortby field and serie list by pretty name or sort name.
-
-Also fixed issue of looping bug when selecting new images for series.</VersionDescription>
+    <VersionDescription>Update SQLite</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2017-07-18T23:39:41</ReleaseDate>
+    <ReleaseDate>2018-03-20T23:39:41</ReleaseDate>
     <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures, tvseries, music, actors, writers, directors, myfilms</Tags>
     <Location>D:\Software\MediaPortal\DVDArt_Plugin\[Name]-v[Version].mpe1</Location>
     <Params>
@@ -363,6 +382,27 @@ Also fixed issue of looping bug when selecting new images for series.</VersionDe
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\colors.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e2dd90f1-d9c3-488b-812a-f5fbc024e686}-colors.xml</ZipFileName>
+        <DestinationFilename>%Base%\colors.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\delegates.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fb078052-f1d1-4567-b005-2bcf060ec4d0}-delegates.xml</ZipFileName>
+        <DestinationFilename>%Base%\delegates.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\..\..\..\DVDArt_Plugin\magic.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9ba9275a-8198-4f2c-801a-292bb3fe6613}-magic.xml</ZipFileName>
+        <DestinationFilename>%Base%\magic.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
         <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\Newtonsoft.Json.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{02e8f05b-fac8-42b4-9ae7-b5c7702dded8}-Newtonsoft.Json.dll</ZipFileName>
@@ -372,21 +412,21 @@ Also fixed issue of looping bug when selecting new images for series.</VersionDe
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{c19cdb51-32e0-47da-b5be-dd612b7eeb67}-DVDArt_Plugin.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{b3ce5a4d-8094-400f-9416-7c7fa84b7da1}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{7c7ccd5e-e2ac-4340-b69b-c97628b1a193}-DVDArt_Plugin_logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{7bfa3f3e-2f35-4c78-9270-88a0bbe74daa}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{82a97964-440a-45ab-8e79-9d0f57793401}-MP_Packaging.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{f35cc7d3-ab7c-4f86-b4fc-daa03b82f67d}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
