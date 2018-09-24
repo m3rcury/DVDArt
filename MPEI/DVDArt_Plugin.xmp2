@@ -302,13 +302,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>4</Build>
-      <Revision>2</Revision>
+      <Revision>3</Revision>
     </Version>
     <ExtensionDescription>This plugin scans your MovingPictures, MyFilms, MyVideos, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art, Banners, Actor, Writer and Director images from the fanart.tv and themoviedb.org websites where applicable.</ExtensionDescription>
-    <VersionDescription>Update SQLite</VersionDescription>
+    <VersionDescription>Minor fix in loading artist name.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2018-03-20T23:39:41</ReleaseDate>
+    <ReleaseDate>2018-09-15T23:39:41</ReleaseDate>
     <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures, tvseries, music, actors, writers, directors, myfilms</Tags>
     <Location>D:\Software\MediaPortal\DVDArt_Plugin\[Name]-v[Version].mpe1</Location>
     <Params>
@@ -412,21 +412,21 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{b3ce5a4d-8094-400f-9416-7c7fa84b7da1}-DVDArt_Plugin.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{32424546-8b91-4488-8c67-8bb7b54adbd7}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{7bfa3f3e-2f35-4c78-9270-88a0bbe74daa}-DVDArt_Plugin_logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{f418a1ac-b793-4fcf-abd8-2463a6173174}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{f35cc7d3-ab7c-4f86-b4fc-daa03b82f67d}-MP_Packaging.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{94c8a323-2e30-49b0-b3e9-9fd2aa2307b3}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

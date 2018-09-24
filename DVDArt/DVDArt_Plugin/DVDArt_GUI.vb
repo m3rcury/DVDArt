@@ -1088,7 +1088,7 @@ Public Class DVDArt_GUI
                     If ((cb_DVDArt_movies.Checked And type = "movies") Or (cb_CDArt_music.Checked And Microsoft.VisualBasic.Left(type, 12) = "music/albums")) And details(0, x) <> Nothing Then
                         imagekey = Guid.NewGuid().ToString()
                         Try
-                            ImageInBytes = WebClient.DownloadData(details(0, x).Replace("/fanart/", "/preview/"))
+                            ImageInBytes = WebClient.DownloadData(details(0, x).Replace("/fanart/", "/preview/").Replace("https:", "http:"))
                             stream = New System.IO.MemoryStream(ImageInBytes)
                             il_dvdart.Images.Add(imagekey, Image.FromStream(stream))
                             If type = "movies" Then
@@ -1104,7 +1104,7 @@ Public Class DVDArt_GUI
                     If ((cb_ClearArt_movies.Checked And type = "movies") Or (cb_ClearArt_series.Checked And type = "tv") Or (cb_Banner_artist.Checked And type = "music")) And details(2, x) <> Nothing Then
                         imagekey = Guid.NewGuid().ToString()
                         Try
-                            ImageInBytes = WebClient.DownloadData(details(2, x).Replace("/fanart/", "/preview/"))
+                            ImageInBytes = WebClient.DownloadData(details(2, x).Replace("/fanart/", "/preview/").Replace("https:", "http:"))
                             stream = New System.IO.MemoryStream(ImageInBytes)
                             If type = "movies" Then
                                 il_clearart.Images.Add(imagekey, Image.FromStream(stream))
@@ -1124,7 +1124,7 @@ Public Class DVDArt_GUI
                     If ((cb_ClearLogo_movies.Checked And type = "movies") Or (cb_ClearLogo_series.Checked And type = "tv") Or (cb_ClearLogo_artist.Checked And type = "music")) And details(4, x) <> Nothing Then
                         imagekey = Guid.NewGuid().ToString()
                         Try
-                            ImageInBytes = WebClient.DownloadData(details(4, x).Replace("/fanart/", "/preview/"))
+                            ImageInBytes = WebClient.DownloadData(details(4, x).Replace("/fanart/", "/preview/").Replace("https:", "http:"))
                             stream = New System.IO.MemoryStream(ImageInBytes)
                             il_clearlogo.Images.Add(imagekey, Image.FromStream(stream))
                             If type = "movies" Then
@@ -1142,7 +1142,7 @@ Public Class DVDArt_GUI
                     If cb_Banner_movies.Checked And type = "movies" And details(6, x) <> Nothing Then
                         imagekey = Guid.NewGuid().ToString()
                         Try
-                            ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/fanart/", "/preview/"))
+                            ImageInBytes = WebClient.DownloadData(details(6, x).Replace("/fanart/", "/preview/").Replace("https:", "http:"))
                             stream = New System.IO.MemoryStream(ImageInBytes)
                             il_banner.Images.Add(imagekey, Image.FromStream(stream))
                             lv_movie_banner.Items.Add(details(7, x), imagekey)
@@ -1154,7 +1154,7 @@ Public Class DVDArt_GUI
                     If cb_Backdrop_movies.Checked And type = "movies" And details(8, x) <> Nothing Then
                         imagekey = Guid.NewGuid().ToString()
                         Try
-                            ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/w1920/", "/w300/").Replace("/fanart/", "/preview/"))
+                            ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/w1920/", "/w300/").Replace("/fanart/", "/preview/").Replace("https:", "http:"))
                             stream = New System.IO.MemoryStream(ImageInBytes)
                             il_backdrop.Images.Add(imagekey, Image.FromStream(stream))
                             lv_movie_backdrop.Items.Add(details(9, x), imagekey)
@@ -1166,7 +1166,7 @@ Public Class DVDArt_GUI
                     If cb_Cover_movies.Checked And type = "movies" And details(10, x) <> Nothing Then
                         imagekey = Guid.NewGuid().ToString()
                         Try
-                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/w1920/", "/w300/").Replace("/fanart/", "/preview/"))
+                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/w1920/", "/w300/").Replace("/fanart/", "/preview/").Replace("https:", "http:"))
                             stream = New System.IO.MemoryStream(ImageInBytes)
                             il_cover.Images.Add(imagekey, Image.FromStream(stream))
                             lv_movie_cover.Items.Add(details(11, x), imagekey)
@@ -1212,14 +1212,14 @@ Public Class DVDArt_GUI
 
                     If InStr(url(x), "/w1920/") > 0 Then
                         If x = 4 Then
-                            parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w300/")
+                            parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w300/").Replace("https:", "http:")
                         ElseIf x = 5 Then
-                            parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/")
+                            parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/").Replace("https:", "http:")
                         End If
                     ElseIf x = 5 Then
-                        parm = thumbpath & "|" & url(x)
+                        parm = thumbpath & "|" & url(x).Replace("https:", "http:")
                     Else
-                        parm = thumbpath & "|" & url(x).Replace("/fanart/", "/preview/")
+                        parm = thumbpath & "|" & url(x).Replace("/fanart/", "/preview/").Replace("https:", "http:")
                     End If
 
                     Do
@@ -1249,11 +1249,11 @@ Public Class DVDArt_GUI
                     Loop
 
                     If x = 0 Then
-                        parm = fullpath & "|" & url(x) & "|shrink"
+                        parm = fullpath & "|" & url(x).Replace("https:", "http:") & "|shrink"
                     ElseIf x = 5 Then
-                        parm = fullpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/")
+                        parm = fullpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/").Replace("https:", "http:")
                     Else
-                        parm = fullpath & "|" & url(x)
+                        parm = fullpath & "|" & url(x).Replace("https:", "http:")
                     End If
 
                     Do
@@ -3881,7 +3881,7 @@ Public Class DVDArt_GUI
     End Sub
 
     Private Sub ll_wiki_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles ll_wiki.LinkClicked
-        Dim url As String = "http://code.google.com/p/dvdart/w/list"
+        Dim url As String = "https://github.com/m3rcury/DVDArt/wiki/Screen-shots"
         Process.Start(url)
     End Sub
 

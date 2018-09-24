@@ -431,7 +431,9 @@ Public Class DVDArt_Common
 
                     For y = 0 To UBound(persons)
 
-                        If Not String.IsNullOrEmpty(Trim(persons(y))) Then
+                        persons(y) = Trim(persons(y))
+
+                        If Not String.IsNullOrEmpty(persons(y)) Then
                             If Not personlist.ContainsKey(persons(y)) Then personlist.Add(persons(y), SQLreader(1))
                         End If
 
@@ -1610,12 +1612,12 @@ Public Class DVDArt_Common
 
                         If InStr(url(y * 2, 0), "/w1920/") > 0 Then
                             If y = UBound(found) - 1 Then
-                                parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w300/")
+                                parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w300/").Replace("https:", "http:")
                             ElseIf y = UBound(found) Then
-                                parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w" & _coversize & "/")
+                                parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w" & _coversize & "/").Replace("https:", "http:")
                             End If
                         Else
-                            parm = thumbpath & "|" & url(y * 2, 0).Replace("/fanart/", "/preview/")
+                            parm = thumbpath & "|" & url(y * 2, 0).Replace("/fanart/", "/preview/").Replace("https:", "http:")
                         End If
 
                         found(y) = True
@@ -1656,7 +1658,7 @@ Public Class DVDArt_Common
 
                     If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
 
-                        parm = fullpath & "|" & url(y * 2, 0)
+                        parm = fullpath & "|" & url(y * 2, 0).Replace("https:", "http:")
                         If y = 0 Then parm += "|shrink"
 
                         Do
@@ -1719,10 +1721,11 @@ Public Class DVDArt_Common
 
     Public Shared Sub reduceSize(ByVal path As String, ByVal size As Integer)
 
-        If size > maxsize Then
-            Dim factor As Integer = (maxsize / size) * 100
-            Dim ratio As Integer = 100 - (10 - (factor / 10))
-            Dim params() As String = {"-quality", ratio.ToString}
+        If (size / 1024) > maxsize Then
+            'Dim factor As Integer = (maxsize / size) * 100
+            'Dim ratio As Integer = 100 - (10 - (factor / 10))
+            'Dim params() As String = {"-quality", ratio.ToString}
+            Dim params() As String = {"-strip", "-define", "jpeg:extent=" & maxsize.ToString & "kb"}
             Convert(path, path, params)
         End If
 
@@ -2210,15 +2213,15 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.4.1"
+        _version = "v1.0.4.3"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 
         'set cover size width to 680pixels
         _coversize = "680"
 
-        'set cover file size to 950Kb
-        maxsize = 950 * 1024
+        'set cover file size to 600Kb
+        maxsize = 600
 
         'initialize language array
         lang = {"English", "Deutsch", "Française", "Italiano", "русский", "Any"}
