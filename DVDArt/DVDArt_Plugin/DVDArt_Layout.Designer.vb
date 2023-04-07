@@ -25,11 +25,11 @@ Partial Class DVDArt_Layout
         Me.b_done = New System.Windows.Forms.Button()
         Me.l_copyright = New System.Windows.Forms.Label()
         Me.p_size_type = New System.Windows.Forms.Panel()
+        Me.rb_s1 = New System.Windows.Forms.RadioButton()
+        Me.rb_s2 = New System.Windows.Forms.RadioButton()
         Me.p_title_position = New System.Windows.Forms.Panel()
         Me.rb_tl1 = New System.Windows.Forms.RadioButton()
         Me.rb_tl2 = New System.Windows.Forms.RadioButton()
-        Me.rb_s1 = New System.Windows.Forms.RadioButton()
-        Me.rb_s2 = New System.Windows.Forms.RadioButton()
         Me.rb_t2 = New System.Windows.Forms.RadioButton()
         Me.rb_t1 = New System.Windows.Forms.RadioButton()
         Me.p_size_type.SuspendLayout()
@@ -52,9 +52,9 @@ Partial Class DVDArt_Layout
         Me.l_copyright.ForeColor = System.Drawing.SystemColors.ActiveCaption
         Me.l_copyright.Location = New System.Drawing.Point(2, 563)
         Me.l_copyright.Name = "l_copyright"
-        Me.l_copyright.Size = New System.Drawing.Size(138, 12)
+        Me.l_copyright.Size = New System.Drawing.Size(56, 12)
         Me.l_copyright.TabIndex = 28
-        Me.l_copyright.Text = "Copyright © 2012-2017, m3rcury"
+        Me.l_copyright.Text = "Copyright © "
         '
         'p_size_type
         '
@@ -64,6 +64,26 @@ Partial Class DVDArt_Layout
         Me.p_size_type.Name = "p_size_type"
         Me.p_size_type.Size = New System.Drawing.Size(483, 100)
         Me.p_size_type.TabIndex = 30
+        '
+        'rb_s1
+        '
+        Me.rb_s1.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo_size_80x56
+        Me.rb_s1.Location = New System.Drawing.Point(3, 6)
+        Me.rb_s1.Name = "rb_s1"
+        Me.rb_s1.Size = New System.Drawing.Size(222, 90)
+        Me.rb_s1.TabIndex = 34
+        Me.rb_s1.TabStop = True
+        Me.rb_s1.UseVisualStyleBackColor = True
+        '
+        'rb_s2
+        '
+        Me.rb_s2.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo_size_177x125
+        Me.rb_s2.Location = New System.Drawing.Point(258, 6)
+        Me.rb_s2.Name = "rb_s2"
+        Me.rb_s2.Size = New System.Drawing.Size(222, 90)
+        Me.rb_s2.TabIndex = 33
+        Me.rb_s2.TabStop = True
+        Me.rb_s2.UseVisualStyleBackColor = True
         '
         'p_title_position
         '
@@ -93,26 +113,6 @@ Partial Class DVDArt_Layout
         Me.rb_tl2.TabIndex = 33
         Me.rb_tl2.TabStop = True
         Me.rb_tl2.UseVisualStyleBackColor = True
-        '
-        'rb_s1
-        '
-        Me.rb_s1.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo_size_80x56
-        Me.rb_s1.Location = New System.Drawing.Point(3, 6)
-        Me.rb_s1.Name = "rb_s1"
-        Me.rb_s1.Size = New System.Drawing.Size(222, 90)
-        Me.rb_s1.TabIndex = 34
-        Me.rb_s1.TabStop = True
-        Me.rb_s1.UseVisualStyleBackColor = True
-        '
-        'rb_s2
-        '
-        Me.rb_s2.Image = Global.DVDArt_Plugin.My.Resources.Resources.logo_size_177x125
-        Me.rb_s2.Location = New System.Drawing.Point(258, 6)
-        Me.rb_s2.Name = "rb_s2"
-        Me.rb_s2.Size = New System.Drawing.Size(222, 90)
-        Me.rb_s2.TabIndex = 33
-        Me.rb_s2.TabStop = True
-        Me.rb_s2.UseVisualStyleBackColor = True
         '
         'rb_t2
         '

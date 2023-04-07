@@ -240,7 +240,51 @@ Click Next to continue or Cancel to exit Setup.</Value>
           </Items>
         </Params>
         <Actions>
-          <Items />
+          <Items>
+            <ActionItem Name="RunApplication" ActionType="RunApplication" ConditionGroup="">
+              <Params>
+                <Items>
+                  <SectionParam Name="Path to application">
+                    <Value>%Base%\DVDArt_PluginLauncher.exe</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Path to the application like 
+ %Base%\MediaPortal.exe</Description>
+                  </SectionParam>
+                  <SectionParam Name="Parameters for application">
+                    <Value />
+                    <ValueType>String</ValueType>
+                    <Description>Command line parameters</Description>
+                  </SectionParam>
+                  <SectionParam Name="Wait for exit">
+                    <Value>YES</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>Wait for exit </Description>
+                  </SectionParam>
+                  <SectionParam Name="Don't run when silent install">
+                    <Value />
+                    <ValueType>Bool</ValueType>
+                    <Description>If set to Yes the aplication don't run when the istalation is silent </Description>
+                  </SectionParam>
+                  <SectionParam Name="Path to uninstall application">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Path to the application which should be executed when uninstall</Description>
+                  </SectionParam>
+                  <SectionParam Name="Parameters for uninstall application">
+                    <Value />
+                    <ValueType>String</ValueType>
+                    <Description>Command line parameters for uninstall app</Description>
+                  </SectionParam>
+                  <SectionParam Name="Wait for exit on uninstall">
+                    <Value />
+                    <ValueType>Bool</ValueType>
+                    <Description>Wait for exit on uninstall </Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+          </Items>
         </Actions>
         <IncludedGroups />
         <PanelName>Setup Complete</PanelName>
@@ -297,18 +341,18 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Author>m3rcury</Author>
     <HomePage>http://www.team-mediaportal.com/extensions/dvdart-plugin?lang=en</HomePage>
     <ForumPage>http://forum.team-mediaportal.com/threads/dvdart-plugin-that-scrapes-fanart-tv-for-dvd-cover-art-of-you-movie-collection-in-movingpictures.112847/</ForumPage>
-    <UpdateUrl>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=52</UpdateUrl>
+    <UpdateUrl>https://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=52</UpdateUrl>
     <Version>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>4</Build>
-      <Revision>3</Revision>
+      <Revision>6</Revision>
     </Version>
     <ExtensionDescription>This plugin scans your MovingPictures, MyFilms, MyVideos, TVSeries and Music databases and downloads DVD Art, Clear Art, Clear Logo, CD Art, Banners, Actor, Writer and Director images from the fanart.tv and themoviedb.org websites where applicable.</ExtensionDescription>
-    <VersionDescription>Minor fix in loading artist name.</VersionDescription>
+    <VersionDescription>Added scroll bar in configurator to allow scroll when window doesn't fit screen.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=243&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2018-09-15T23:39:41</ReleaseDate>
+    <ReleaseDate>2023-04-07T23:39:41</ReleaseDate>
     <Tags>dvdart, cover art, clear art, clear logo, scraper, movingpictures, tvseries, music, actors, writers, directors, myfilms</Tags>
     <Location>D:\Software\MediaPortal\DVDArt_Plugin\[Name]-v[Version].mpe1</Location>
     <Params>
@@ -412,21 +456,21 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{32424546-8b91-4488-8c67-8bb7b54adbd7}-DVDArt_Plugin.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{0471b528-333d-4d1d-9147-b18e710d53bf}-DVDArt_Plugin.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\DVDArt_Plugin\DVDArt_Plugin_logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{f418a1ac-b793-4fcf-abd8-2463a6173174}-DVDArt_Plugin_logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{1f3c8383-90e1-47da-9f2c-3c2c8d3d91f6}-DVDArt_Plugin_logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\..\..\..\StreamedMP-MOD\MP_Packaging.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{94c8a323-2e30-49b0-b3e9-9fd2aa2307b3}-MP_Packaging.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{74070420-d9bb-4907-ae4e-19bce9f2e46f}-MP_Packaging.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

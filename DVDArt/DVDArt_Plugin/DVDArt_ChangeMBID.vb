@@ -17,4 +17,8 @@
         Return
     End Sub
 
+    Private Sub DVDArt_ChangeMBID_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        l_copyright.Text = DVDArt_Common._copyright
+    End Sub
+
 End Class

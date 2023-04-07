@@ -1,0 +1,24 @@
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe.config
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.pdb
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.Properties.Resources.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.csproj.GenerateResource.cache
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.csproj.CoreCompileInputs.cache
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.csproj.CopyComplete
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.exe
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.pdb
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Common.Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe.config
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.pdb
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Common.Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.csproj.AssemblyReference.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.csproj.SuggestedBindingRedirects.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.Properties.Resources.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.csproj.GenerateResource.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.csproj.CoreCompileInputs.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.csproj.CopyComplete
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.exe
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\Release\DVDArt_PluginLauncher.pdb

@@ -1,0 +1,191 @@
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\System.Data.SQLite.dll
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\ResolveAssemblyReference.cache
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_GUI.resources
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Layout.resources
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ManualUpload.resources
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Preview.resources
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.Resources.resources
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_SplashScreen.resources
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\ResGen.read.1.tlog
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\ResGen.write.1.tlog
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll.config
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll
+E:\Rudolph\Documents\Visual Studio 2010\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.dll
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbprojResolveAssemblyReference.cache
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_GUI.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Layout.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ManualUpload.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Preview.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.Resources.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_SplashScreen.resources
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.GenerateResource.Cache
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\tagnetlib.dll
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll.config
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll
+E:\Rudolph\Documents\Visual Studio 2013\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.dll
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\tagnetlib.dll
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbprojResolveAssemblyReference.cache
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_GUI.resources
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Layout.resources
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ManualUpload.resources
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Preview.resources
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.Resources.resources
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_SplashScreen.resources
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.GenerateResource.Cache
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Dialogs.dll
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\System.Data.SQLite.dll
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.exe.config
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.exe
+E:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.exe
+D:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.exe.config
+D:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.exe
+D:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
+D:\Rudolph\Documents\Visual Studio 2015\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_GUI.resources
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Layout.resources
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ManualUpload.resources
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Preview.resources
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.Resources.resources
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_SplashScreen.resources
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.GenerateResource.Cache
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.CoreCompileInputs.cache
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.CopyComplete
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbprojAssemblyReference.cache
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_GUI.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Layout.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ManualUpload.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Preview.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.Resources.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_SplashScreen.resources
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.GenerateResource.cache
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.CoreCompileInputs.cache
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.CopyComplete
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll.config
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll
+E:\Users\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.dll
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll.config
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbprojAssemblyReference.cache
+D:\Rudolph\Documents\Visual Studio 2017\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbprojAssemblyReference.cache
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_GUI.resources
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Layout.resources
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ManualUpload.resources
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Preview.resources
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.Resources.resources
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_SplashScreen.resources
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.GenerateResource.cache
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.CopyComplete
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Common.Utils.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Core.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Dialogs.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Utils.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\log4net.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DirectShowLib.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MediaInfo.Wrapper.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\CSScriptLibrary.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\System.Management.Automation.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\edtftpnet-1.2.2.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\taglib-sharp.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Bass.Net.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\AxInterop.WMPLib.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Interop.WMPLib.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\CSCore.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MediaPortal.Support.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\BassRegistration.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Databases.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\HtmlAgilityPack.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Microsoft.WindowsAPICodePack.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Ionic.Zip.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Newtonsoft.Json.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\System.Data.SQLite.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Interop.IWshRuntimeLibrary.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.CoreCompileInputs.cache
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MetadataExtractor.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\XmpCore.dll
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.exe.config
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.exe
+D:\Users\Rudolph\Documents\Visual Studio 2019\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.exe
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.AssemblyReference.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ChangeMBID.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_CoverArt.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_GUI.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Layout.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_ManualUpload.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_Preview.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.Resources.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.DVDArt_SplashScreen.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.GenerateResource.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.CoreCompileInputs.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.pdb
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.xml
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Common.Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Core.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Dialogs.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MyFilms.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Newtonsoft.Json.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\System.Data.SQLite.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\log4net.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DirectShowLib.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MediaInfo.Wrapper.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\CSScriptLibrary.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\System.Management.Automation.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\edtftpnet-1.2.2.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\TagLibSharp.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Bass.Net.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\AxInterop.WMPLib.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Interop.WMPLib.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\CSCore.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MetadataExtractor.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\MediaPortal.Support.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\BassRegistration.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\UnidecodeSharpFork.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Microsoft.WindowsAPICodePack.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\XmpCore.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Ionic.Zip.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.vbproj.CopyComplete
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.xml
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.pdb
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\Newtonsoft.Json.xml
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll.config
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\bin\Release\DVDArt_Plugin.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\DVDArt_Plugin\DVDArt_Plugin\obj\x86\Release\DVDArt_Plugin.dll

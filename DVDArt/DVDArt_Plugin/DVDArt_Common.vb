@@ -11,11 +11,13 @@ Imports System.IO
 Imports System.Text
 Imports System.Reflection
 Imports System.Security.Cryptography
+Imports System.Net.ServicePointManager
 
 Imports Newtonsoft.Json
 
 Imports MyFilmsPlugin.DataBase
 Imports MyFilmsPlugin.MyFilms.Utils
+Imports System.Net
 
 Public Class DVDArt_Common
 
@@ -82,7 +84,7 @@ Public Class DVDArt_Common
         Dim sortname As String
     End Structure
 
-    Public Shared _version, folder(2, 5, 1), lang(4), langcode(4), _coversize As String
+    Public Shared _version, _copyright, folder(2, 5, 1), lang(4), langcode(4), _coversize As String
     Public Shared WithEvents bw_download0 As New BackgroundWorker
     Public Shared WithEvents bw_download1 As New BackgroundWorker
     Public Shared WithEvents bw_download2 As New BackgroundWorker
@@ -943,7 +945,8 @@ Public Class DVDArt_Common
 
         Dim apikey As String = "bfd6e4e0d4e71237f784b70fc43f8269"
         Dim personalAPIkey As String = p_personalAPIkey
-        Dim url As String = "http://webservice.fanart.tv/v3/" & type & "/" & id & "?api_key=" & apikey
+        Dim url As String = "https://webservice.fanart.tv/v3/" & type & "/" & id & "?api_key=" & apikey
+        'Dim url As String = "http://webservice.fanart.tv/" & type & "/" & id & "?api_key=" & apikey
         Dim downstring As String = Nothing
         Dim tries As Integer
         Dim tmdbID As String = Nothing
@@ -1048,7 +1051,7 @@ Public Class DVDArt_Common
                 Dim response As System.Net.HttpWebResponse = WebClient.GetResponse()
                 Dim receiveStream As Stream = response.GetResponseStream()
                 Dim readStream As New StreamReader(receiveStream, Encoding.UTF8)
-                downstring = readStream.ReadToEnd().Replace("/", "http://image.tmdb.org/t/p/w1920/").Replace("file_path", "id"":,""url")
+                downstring = readStream.ReadToEnd().Replace("/", "http://image.tmdb.org/t/p/original/").Replace("file_path", "id"":,""url")
                 response.Close()
                 readStream.Close()
                 readStream.Dispose()
@@ -1183,8 +1186,7 @@ Public Class DVDArt_Common
 
         Try
             Dim apikey As String = "cc25933c4094ca50635f94574491f320"
-
-            Dim url As String = Uri.EscapeUriString("http://api.themoviedb.org/3/search/person?api_key=" & apikey & "&query=" & Trim(LCase(artist)))
+            Dim url As String = Uri.EscapeUriString("https://api.themoviedb.org/3/search/person?api_key=" & apikey & "&query=" & Trim(LCase(artist)))
 
             Dim WebClient As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create(url)
             WebClient.Accept = "application/json"
@@ -1220,7 +1222,7 @@ Public Class DVDArt_Common
                 If downstring <> Nothing Then
                     Dim filename As String = downstring.Replace("/", "").Replace("\", "")
 
-                    downstring = "http://image.tmdb.org/t/p/w300/" & downstring.Replace("/", "").Replace("\", "")
+                    downstring = "https://image.tmdb.org/t/p/w300/" & downstring.Replace("/", "").Replace("\", "")
 
                     Dim ImageClient As New System.Net.WebClient
                     Dim ImageInBytes() As Byte
@@ -1515,7 +1517,7 @@ Public Class DVDArt_Common
 
                     Dim info As New IO.FileInfo(path)
 
-                    If info.Extension = ".jpg" And (InStr(url, "/preview/") = 0 Or InStr(url, "/w1920/") > 0) Then
+                    If info.Extension = ".jpg" And (InStr(url, "/preview/") = 0 Or InStr(url, "/original/") > 0) Then
 
                         reduceSize(path, info.Length)
 
@@ -1610,11 +1612,11 @@ Public Class DVDArt_Common
 
                     If (try2download(y) Or overwrite) And url(y * 2, 0) <> Nothing Then
 
-                        If InStr(url(y * 2, 0), "/w1920/") > 0 Then
+                        If InStr(url(y * 2, 0), "/original/") > 0 Then
                             If y = UBound(found) - 1 Then
-                                parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w300/").Replace("https:", "http:")
+                                parm = thumbpath & "|" & url(y * 2, 0).Replace("/original/", "/w300/").Replace("https:", "http:")
                             ElseIf y = UBound(found) Then
-                                parm = thumbpath & "|" & url(y * 2, 0).Replace("/w1920/", "/w" & _coversize & "/").Replace("https:", "http:")
+                                parm = thumbpath & "|" & url(y * 2, 0).Replace("/original/", "/w" & _coversize & "/").Replace("https:", "http:")
                             End If
                         Else
                             parm = thumbpath & "|" & url(y * 2, 0).Replace("/fanart/", "/preview/").Replace("https:", "http:")
@@ -1811,7 +1813,32 @@ Public Class DVDArt_Common
             If template = 2 Then template = 1
         End If
 
-        If _title = 1 Then discart = _temp & "\" & type & "_title.png" Else discart = _temp & "\" & type & ".png"
+        If _title = 1 Then
+            discart = _temp & "\" & type & "_title.png"
+        Else
+            Dim SQLconnect As New SQLiteConnection()
+            Dim SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
+            Dim SQLreader As SQLiteDataReader
+
+            If IO.File.Exists(p_Databases("movingpictures")) Then
+                SQLconnect.ConnectionString = "Data Source=" & p_Databases("movingpictures") & ";Read Only=True;"
+                SQLconnect.Open()
+                SQLcommand.CommandText = "SELECT l.videoresolution FROM local_media l, movie_info m, local_media__movie_info lm WHERE lm.movie_info_id = m.id AND l.id = lm.local_media_id AND m.imdb_id = '" & imagename & "'"
+            ElseIf IO.File.Exists(p_Databases("myvideos")) Then
+                SQLconnect.ConnectionString = "Data Source=" & p_Databases("myvideos") & ";Read Only=True;"
+                SQLconnect.Open()
+                SQLcommand.CommandText = "SELECT i.videoResolution FROM movieinfo m, files f, filesmediainfo i WHERE m.idMovie = f.idMovie AND f.idFile = i.idFile AND m.IMDBID = '" & imagename & "'"
+            End If
+
+            SQLreader = SQLcommand.ExecuteReader(CommandBehavior.SingleRow)
+            SQLreader.Read()
+
+            If LCase(SQLreader(0)) = "720p" Or LCase(SQLreader(0)) = "1080p" Or LCase(SQLreader(0)) = "1080i" Or LCase(SQLreader(0)) = "hd" Then
+                discart = _temp & "\" & "blu-ray.png"
+            Else
+                discart = _temp & "\" & type & ".png"
+            End If
+        End If
 
         Dim params() As String = {"-resize", "500", "-gravity", "Center", "-crop", "500x500+0+0", "+repage", _temp & "\" & type & "_mask.png", "-alpha", "off", "-compose", "copy_opacity", "-composite", discart, "-compose", "over", "-composite"}
 
@@ -1876,7 +1903,8 @@ Public Class DVDArt_Common
 
             If template = 1 Then
                 If size_type = 1 Then
-                    logos = {tempfile + "[80x57]", "-geometry", "-195+30", "-composite"}
+                    'logos = {tempfile + "[80x57]", "-geometry", "-195+30", "-composite"}
+                    logos = {tempfile + "[80x57]", "-geometry", "-180+30", "-composite"}
                 Else
                     logos = {tempfile, "-geometry", "-148+60", "-composite"}
                 End If
@@ -1922,19 +1950,22 @@ Public Class DVDArt_Common
                     Select Case studio.Length
                         Case 1
                             If size_type = 1 Then
-                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+200", "-composite"}
+                                'logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+200", "-composite"}
+                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+150", "-composite"}
                             Else
                                 logos = {"""" & studio(0) & """", "-geometry", "+155", "-composite"}
                             End If
                         Case 2
                             If size_type = 1 Then
-                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+195-25", "-composite", """" & studio(1) & "[80x57]""", "-geometry", "+195+25", "-composite"}
+                                'logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+195-25", "-composite", """" & studio(1) & "[80x57]""", "-geometry", "+195+25", "-composite"}
+                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+150-25", "-composite", """" & studio(1) & "[80x57]""", "-geometry", "+150+25", "-composite"}
                             Else
                                 logos = {"""" & studio(0) & """", "-geometry", "+148-50", "-composite", """" & studio(1) & """", "-geometry", "+148+50", "-composite"}
                             End If
                         Case Else
                             If size_type = 1 Then
-                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+180-42", "-composite", """" & studio(1) & "[80x57]""", "-geometry", "+200", "-composite", """" & studio(2) & "[80x57]""", "-geometry", "+180+42", "-composite"}
+                                'logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+180-42", "-composite", """" & studio(1) & "[80x57]""", "-geometry", "+200", "-composite", """" & studio(2) & "[80x57]""", "-geometry", "+180+42", "-composite"}
+                                logos = {"""" & studio(0) & "[80x57]""", "-geometry", "+155-42", "-composite", """" & studio(1) & "[80x57]""", "-geometry", "+150", "-composite", """" & studio(2) & "[80x57]""", "-geometry", "+155+42", "-composite"}
                             Else
                                 logos = {"""" & studio(0) & """", "-geometry", "+130-85", "-composite", """" & studio(1) & """", "-geometry", "+155", "-composite", """" & studio(2) & """", "-geometry", "+130+85", "-composite"}
                             End If
@@ -1964,7 +1995,8 @@ Public Class DVDArt_Common
 
                     If template = 1 Then
                         If size_type = 1 Then
-                            logos = {certification + "[80x57]", "-geometry", "-195-30", "-composite"}
+                            'logos = {certification + "[80x57]", "-geometry", "-195-30", "-composite"}
+                            logos = {certification + "[80x57]", "-geometry", "-180-30", "-composite"}
                         Else
                             logos = {certification, "-geometry", "-148-60", "-composite"}
                         End If
@@ -2213,7 +2245,8 @@ Public Class DVDArt_Common
         fhandle.Close()
 
         ' initialize version
-        _version = "v1.0.4.3"
+        _version = "v1.0.4.6"
+        _copyright = "Copyright © 2012-" & Year(Today) & ", m3rcury"
 
         logStats("DVDArt: Plugin version " & _version, "LOG")
 
@@ -2314,6 +2347,22 @@ Public Class DVDArt_Common
             image.Dispose()
         End If
 
+        'extract blu-ray.png from resources to temporary folder
+        png = _temp & "\blu-ray.png"
+        If Not FileSystem.FileExists(png) Then
+            Dim image As Image = New Bitmap(My.Resources.blu_ray)
+            image.Save(png)
+            image.Dispose()
+        End If
+
+        'extract blu-ray_mask.png from resources to temporary folder
+        png = _temp & "\blu-ray_mask.png"
+        If Not FileSystem.FileExists(png) Then
+            Dim image As Image = New Bitmap(My.Resources.blu_ray_mask)
+            image.Save(png)
+            image.Dispose()
+        End If
+
         'extract dvdart_title.png from resources to temporary folder
         png = _temp & "\dvdart_title.png"
         If Not FileSystem.FileExists(png) Then
@@ -2345,6 +2394,8 @@ Public Class DVDArt_Common
             image.Save(png)
             image.Dispose()
         End If
+
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 Or SecurityProtocolType.Tls Or SecurityProtocolType.Tls11 Or SecurityProtocolType.Tls12 Or SecurityProtocolType.SystemDefault
 
         logStats("DVDArt: Initialization complete.", "LOG")
 

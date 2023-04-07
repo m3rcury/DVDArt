@@ -26,7 +26,7 @@ namespace DVDArt_PluginLauncher {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
             // Load Plugin Configuration
             LoadPluginConfiguration();
         }

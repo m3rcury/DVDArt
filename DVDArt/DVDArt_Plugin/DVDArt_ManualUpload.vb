@@ -43,6 +43,8 @@ Public Class DVDArt_ManualUpload
 
             cb_title_and_logos_CheckedChanged(Nothing, Nothing)
 
+            l_copyright.Text = DVDArt_Common._copyright
+
             'change window title to reflect movie name
             Me.Text = Me.Text & " - " & _title
             Me.Refresh()
@@ -509,10 +511,6 @@ Public Class DVDArt_ManualUpload
 
     Private Sub cb_title_and_logos_CheckedChanged(sender As Object, e As EventArgs) Handles cb_title.TextChanged, cb_logos.CheckedChanged
         b_change_layout.Enabled = cb_title.SelectedIndex > 0 Or cb_logos.Checked
-    End Sub
-
-    Private Sub tb_dvdart_TextChanged(sender As Object, e As EventArgs) Handles tb_dvdart.TextChanged
-
     End Sub
 
 End Class

@@ -1154,7 +1154,7 @@ Public Class DVDArt_GUI
                     If cb_Backdrop_movies.Checked And type = "movies" And details(8, x) <> Nothing Then
                         imagekey = Guid.NewGuid().ToString()
                         Try
-                            ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/w1920/", "/w300/").Replace("/fanart/", "/preview/").Replace("https:", "http:"))
+                            ImageInBytes = WebClient.DownloadData(details(8, x).Replace("/original/", "/w300/").Replace("/fanart/", "/preview/").Replace("https:", "http:"))
                             stream = New System.IO.MemoryStream(ImageInBytes)
                             il_backdrop.Images.Add(imagekey, Image.FromStream(stream))
                             lv_movie_backdrop.Items.Add(details(9, x), imagekey)
@@ -1166,7 +1166,7 @@ Public Class DVDArt_GUI
                     If cb_Cover_movies.Checked And type = "movies" And details(10, x) <> Nothing Then
                         imagekey = Guid.NewGuid().ToString()
                         Try
-                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/w1920/", "/w300/").Replace("/fanart/", "/preview/").Replace("https:", "http:"))
+                            ImageInBytes = WebClient.DownloadData(details(10, x).Replace("/original/", "/w300/").Replace("/fanart/", "/preview/").Replace("https:", "http:"))
                             stream = New System.IO.MemoryStream(ImageInBytes)
                             il_cover.Images.Add(imagekey, Image.FromStream(stream))
                             lv_movie_cover.Items.Add(details(11, x), imagekey)
@@ -1210,11 +1210,11 @@ Public Class DVDArt_GUI
                         thumbpath = thumbs & DVDArt_Common.folder(2, x, 1) & id & ".png"
                     End If
 
-                    If InStr(url(x), "/w1920/") > 0 Then
+                    If InStr(url(x), "original") > 0 Then
                         If x = 4 Then
-                            parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w300/").Replace("https:", "http:")
+                            parm = thumbpath & "|" & url(x).Replace("/original/", "/w300/").Replace("https:", "http:")
                         ElseIf x = 5 Then
-                            parm = thumbpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/").Replace("https:", "http:")
+                            parm = thumbpath & "|" & url(x).Replace("/original/", "/w" & DVDArt_Common._coversize & "/").Replace("https:", "http:")
                         End If
                     ElseIf x = 5 Then
                         parm = thumbpath & "|" & url(x).Replace("https:", "http:")
@@ -1251,7 +1251,7 @@ Public Class DVDArt_GUI
                     If x = 0 Then
                         parm = fullpath & "|" & url(x).Replace("https:", "http:") & "|shrink"
                     ElseIf x = 5 Then
-                        parm = fullpath & "|" & url(x).Replace("/w1920/", "/w" & DVDArt_Common._coversize & "/").Replace("https:", "http:")
+                        parm = fullpath & "|" & url(x).Replace("original", "/w" & DVDArt_Common._coversize & "/").Replace("https:", "http:")
                     Else
                         parm = fullpath & "|" & url(x).Replace("https:", "http:")
                     End If
@@ -3950,6 +3950,12 @@ Public Class DVDArt_GUI
 
         DVDArt_Common.logStats("DVDArt: Plugin started.", "LOG")
 
+        If Screen.PrimaryScreen.WorkingArea.Height < Me.Height Then
+            Me.Height = Screen.PrimaryScreen.WorkingArea.Height
+            Me.Width += 25
+            Me.CenterToScreen()
+        End If
+
         If DVDArt_Common.Get_Paths(thumbs) Then
 
             'pre Initialize
@@ -3957,6 +3963,8 @@ Public Class DVDArt_GUI
 
             'initialize about tab version
             l_version.Text = DVDArt_Common._version
+            l_copyright1.Text = DVDArt_Common._copyright
+            l_copyright2.Text = DVDArt_Common._copyright
 
             'show splashscreen
             Dim splash As New DVDArt_SplashScreen

@@ -57,6 +57,16 @@ DVDArt_Plugin
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.blu_ray">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:DVDArt_Plugin.My.Resources.Resources.blu_ray_mask">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:DVDArt_Plugin.My.Resources.Resources.btn_donateCC_LG">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.

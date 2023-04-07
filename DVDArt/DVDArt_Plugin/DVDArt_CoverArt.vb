@@ -69,6 +69,8 @@ Public Class DVDArt_CoverArt
 
     Private Sub DVDArt_CoverArt_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        l_copyright.Text = DVDArt_Common._copyright
+
         cb_title_and_logos_CheckedChanged(Nothing, Nothing)
 
         Dim fs As System.IO.FileStream

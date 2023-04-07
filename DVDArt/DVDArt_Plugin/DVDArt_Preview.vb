@@ -41,6 +41,8 @@
         Dim imagesize As String = DVDArt_Common.getSize(IO.Path.GetDirectoryName(_path) & "\" & IO.Path.GetFileName(_path))
         Dim i_dim() As String = Split(imagesize, "x")
 
+        l_copyright.Text = DVDArt_Common._copyright
+
         If i_dim(0) <= 1000 Then
             pb_preview.SizeMode = PictureBoxSizeMode.CenterImage
             Me.Width = i_dim(0) + 20

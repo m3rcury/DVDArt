@@ -33,13 +33,14 @@ Partial Class DVDArt_ManualUpload
         Me.b_clearlogo = New System.Windows.Forms.Button()
         Me.b_clearart = New System.Windows.Forms.Button()
         Me.b_upload = New System.Windows.Forms.Button()
-        Me.Label4 = New System.Windows.Forms.Label()
+        Me.l_copyright = New System.Windows.Forms.Label()
         Me.cb_logos = New System.Windows.Forms.CheckBox()
         Me.b_change_layout = New System.Windows.Forms.Button()
         Me.tt_change = New System.Windows.Forms.ToolTip(Me.components)
         Me.b_backdrop = New System.Windows.Forms.Button()
         Me.tb_backdrop = New System.Windows.Forms.TextBox()
         Me.l_backdrop = New System.Windows.Forms.Label()
+        Me.cb_title = New System.Windows.Forms.ComboBox()
         Me.b_process_backdrop = New System.Windows.Forms.Button()
         Me.b_preview_backdrop = New System.Windows.Forms.Button()
         Me.b_process_clearart = New System.Windows.Forms.Button()
@@ -48,7 +49,6 @@ Partial Class DVDArt_ManualUpload
         Me.b_preview_clearlogo = New System.Windows.Forms.Button()
         Me.b_preview_clearart = New System.Windows.Forms.Button()
         Me.b_preview_dvdart = New System.Windows.Forms.Button()
-        Me.cb_title = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'b_dvdart
@@ -135,16 +135,16 @@ Partial Class DVDArt_ManualUpload
         Me.b_upload.Text = "Upload"
         Me.b_upload.UseVisualStyleBackColor = True
         '
-        'Label4
+        'l_copyright
         '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.ForeColor = System.Drawing.SystemColors.ActiveCaption
-        Me.Label4.Location = New System.Drawing.Point(2, 261)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(160, 13)
-        Me.Label4.TabIndex = 25
-        Me.Label4.Text = "Copyright © 2012-2017, m3rcury"
+        Me.l_copyright.AutoSize = True
+        Me.l_copyright.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.l_copyright.ForeColor = System.Drawing.SystemColors.ActiveCaption
+        Me.l_copyright.Location = New System.Drawing.Point(2, 261)
+        Me.l_copyright.Name = "l_copyright"
+        Me.l_copyright.Size = New System.Drawing.Size(66, 13)
+        Me.l_copyright.TabIndex = 25
+        Me.l_copyright.Text = "Copyright © "
         '
         'cb_logos
         '
@@ -191,6 +191,17 @@ Partial Class DVDArt_ManualUpload
         Me.l_backdrop.Size = New System.Drawing.Size(53, 13)
         Me.l_backdrop.TabIndex = 35
         Me.l_backdrop.Text = "Backdrop"
+        '
+        'cb_title
+        '
+        Me.cb_title.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_title.FormattingEnabled = True
+        Me.cb_title.Items.AddRange(New Object() {"None", "Add Movie text title", "Add Movie Clearlogo title"})
+        Me.cb_title.Location = New System.Drawing.Point(379, 203)
+        Me.cb_title.Name = "cb_title"
+        Me.cb_title.Size = New System.Drawing.Size(173, 21)
+        Me.cb_title.TabIndex = 42
+        Me.cb_title.Text = "None"
         '
         'b_process_backdrop
         '
@@ -272,17 +283,6 @@ Partial Class DVDArt_ManualUpload
         Me.b_preview_dvdart.UseVisualStyleBackColor = True
         Me.b_preview_dvdart.Visible = False
         '
-        'cb_title
-        '
-        Me.cb_title.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_title.FormattingEnabled = True
-        Me.cb_title.Items.AddRange(New Object() {"None", "Add Movie text title", "Add Movie Clearlogo title"})
-        Me.cb_title.Location = New System.Drawing.Point(379, 203)
-        Me.cb_title.Name = "cb_title"
-        Me.cb_title.Size = New System.Drawing.Size(173, 21)
-        Me.cb_title.TabIndex = 42
-        Me.cb_title.Text = "None"
-        '
         'DVDArt_ManualUpload
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -299,7 +299,7 @@ Partial Class DVDArt_ManualUpload
         Me.Controls.Add(Me.b_process_clearart)
         Me.Controls.Add(Me.b_process_clearlogo)
         Me.Controls.Add(Me.b_process_dvdart)
-        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.l_copyright)
         Me.Controls.Add(Me.b_upload)
         Me.Controls.Add(Me.b_preview_clearlogo)
         Me.Controls.Add(Me.b_preview_clearart)
@@ -335,7 +335,7 @@ Partial Class DVDArt_ManualUpload
     Friend WithEvents b_preview_clearart As System.Windows.Forms.Button
     Friend WithEvents b_preview_clearlogo As System.Windows.Forms.Button
     Friend WithEvents b_upload As System.Windows.Forms.Button
-    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents l_copyright As System.Windows.Forms.Label
     Friend WithEvents b_preview_dvdart As System.Windows.Forms.Button
     Friend WithEvents b_process_dvdart As System.Windows.Forms.Button
     Friend WithEvents b_process_clearlogo As System.Windows.Forms.Button

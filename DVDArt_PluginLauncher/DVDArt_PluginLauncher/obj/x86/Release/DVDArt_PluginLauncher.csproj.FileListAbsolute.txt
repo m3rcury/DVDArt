@@ -17,3 +17,36 @@ E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DV
 E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.pdb
 E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Common.Utils.dll
 E:\Rudolph\Documents\Visual Studio 2013\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe.config
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.exe
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DVDArt_PluginLauncher.pdb
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Common.Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Core.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Utils.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\log4net.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\DirectShowLib.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\MediaInfo.Wrapper.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\CSScriptLibrary.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\System.Management.Automation.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\edtftpnet-1.2.2.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\TagLibSharp.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Bass.Net.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\AxInterop.WMPLib.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Interop.WMPLib.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\CSCore.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\MetadataExtractor.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\MediaPortal.Support.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\BassRegistration.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\UnidecodeSharpFork.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Microsoft.WindowsAPICodePack.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\XmpCore.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\bin\Release\Ionic.Zip.dll
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csproj.AssemblyReference.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csproj.SuggestedBindingRedirects.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.Properties.Resources.resources
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csproj.GenerateResource.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csproj.CoreCompileInputs.cache
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.csproj.CopyComplete
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.exe
+E:\Users\Rudolph\Documents\Visual Studio\Projects\PluginConfigLoader & Service\DVDArt_PluginLauncher\DVDArt_PluginLauncher\obj\x86\Release\DVDArt_PluginLauncher.pdb

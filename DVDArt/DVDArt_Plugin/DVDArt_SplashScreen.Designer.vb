@@ -59,9 +59,9 @@ Partial Class DVDArt_SplashScreen
         Me.l_copyright.BackColor = System.Drawing.Color.White
         Me.l_copyright.Location = New System.Drawing.Point(349, 127)
         Me.l_copyright.Name = "l_copyright"
-        Me.l_copyright.Size = New System.Drawing.Size(166, 13)
+        Me.l_copyright.Size = New System.Drawing.Size(69, 13)
         Me.l_copyright.TabIndex = 3
-        Me.l_copyright.Text = "Copyright ©  2012-2017 : m3rcury"
+        Me.l_copyright.Text = "Copyright ©  "
         Me.l_copyright.TextAlign = System.Drawing.ContentAlignment.BottomRight
         Me.l_copyright.UseWaitCursor = True
         '

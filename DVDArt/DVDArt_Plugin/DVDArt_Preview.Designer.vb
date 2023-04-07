@@ -34,9 +34,9 @@ Partial Class DVDArt_Preview
         Me.l_copyright.ForeColor = System.Drawing.SystemColors.ActiveCaption
         Me.l_copyright.Location = New System.Drawing.Point(2, 488)
         Me.l_copyright.Name = "l_copyright"
-        Me.l_copyright.Size = New System.Drawing.Size(160, 13)
+        Me.l_copyright.Size = New System.Drawing.Size(66, 13)
         Me.l_copyright.TabIndex = 25
-        Me.l_copyright.Text = "Copyright © 2012-2017, m3rcury"
+        Me.l_copyright.Text = "Copyright © "
         '
         'pb_preview
         '
